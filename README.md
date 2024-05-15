@@ -29,6 +29,19 @@
 		token 3 : the string is ls who is a COMMAND type token (ex : 6)
 	This token will be define in the .h
 
+### => Tokenization to do list
+
+1/ Identify Tokens: List all possible tokens (e.g., commands, flags, arguments, operators like |, >, <, etc.).
+
+2/ Write a Tokenizer: Create a function to split the input string into tokens.
+
+-> Handle quotes (single and double) to allow spaces within arguments.
+
+-> Consider escape characters.
+
+3/ Test Tokenizer: Write tests to ensure the tokenizer handles various edge cases (e.g., multiple spaces, quoted strings, escape sequences).
+
+
 ## EXEC
 
 ### Handling Simple Commands
