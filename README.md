@@ -13,7 +13,7 @@
 ### PROMPT
 
 - COMMAND :
-	LS, CAT
+	LS, CAT, ECHO
 
 - REDIRECTION :
 	<, >, <<, >>
