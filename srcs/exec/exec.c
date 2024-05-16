@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/16 10:43:50 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/16 11:54:44 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ void	handle_redir(char *input_file, char *output_file, int append)
 	}
 }
 
-int	exec_cmd(char *path, char **argv, char *input_file, char *output_file, int append)
+int	exec_cmd(char *path, char **argv, char *input_file, char *output_file,
+		int append)
 {
 	pid_t	pid;
 	int		status;
@@ -132,6 +133,8 @@ int	exec_cmd(char *path, char **argv, char *input_file, char *output_file, int a
 	}
 	else
 	{
+		if (waitpid(pid, &status, 0) == -1)
+			perror_handler("waitpid");
 		if (WIFEXITED(status))
 			printf("Child exited with status %d\n", WEXITSTATUS(status));
 		else if (WIFSIGNALED(status))
