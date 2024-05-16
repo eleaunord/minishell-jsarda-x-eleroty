@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/15 13:39:29 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/15 15:40:09 by jsarda           ###   ########.fr       */
+/*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
+/*   Updated: 2024/05/16 10:43:50 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@
 // 1 . Call execve() Function: In the child process block,
 //		use the execve() function to replace the current process image with a new executable.
 // 3 . Handle Errors: Check if execve() returns -1,
-//		indicating an error. If so, print an error message using perror() and exit the child process with a failure status.
+//		indicating an error. If so,
+//			print an error message using perror() and exit the child process with a failure status.
 
 // #Step 3: Waiting for the Child Process to Finish with waitpid()
 
@@ -43,38 +44,112 @@
 //		using perror() and exit the parent process with a
 //		failure status.
 
-int	main(void)
+// #Step 4: Handling possible errors for fork(),
+//		execve(), and waitpid()
+
+// 1 . Error Handling for fork()
+//		If fork() returns -1, an error has occurred. Print
+//		an error message using perror() and exit the
+//		program with EXIT_FAILURE.
+
+// 2 . Error Handling for execve()
+//		If execve() returns -1 in the child process,
+//		it indicates an error. Print an error message
+//		using perror() and exit the child process
+//		with EXIT_FAILURE.
+
+// 3 . Error Handling for waitpid()
+//		If waitpid() returns -1, an error has occurred.
+//		Print an error message using perror() and exit
+//		the parent process with EXIT_FAILURE.
+
+// #Step 5: Handling Redirections
+
+// 1 . Open the File:
+//		Use open() to open the file with the appropriate
+//		flags (O_WRONLY, O_CREAT, O_TRUNC).
+
+// 2 . Redirect Standard Output:
+//		Use dup2() to duplicate the file
+//		descriptor to STDOUT_FILENO.
+
+// 3 . Execute the Command:
+//		Use execve() to execute the command, which will
+//		now write its output to the specified file.
+
+void	perror_handler(char *type)
+{
+	perror(type);
+	exit(EXIT_FAILURE);
+}
+
+void	handle_redir(char *input_file, char *output_file, int append)
+{
+	int	fd;
+
+	if (input_file)
+	{
+		fd = open(input_file, O_RDONLY);
+		if (fd < 0)
+			perror_handler("open input file");
+		if (dup2(fd, STDIN_FILENO) < 0)
+		{
+			close(fd);
+			perror_handler("dup2 input file");
+		}
+		close(fd);
+	}
+	if (output_file)
+	{
+		if (append)
+			fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		else
+			fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd < 0)
+			perror_handler("open output file");
+		if (dup2(fd, STDOUT_FILENO) < 0)
+		{
+			close(fd);
+			perror_handler("dup2 input file");
+		}
+		close(fd);
+	}
+}
+
+int	exec_cmd(char *path, char **argv, char *input_file, char *output_file, int append)
 {
 	pid_t	pid;
-	char	*path;
-	char	*argv[] = {"cat", "exec.c", NULL};
-	int status;
+	int		status;
 
-	path = "/bin/cat";
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
+		perror_handler("fork");
 	else if (pid == 0)
 	{
-		printf("Child process created\n");
+		handle_redir(input_file, output_file, append);
 		if (execve(path, argv, NULL) == -1)
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
+			perror_handler("execve");
 	}
 	else
 	{
-		printf("Parent process: Child PID = %d\n", pid);
-		if (waitpid(pid, &status, 0) == -1)
-		{
-			perror("waitpid");
-			exit(EXIT_FAILURE);
-		}
-		printf("Child process finished\n");
+		if (WIFEXITED(status))
+			printf("Child exited with status %d\n", WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
 	return (0);
+}
+
+int	main(void)
+{
+	char	*path;
+	char	*argv[] = {"cat", "exec_cmd.c", NULL};
+	char	*output_file;
+	int		append;
+
+	char *input_file = "test.txt"; // No input redirection
+	output_file = NULL;
+	append = 0;
+	path = "/bin/cat";
+	exec_cmd(path, argv, input_file, output_file, append);
 }

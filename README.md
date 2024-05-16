@@ -20,15 +20,6 @@
 
 ## PARSING
 
-- TOKEN :
-	Need to create a string of TOKEN and an INT for each node.
-	The string is the node and the int is the TOKEN.
-	ex : cat|ls
-		token 1 : the string is cat who is a COMMAND type token (ex : 6)
-		token 2 : the string is | who is a PIPE type token (ex : 5)
-		token 3 : the string is ls who is a COMMAND type token (ex : 6)
-	This token will be define in the .h
-
 ### => Tokenization to do list
 
 1/ Identify Tokens: List all possible tokens (e.g., commands, flags, arguments, operators like |, >, <, etc.).
