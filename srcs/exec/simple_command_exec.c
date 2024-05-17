@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/16 10:43:50 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/16 13:19:58 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <stdio.h>
 
 // #Step 1: Creating a Child Process with fork()
 
@@ -77,12 +76,6 @@
 //		Use execve() to execute the command, which will
 //		now write its output to the specified file.
 
-void	perror_handler(char *type)
-{
-	perror(type);
-	exit(EXIT_FAILURE);
-}
-
 void	handle_redir(char *input_file, char *output_file, int append)
 {
 	int	fd;
@@ -116,7 +109,8 @@ void	handle_redir(char *input_file, char *output_file, int append)
 	}
 }
 
-int	exec_cmd(char *path, char **argv, char *input_file, char *output_file, int append)
+void	exec_cmd(char *path, char **argv, char *input_file, char *output_file,
+		int append)
 {
 	pid_t	pid;
 	int		status;
@@ -132,24 +126,25 @@ int	exec_cmd(char *path, char **argv, char *input_file, char *output_file, int a
 	}
 	else
 	{
+		if (waitpid(pid, &status, 0) == -1)
+			perror_handler("waitpid");
 		if (WIFEXITED(status))
 			printf("Child exited with status %d\n", WEXITSTATUS(status));
 		else if (WIFSIGNALED(status))
 			printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
-	return (0);
 }
 
-int	main(void)
-{
-	char	*path;
-	char	*argv[] = {"cat", "exec_cmd.c", NULL};
-	char	*output_file;
-	int		append;
+// int	main(void)
+// {
+// 	char	*path;
+// 	char	*argv[] = {"cat", "exec_cmd.c", NULL};
+// 	char	*output_file;
+// 	int		append;
 
-	char *input_file = "test.txt"; // No input redirection
-	output_file = NULL;
-	append = 0;
-	path = "/bin/cat";
-	exec_cmd(path, argv, input_file, output_file, append);
-}
+// 	char *input_file = "test.txt";
+// 	output_file = NULL;
+// 	append = 0;
+// 	path = "/bin/cat";
+// 	exec_cmd(path, argv, input_file, output_file, append);
+// }
