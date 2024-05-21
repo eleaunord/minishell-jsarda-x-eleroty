@@ -1,4 +1,4 @@
-#include "libft.h"
+#include "../includes/minishell.h"
 
 void	ft_putendl_fd(char const *s, int fd)
 {
@@ -13,10 +13,10 @@ void	ft_putendl_fd(char const *s, int fd)
 	write(fd, "\n", 1);
 }
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+void	ft_lstclear(t_tokens **lst, void (*del)(void *))
 {
-	t_list *current;
-	t_list *tmp;
+	t_tokens *current;
+	t_tokens *tmp;
 
 	if (!lst || !del)
 		return ;
@@ -31,9 +31,20 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 	*lst = NULL;
 }
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+t_tokens	*ft_lstlast(t_tokens *lst)
 {
-	t_list	*last;
+	if (!lst)
+		return (NULL);
+	while (lst->next != NULL)
+	{
+		lst = lst->next;
+	}
+	return (lst);
+}
+
+void	ft_lstadd_back(t_tokens **lst, t_tokens *new)
+{
+	t_tokens	*last;
 
 	if (NULL == lst)
 		return ;
@@ -46,14 +57,17 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	last->next = new;
 }
 
-t_list	*ft_lstnew(void *content)
+t_tokens	*ft_lstnew(void *content, int type)
 {
-	t_list	*node;
+	t_tokens	*node;
 
-	node = malloc(sizeof(t_list));
+	node =(t_tokens *) ft_calloc(1, sizeof(t_tokens));
 	if (node == NULL)
 		return (NULL);
 	node->content = content;
+	node->type = type;
 	node->next = NULL;
 	return (node);
 }
+
+
