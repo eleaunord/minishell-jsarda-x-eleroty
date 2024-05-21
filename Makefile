@@ -6,9 +6,9 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_substr.c \
 					libft/ft_str.c \
 					libft/ft_utils.c \
-					parsing/tokenization/tokens.c \
-					parsing/tokenization/pipes_spaces.c \
-					# parsing/tokenization/quotes.c \
+					srcs/parsing/tokenization/tokens.c \
+					srcs/parsing/tokenization/pipes_spaces.c \
+					srcs/parsing/tokenization/quotes.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)

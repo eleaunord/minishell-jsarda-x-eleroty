@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 // Helper function to create a new list node
 t_list	*create_node(char *token)

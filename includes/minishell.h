@@ -110,7 +110,9 @@ char					*create_token(char *str, int start, int end);
 char					*process_in_quotes(char *line, t_position_tracker *p,
 							t_command **cmd, t_list *mini);
 void					ft_split_pipes_spaces(char *line, t_list **tokens_list);
-
+char					*remove_quotes(char *line);
+int						main(int argc, char *argv[]);
+int						tokenizer(char *line, t_list *tokens_list);
 // LIBFT FUNCTIONS
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 char					*ft_strjoin(char const *s1, char const *s2);

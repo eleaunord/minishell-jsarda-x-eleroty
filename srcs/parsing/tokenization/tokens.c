@@ -1,15 +1,15 @@
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
-
-int	tokenizer(char *input, t_list *tokens_list)
+int	tokenizer(char *line, t_list *tokens_list)
 {
 	t_list	*current;
+	char	*input;
 
 	// check syntax (?)
-
-	// pipes_spaces : Trim spaces + split into pipes
+	input = remove_quotes(line);
+	// pipes_spaces.c : Trim spaces + split into pipes
 	ft_split_pipes_spaces(input, &tokens_list);
-
+	// quotes : trim quotes
 	// Debug / check content of the linked list using print_list
 	current = tokens_list;
 	while (current != NULL)
@@ -18,7 +18,6 @@ int	tokenizer(char *input, t_list *tokens_list)
 		current = current->next;
 	}
 	//
-
 	return (1);
 }
 int	main(int argc, char *argv[])
