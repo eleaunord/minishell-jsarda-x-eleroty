@@ -1,4 +1,4 @@
-// void	open_quote_error(t_tokens *token_list)
+// void	open_quote_error(t_list *token_list)
 // {
 // 	// need to look up what happens then
 // 	ft_lstclear(&token_list, NULL);
@@ -15,7 +15,7 @@
 // }
 
 // void	process_token(char *line, t_command **command, t_position_tracker *pos,
-// 		t_tokens *minishell)
+// 		t_list *minishell)
 // {
 // 	char	*copy;
 
@@ -28,9 +28,9 @@
 // 	free(copy);
 // }
 
-// t_tokens	*ft_split_identifier(char *str)
+// t_list	*ft_split_identifier(char *str)
 // {
-// 	t_tokens	*lst;
+// 	t_list	*lst;
 // 	int		i;
 // 	int		start;
 // 	char	inside_quotes;
@@ -65,10 +65,10 @@
 // }
 
 
-// void	ft_split_separators(t_tokens **token_list)
+// void	ft_split_separators(t_list **token_list)
 // {
 // 	char	*s;
-// 	t_tokens	*current;
+// 	t_list	*current;
 // 	// int		i;
 // 	// int		j;
 
@@ -84,9 +84,9 @@
 // 	}
 // }
 
-// t_tokens	*tokenizer(char *input)
+// t_list	*tokenizer(char *input)
 // {
-// 	t_tokens	*list_of_tokens;
+// 	t_list	*list_of_tokens;
 // 	int		i;
 
 // 	i = 0;
@@ -95,7 +95,7 @@
 // 	return (list_of_tokens);
 // }
 
-// static void	set_input(t_tokens *minishell)
+// static void	set_input(t_list *minishell)
 // {
 // 	// minishell->inf.file = 0;
 // 	// minishell->inf.eof = 0;
