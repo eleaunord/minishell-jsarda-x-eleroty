@@ -47,7 +47,7 @@ Règles de Tokenisation :
 # define CMD		6	
 # define ARG		7	
 # define SINGLE_QUOTE 39
-
+# define PATH_MAX 500 
 // TOKEN LINKED LIST
 
 /*
@@ -77,6 +77,18 @@ typedef struct s_list
 	// For libft functions
 	void				*content;
 }						t_list;
+
+// struct qui centralise tout ?
+typedef struct s_minishell
+{
+	t_list	*env;
+	// t_token	*token;
+	// t_cmd	*cmd;
+	t_list			*nodes;
+	int				exit_code;
+	int				pip[2];
+	bool			sq;
+}					t_minishell;
 
 
 typedef struct s_command

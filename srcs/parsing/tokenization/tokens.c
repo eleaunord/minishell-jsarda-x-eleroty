@@ -25,10 +25,11 @@ int	tokenizer(char *line, t_list *tokens_list)
 	//
 	return (1);
 }
-int	main(int argc, char *argv[])
+int	main(int argc, char *argv[], char *env[])
 {
 	char *input_line;
 	t_list *tokens_list;
+	t_minishell *data;
 	int flag;
 
 	input_line = NULL;
@@ -38,6 +39,10 @@ int	main(int argc, char *argv[])
 	(void)argv;
 
 	// set_input(&minishell);
+	if (!init_env(env, data))
+	{
+		return (1);
+	}
 	while (1)
 	{
 		input_line = readline("prompt> ");
