@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/16 13:19:58 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/22 13:52:40 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,41 +76,40 @@
 //		Use execve() to execute the command, which will
 //		now write its output to the specified file.
 
-void	handle_redir(char *input_file, char *output_file, int append)
-{
-	int	fd;
+// void	handle_redir(char *input_file, char *output_file, int append)
+// {
+// 	int	fd;
 
-	if (input_file)
-	{
-		fd = open(input_file, O_RDONLY);
-		if (fd < 0)
-			perror_handler("open input file");
-		if (dup2(fd, STDIN_FILENO) < 0)
-		{
-			close(fd);
-			perror_handler("dup2 input file");
-		}
-		close(fd);
-	}
-	if (output_file)
-	{
-		if (append)
-			fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-			perror_handler("open output file");
-		if (dup2(fd, STDOUT_FILENO) < 0)
-		{
-			close(fd);
-			perror_handler("dup2 input file");
-		}
-		close(fd);
-	}
-}
+// 	if (input_file)
+// 	{
+// 		fd = open(input_file, O_RDONLY);
+// 		if (fd < 0)
+// 			perror_handler("open input file");
+// 		if (dup2(fd, STDIN_FILENO) < 0)
+// 		{
+// 			close(fd);
+// 			perror_handler("dup2 input file");
+// 		}
+// 		close(fd);
+// 	}
+// 	if (output_file)
+// 	{
+// 		if (append)
+// 			fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+// 		else
+// 			fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 		if (fd < 0)
+// 			perror_handler("open output file");
+// 		if (dup2(fd, STDOUT_FILENO) < 0)
+// 		{
+// 			close(fd);
+// 			perror_handler("dup2 input file");
+// 		}
+// 		close(fd);
+// 	}
+// }
 
-void	exec_cmd(char *path, char **argv, char *input_file, char *output_file,
-		int append)
+void	exec_simple_cmd(t_list *nodes)
 {
 	pid_t	pid;
 	int		status;
@@ -120,8 +119,8 @@ void	exec_cmd(char *path, char **argv, char *input_file, char *output_file,
 		perror_handler("fork");
 	else if (pid == 0)
 	{
-		handle_redir(input_file, output_file, append);
-		if (execve(path, argv, NULL) == -1)
+		//handle_redir(input_file, output_file, append);
+		if (execve("/bin/echo", nodes->av, NULL) == -1)
 			perror_handler("execve");
 	}
 	else
@@ -137,14 +136,12 @@ void	exec_cmd(char *path, char **argv, char *input_file, char *output_file,
 
 // int	main(void)
 // {
-// 	char	*path;
-// 	char	*argv[] = {"cat", "exec_cmd.c", NULL};
-// 	char	*output_file;
-// 	int		append;
-
-// 	char *input_file = "test.txt";
-// 	output_file = NULL;
-// 	append = 0;
-// 	path = "/bin/cat";
-// 	exec_cmd(path, argv, input_file, output_file, append);
+// 	t_list *list;
+// 	list = malloc(sizeof(t_list));
+// 	list->av = calloc(sizeof(char *), 3);
+// 	list->av[0] = malloc(sizeof(char) * 10);
+// 	list->av[1] = malloc(sizeof(char) * 10);
+// 	list->av[0] = "echo";
+// 	list->av[1] = "bonjour";
+// 	exec_simple_cmd(list);
 // }

@@ -9,6 +9,8 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/tokenization/tokens.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
+					srcs/exec/simple_command_exec.c \
+					utils/perror.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)
@@ -35,4 +37,11 @@ all:		${NAME}
 bonus:		all
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re

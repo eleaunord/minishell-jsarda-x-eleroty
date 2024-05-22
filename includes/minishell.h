@@ -7,6 +7,10 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
+#include <sys/wait.h>
+
+
 
 // TOKEN LIST
 
@@ -80,6 +84,7 @@ typedef struct s_list
 	// For libft functions
 	void				*content;
 }						t_list;
+
 
 typedef struct s_command
 {
