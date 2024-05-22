@@ -2,11 +2,14 @@
 # define TOKENS_H
 
 // Librairies
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 # include <unistd.h>
+
 # include <fcntl.h>
 #include <sys/wait.h>
 # include <stdbool.h>
@@ -90,6 +93,10 @@ typedef struct s_minishell
 	bool			sq;
 }					t_minishell;
 
+typedef struct s_exec
+{
+	char				**av;
+}						t_exec;
 
 typedef struct s_command
 {
@@ -107,6 +114,7 @@ typedef struct s_position_tracker
 
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
+void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
 
 // PARSING FUNCTIONS
 int						is_space(const char num);

@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/22 13:52:40 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/22 16:01:50 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@
 // 	}
 // }
 
-void	exec_simple_cmd(t_list *nodes)
+void	exec_simple_cmd(t_exec *exec)
 {
 	pid_t	pid;
 	int		status;
@@ -119,8 +119,8 @@ void	exec_simple_cmd(t_list *nodes)
 		perror_handler("fork");
 	else if (pid == 0)
 	{
-		//handle_redir(input_file, output_file, append);
-		if (execve("/bin/echo", nodes->av, NULL) == -1)
+		// handle_redir(input_file, output_file, append);
+		if (execve("/bin/echo", exec->av, NULL) == -1)
 			perror_handler("execve");
 	}
 	else
@@ -134,14 +134,12 @@ void	exec_simple_cmd(t_list *nodes)
 	}
 }
 
-// int	main(void)
-// {
-// 	t_list *list;
-// 	list = malloc(sizeof(t_list));
-// 	list->av = calloc(sizeof(char *), 3);
-// 	list->av[0] = malloc(sizeof(char) * 10);
-// 	list->av[1] = malloc(sizeof(char) * 10);
-// 	list->av[0] = "echo";
-// 	list->av[1] = "bonjour";
-// 	exec_simple_cmd(list);
-// }
+void	exec(t_list *list)
+{
+	t_exec	exec_struct;
+
+	convert_to_exec_args(list, &exec_struct);
+	if (ft_lstsize(list) == 1)
+		exec_simple_cmd(&exec_struct);
+	//  free_exec_args(&exec);
+}
