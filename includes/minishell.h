@@ -9,7 +9,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 #include <sys/wait.h>
-
+# include <stdbool.h>
 
 
 // TOKEN LIST
@@ -38,21 +38,14 @@ Règles de Tokenisation :
 
 */
 
-# define INPUT 1
-# define HEREDOC 2
-# define TRUNC 3
-# define APPEND 4
-# define PIPE 5
-# define CMD 6
-# define ARG 7
-# define IDENTIFIER 8
-# define OPERATOR 9
-# define L_PARENT 10
-# define R_PARENT 10
-# define STR 11
-# define OPERATORS_STR "><|;"
-# define SPACE_ 32
-# define DOUBLE_QUOTE 34
+
+# define INPUT		1	//"<"
+# define HEREDOC	2	//"<<"
+# define TRUNC		3	//">"
+# define APPEND		4	//">>"
+# define PIPE		5	//"|"
+# define CMD		6	
+# define ARG		7	
 # define SINGLE_QUOTE 39
 
 // TOKEN LINKED LIST

@@ -6,6 +6,11 @@ int	tokenizer(char *line, t_list *tokens_list)
 	char	*input;
 
 	// check syntax (?)
+	if (open_quote_check(line))
+	{
+		free(line);
+		return (1);
+	}
 	input = remove_quotes(line);
 	// pipes_spaces.c : Trim spaces + split into pipes
 	ft_split_pipes_spaces(input, &tokens_list);
@@ -33,7 +38,7 @@ int	main(int argc, char *argv[])
 	(void)argv;
 
 	// set_input(&minishell);
-	while (flag == 1)
+	while (1)
 	{
 		input_line = readline("prompt> ");
 		if (input_line == NULL)
@@ -51,7 +56,6 @@ int	main(int argc, char *argv[])
 		}
 		add_history(input_line);
 		free(input_line);
-		return (1);
 		// exec command
 		// free_input(&minishell);
 	}
