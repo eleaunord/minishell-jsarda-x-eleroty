@@ -5,15 +5,12 @@
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <sys/wait.h>
 # include <unistd.h>
-
-# include <fcntl.h>
-#include <sys/wait.h>
-# include <stdbool.h>
-
 
 // TOKEN LIST
 
@@ -41,16 +38,15 @@ Règles de Tokenisation :
 
 */
 
-
-# define INPUT		1	//"<"
-# define HEREDOC	2	//"<<"
-# define TRUNC		3	//">"
-# define APPEND		4	//">>"
-# define PIPE		5	//"|"
-# define CMD		6	
-# define ARG		7	
+# define INPUT 1   //"<"
+# define HEREDOC 2 //"<<"
+# define TRUNC 3   //">"
+# define APPEND 4  //">>"
+# define PIPE 5    //"|"
+# define CMD 6
+# define ARG 7
 # define SINGLE_QUOTE 39
-# define PATH_MAX 500 
+# define PATH_MAX 500
 // TOKEN LINKED LIST
 
 /*
@@ -81,17 +77,22 @@ typedef struct s_list
 	void				*content;
 }						t_list;
 
-// struct qui centralise tout ?
+// Env struct
+typedef struct s_env
+{
+	char				*key;
+	char				*value;
+	struct s_env		*next;
+}						t_env;
+
+// Struct qui centralise tout
 typedef struct s_minishell
 {
-	t_list	*env;
-	// t_token	*token;
-	// t_cmd	*cmd;
-	t_list			*nodes;
-	int				exit_code;
-	int				pip[2];
-	bool			sq;
-}					t_minishell;
+	t_env				*env;
+	t_list				*nodes;
+	// a completer au fur et a mesure
+
+}						t_minishell;
 
 typedef struct s_exec
 {
@@ -131,6 +132,8 @@ void					ft_split_pipes_spaces(char *line, t_list **tokens_list);
 char					*remove_quotes(char *line);
 int						main(int argc, char *argv[]);
 int						tokenizer(char *line, t_list *tokens_list);
+void					free_env(char ***envp);
+void					free_minishell(t_minishell *mini);
 // LIBFT FUNCTIONS
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 char					*ft_strjoin(char const *s1, char const *s2);

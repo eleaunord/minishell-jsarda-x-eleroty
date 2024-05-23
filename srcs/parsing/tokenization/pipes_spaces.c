@@ -86,10 +86,9 @@ char	*collapse_spaces(char *str)
 // Main function to trim spaces and store tokens in the linked list
 void	ft_split_pipes_spaces(char *line, t_list **tokens_list)
 {
-	char	*start;
-	char	*pipe_pos;
-	char	*segment;
-
+	char *start;
+	char *pipe_pos;
+	char *segment;
 
 	*tokens_list = NULL; // Initialize the linked list
 	start = line;

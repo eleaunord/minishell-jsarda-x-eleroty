@@ -25,6 +25,12 @@ int	tokenizer(char *line, t_list *tokens_list)
 	//
 	return (1);
 }
+void init_minishell(t_minishell *mini)
+{
+	mini->env = NULL;
+	mini->nodes = NULL;
+	// a remplir au fur et a mesure
+}
 int	main(int argc, char *argv[], char *env[])
 {
 	char *input_line;
@@ -38,9 +44,10 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argc;
 	(void)argv;
 
-	// set_input(&minishell);
-	if (!init_env(env, data))
+	init_minishell(data);
+	if (env == init_env(env, data))
 	{
+		free_minishell(data);
 		return (1);
 	}
 	while (1)
@@ -66,5 +73,6 @@ int	main(int argc, char *argv[], char *env[])
 	}
 	ft_lstclear(&tokens_list, free);
 	free(input_line);
+	free_minishell(data);
 	return (0);
 }
