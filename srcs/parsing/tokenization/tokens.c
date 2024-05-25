@@ -1,113 +1,151 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_list *tokens_list, t_minishell *mini)
-{
-	t_list	*current;
-	char	*input = NULL;
+#include <string.h>
 
-	// check syntax (?)
-	(void) mini;
-	if (open_quote_check(line))
-	{
-		free(line);
-		return (1);
-	}
-	printf("Input line 1: %s\n", line);
-	input = remove_quotes(line);
-	// if (contains_dollar(line))
-	// {
-	// 	input =  expand_variables(line, mini->env);
-	// }
-	printf("Input line 2 : %s\n", input);
-	// pipes_spaces.c : Trim spaces + split into pipes
-	ft_split_pipes_spaces(input, &tokens_list);
-	printf("Input line 3 : %s\n", input);
-	// quotes : trim quotes
-	// Debug / check content of the linked list using print_list
-	current = tokens_list;
-	while (current != NULL)
-	{
-		printf("Node : %s\n", (char *)current->content);
-		current = current->next;
-	}
-	//
-	return (1);
+// t_token	*new_token(t_token_type type, char *value)
+// {
+// 	t_token	*token;
+
+// 	token = malloc(sizeof(t_token));
+// 	if (!token)
+// 		return (NULL);
+// 	token->type = type;
+// 	token->value = ft_strdup(value);
+// 	if (!token->value)
+// 	{
+// 		free(token);
+// 		return (NULL);
+// 	}
+// 	token->next = NULL;
+// 	return (token);
+// }
+// void	add_token_to_list(t_token **tokens, t_token *new_token)
+// {
+// 	t_token	*last;
+
+// 	if (!*tokens)
+// 		*tokens = new_token;
+// 	else
+// 	{
+// 		last = *tokens;
+// 		while (last->next)
+// 			last = last->next;
+// 		last->next = new_token;
+// 	}
+// }
+
+// void	add_word_token_if_valid(char **start, char **input, t_token **tokens)
+// {
+// 	char	*word;
+
+// 	if (*input > *start)
+// 	{
+// 		word = ft_strndup(*start, *input - *start);
+// 		if (word)
+// 		{
+// 			add_token_to_list(tokens, new_token(TOKEN_WORD, word));
+// 			free(word);
+// 		}
+// 	}
+// }
+// void	handle_word(char **input, t_token **tokens)
+// {
+// 	char	*start;
+
+// 	start = *input;
+// 	add_word_token_if_valid(&start, input, tokens);
+// }
+// t_token	*tokenize_input(char *input)
+// {
+// 	t_token	*tokens;
+
+// 	tokens = NULL;
+// 	while (*input)
+// 	{
+//         handle_word(&input, &tokens);
+// 	}
+//     t_token *current;
+//     current = tokens;
+// 	while (current != NULL)
+// 	{
+// 		printf("Token value : %s\n", (char *)current->value);
+// 		printf("Token type : %s\n", (char *)current->value);
+// 		current = current->next;
+// 	}
+// 	return (tokens);
+// }
+
+
+// Function to create a new token
+t_token *new_token(t_token_type type, char *value)
+{
+    t_token *token;
+
+    token = malloc(sizeof(t_token));
+    if (!token)
+        return NULL;
+    token->type = type;
+    token->value = ft_strdup(value);
+    if (!token->value)
+    {
+        free(token);
+        return NULL;
+    }
+    token->next = NULL;
+    return token;
 }
-void init_minishell(t_minishell *mini)
+
+// Function to add a token to the list
+void add_token_to_list(t_token **tokens, t_token *new_token)
 {
-	mini->env = NULL;
-	mini->nodes = NULL;
-	// a remplir au fur et a mesure
+    t_token *last;
+
+    if (!*tokens)
+        *tokens = new_token;
+    else
+    {
+        last = *tokens;
+        while (last->next)
+            last = last->next;
+        last->next = new_token;
+    }
 }
-int	is_space(char *line)
+
+// Function to tokenize input
+t_token *tokenize_input(char *line)
 {
-	int				a;
+    t_token *tokens = NULL;
+    char *word;
+    int i = 0;
+    int start = 0;
+    int length = ft_strlen(line);
 
-	a = 0;
-	while (line[a] == ' ' || line[a] == '\t'
-		|| line[a] == '\n')
-		a += 1;
-	if (line[a] == '\0')
-		return (1);
-	return (0);
-}
-int check_line(char **line)
-{
-	if (*line[0] == '\0' || is_space(*line) ||  ft_strncmp(*line, "\n", 0))
-		return (1);
-	return (0);
-}
-// Segfault on free functions
+    while (i <= length)  // Adjust condition to handle entire string
+    {
+        if (line[i] == ' ' || line[i] == '\0')
+        {
+            if (i > start)  // Ensure non-empty token
+            {
+                word = ft_strndup(line + start, i - start);
+                if (word)
+                {
+                    add_token_to_list(&tokens, new_token(TOKEN_WORD, word));
+                    free(word);
+                }
+            }
+            start = i + 1;  // Update start position for next token
+        }
+        i++;
+    }
 
-int	main(int argc, char *argv[], char *env[])
-{
-	char *input_line;
-	t_list *tokens_list;
-	t_minishell data;
-	int flag;
+    // Print tokens for debugging
+    t_token *current = tokens;
+    while (current != NULL)
+    {
+        printf("Token value : %s\n", (char *)current->value);
+        printf("Token type : %d\n", (int)current->type);
+        current = current->next;
+    }
 
-	input_line = NULL;
-	tokens_list = NULL;
-	flag = 1;
-	(void)argc;
-	(void)argv;
-
-	// Initialize minishell struct
-	init_minishell(&data);
-	// Initialize shell environment
-	if (init_env(&data, env))
-	{
-		// free_minishell(&data);
-		return (1);
-	}
-	// Main shell execution Loop
-	while (1)
-	{
-		input_line = readline("prompt> ");
-		if (!input_line)
-		{
-			rl_clear_history(); // ?
-			break ;
-		}
-		if (check_line(&input_line))
-			break ;
-		if (!tokenizer(input_line, tokens_list, &data))
-		{
-			add_history(input_line);
-			free(input_line);
-			return (0);
-		}
-		// Parse tokens
-		parse_tokens(&tokens_list);
-		add_history(input_line);
-		free(input_line);
-		// return (1);
-		// exec command
-		// free_input(&minishell);
-	}
-	ft_lstclear(&tokens_list, free);
-	free(input_line);
-	// Cleanup shell
-	// free_minishell(&data);
-	return (0);
+    return tokens;
 }

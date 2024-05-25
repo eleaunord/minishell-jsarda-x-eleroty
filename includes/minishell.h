@@ -59,32 +59,38 @@ liste chainee de token pour chaque elements de la ligne de commande
 
 // MINISHELL STRUCT
 
-// List chainee de maillons
-typedef struct s_list
+typedef enum e_token_type
 {
-	// Each links have :
+	TOKEN_WORD,
+}						t_token_type;
+
+// TOKENS INSIDE NODES
+typedef struct s_token
+{
+	t_token_type		type;
+	char				*value;
+	struct s_token		*next;
 	char				*cmd;
 	char				**args;
-	char				*redrinIn;
-	int					fdredirIn;
-	char				*redrinOut;
-	int					fdredirOut;
-	// Next and prev links
+}						t_token;
+
+// NODES
+typedef struct s_list
+{
 	struct s_list		*next;
 	struct s_list		*prev;
-	// For libft functions
-	void				*content;
+	char				*content;
+	struct s_token		tokens_in_node;
 }						t_list;
 
 // Env struct
 typedef struct s_env
 {
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-	struct s_env	*prev;
-}					t_env;
-
+	char				*key;
+	char				*value;
+	struct s_env		*next;
+	struct s_env		*prev;
+}						t_env;
 
 // Struct qui centralise tout
 typedef struct s_minishell
