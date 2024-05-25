@@ -39,7 +39,7 @@ void	free_nodes(t_list **tokens_list)
 void	free_minishell(t_minishell *mini)
 {
 	if (mini->env)
-		free_env(mini->env);
+		free_env_list(mini->env);
 	if (mini->nodes)
-		free_nodes(mini->nodes);
+		free_nodes(&mini->nodes);
 }

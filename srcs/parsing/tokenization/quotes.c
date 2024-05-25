@@ -84,13 +84,13 @@ char	*remove_quotes(char *line)
 			temp_line[j++] = line[i];
 		}
 	}
-	if (quote != 0)
-	{
-		// There was an unclosed quote
-		free(temp_line);
-		fprintf(stderr, "Error: Unmatched quote\n");
-		return (NULL);
-	}
+	// if (quote != 0)
+	// {
+	// 	// There was an unclosed quote
+	// 	free(temp_line);
+	// 	fprintf(stderr, "Error: Unmatched quote\n");
+	// 	return (NULL);
+	// }
 	temp_line[j] = '\0';
 	return (temp_line);
 }

@@ -21,32 +21,63 @@ empty at least "OLDPWD" available
 
 // If no environment exists we create a minimal env OR return 0 ?
 
-int	env_init(t_minishell *mini, char **env_array)
+static int	list_new_elem_str(t_env **new, char *elem)
 {
-	t_env	*env;
-	t_env	*new;
-	int		i;
+	(*new) = malloc(sizeof(t_env));
+	if (*new == NULL)
+		return (0);
+	(*new)->value = elem;
+	(*new)->next = NULL;
+	(*new)->prev = NULL;
+	return (1);
+}
 
-	// Allocate memory for the first node of the linked list
-	if (!(env = malloc(sizeof(t_env))))
-		return (1);
-	// value for env_array[0] => SHELL=/bin/zsh
-	env->value = ft_strdup(env_array[0]);
-	env->next = NULL;
-	mini->env = env;
-	i = 1; // Start from the second element in the env_array
-	while (env_array && env_array[0] && env_array[i])
+static void	add_first(t_env **list, t_env *new)
+{
+	(*list) = new;
+	(*list)->prev = *list;
+	(*list)->next = *list;
+}
+int	append(t_env **list, char *elem)
+{
+	t_env	*new;
+
+	if (!list_new_elem_str(&new, elem))
+		return (0);
+	if (!(*list))
+		add_first(list, new);
+	else
 	{
-		// Allocate memory for a new node
-		if (!(new = malloc(sizeof(t_env))))
-			return (1);
-		// Copy the current environment variable into the new node
-		new->value = ft_strdup(env_array[i]);
-		new->next = NULL;
-		// Link the new node to the end of the list
-		env->next = new;
-		env = new; // Move to the new end of the list
-		i++; // Move to the next environment variable in the array
+		new->prev = (*list)->prev;
+		new->next = (*list);
+		(*list)->prev->next = new;
+		(*list)->prev = new;
 	}
+	return (1);
+}
+int	init_env(t_minishell *data, char **env)
+{
+	t_env	*list;
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	list = NULL;
+	while (env[i])
+	{
+		tmp = ft_strdup(env[i]);
+		if (!tmp)
+		{
+			free_env_list(list);
+			return (0);
+		}
+		if (!append(&list, tmp))
+		{
+			free_env_list(list);
+			return (0);
+		}
+		i++;
+	}
+	data->env = list;
 	return (0);
 }

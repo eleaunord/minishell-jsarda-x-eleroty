@@ -9,7 +9,6 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
-# include <sys/wait.h>
 # include <unistd.h>
 
 // TOKEN LIST
@@ -80,10 +79,12 @@ typedef struct s_list
 // Env struct
 typedef struct s_env
 {
-	char				*key;
-	char				*value;
-	struct s_env		*next;
-}						t_env;
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+	struct s_env	*prev;
+}					t_env;
+
 
 // Struct qui centralise tout
 typedef struct s_minishell
@@ -134,6 +135,8 @@ int						main(int argc, char *argv[]);
 int						tokenizer(char *line, t_list *tokens_list);
 void					free_env(char ***envp);
 void					free_minishell(t_minishell *mini);
+void					free_env_list(t_env *env_list);
+int						init_env(t_minishell *mini, char **env_array);
 // LIBFT FUNCTIONS
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 char					*ft_strjoin(char const *s1, char const *s2);
