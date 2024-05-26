@@ -1,36 +1,64 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_list *tokens_list, t_minishell *mini)
+int	tokenizer(char *line, t_list *nodes, t_minishell *mini)
 {
 	t_list	*current;
-	char	*input = NULL;
+	t_token	*tokens;
+	char	*input;
 
-	// check syntax (?)
-	(void) mini;
+	input = NULL;
+	(void)mini;
 	if (open_quote_check(line))
 	{
 		free(line);
 		return (1);
 	}
+	// DEBUG : input line with open quote check
 	printf("Input line 1: %s\n", line);
+
 	input = remove_quotes(line);
+	// DEBUG : input line without quotes
+	printf("Input line 2 : %s\n", input);
+
+	// TO DO 
 	// if (contains_dollar(line))
 	// {
 	// 	input =  expand_variables(line, mini->env);
 	// }
-	printf("Input line 2 : %s\n", input);
-	// pipes_spaces.c : Trim spaces + split into pipes
-	ft_split_pipes_spaces(input, &tokens_list);
+
+	ft_split_pipes_spaces(input, &nodes);
+	// DEBUG : input line without spaces 
 	printf("Input line 3 : %s\n", input);
-	// quotes : trim quotes
-	// Debug / check content of the linked list using print_list
-	current = tokens_list;
+
+	current = nodes;
 	while (current != NULL)
 	{
-		printf("Node : %s\n", (char *)current->content);
+		// DEBUG
+		printf("Node : %s\n", current->content);
+
+		tokens = tokenize_input(current->content);
+		// DEBUG
+		t_token *c = tokens;
+		while (c != NULL)
+		{
+			printf("Token value : %s\n", (char *)c->value);
+			printf("Token type : %d\n", (int)c->type);
+			c = c->next;
+		}
+
+		parse_tokens(tokens);
+		// DEBUG
+		t_token *curr = tokens;
+		while (curr != NULL)
+		{
+			printf("Token CMD : %s\n", (char *)curr->cmd);
+			int i = 0;
+			while (curr->args && curr->args[i] != NULL)
+				printf("Arg Token : %s\n", (char *)curr->args[i++]);
+			curr = curr->next;
+		}
 		current = current->next;
 	}
-	//
 	return (1);
 }
 void init_minishell(t_minishell *mini)
