@@ -1,6 +1,7 @@
 #include "../../../includes/minishell.h"
 
 /*
+If no environment exists we create a minimal env OR return 0 ?
 
 Environment Variables
 => key-value pairs maintained by the OS and used by processes to configure their behavior.
@@ -19,8 +20,10 @@ empty at least "OLDPWD" available
 
 */
 
-// If no environment exists we create a minimal env OR return 0 ?
+// Initialize an environment variable list from an array of strings (env) and stores it in a structure (t_env). 
 
+
+// Allocates memory for a new t_env element and initializes its value field with the provided elem.
 static int	list_new_elem_str(t_env **new, char *elem)
 {
 	(*new) = malloc(sizeof(t_env));
@@ -31,13 +34,14 @@ static int	list_new_elem_str(t_env **new, char *elem)
 	(*new)->prev = NULL;
 	return (1);
 }
-
+// Add the first element to the list.
 static void	add_first(t_env **list, t_env *new)
 {
 	(*list) = new;
 	(*list)->prev = *list;
 	(*list)->next = *list;
 }
+//  Appends a new element to an existing list.
 int	append(t_env **list, char *elem)
 {
 	t_env	*new;
@@ -48,7 +52,7 @@ int	append(t_env **list, char *elem)
 		add_first(list, new);
 	else
 	{
-		new->prev = (*list)->prev;
+		new->prev = (*list)->prev; //last element of the existing list
 		new->next = (*list);
 		(*list)->prev->next = new;
 		(*list)->prev = new;
