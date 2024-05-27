@@ -85,17 +85,16 @@ int	main(int argc, char *argv[], char *env[])
 			return (0);
 		}
 		add_history(input_line);
-		// HERE
-		//t_list *current = tokens_list;
-		//printf("this is the arg : %s", (char *)current->tokens_in_node.args);
-		//exec(current);
-			// Use a temporary pointer to traverse the list
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", current->content);
-		// 		// Print each node's content
-		// 	current = current->next;
-		// }
+		t_list *current = tokens_list;
+		int i = 0;
+		while (current != NULL)
+		{
+			printf("NODE : %s\n", current->content);
+			printf("ARG list is : %s", current->tokens_in_node.args[i]);
+			i++;
+				// Print each node's content
+			current = current->next;
+		}
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);
 		return (0);

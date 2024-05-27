@@ -42,6 +42,7 @@ void	parse_tokens(t_token *tokens)
 	// Move to the next token for counting arguments
 	tmp = tokens->next;
 	arg_count = count_arguments(tmp);
+	printf("ARG COUNT %d\n", arg_count);
 	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!tokens->args)
 	{
@@ -49,7 +50,7 @@ void	parse_tokens(t_token *tokens)
 		return ;
 	}
 	i = 0;
-	while (i < arg_count)
+	while (tmp && i < arg_count)
 	{
 		tokens->args[i] = ft_strdup(tmp->value);
 		if (!tokens->args[i])
@@ -69,7 +70,6 @@ void	parse_tokens(t_token *tokens)
 
 	}
 	tokens->args[arg_count] = NULL;
-	printf("this is the arg : %s", tokens->args);
 	// Free the original list except the first token since we need to preserve tokens->cmd
 	tmp = tokens->next;
 	while (tmp)
@@ -80,4 +80,10 @@ void	parse_tokens(t_token *tokens)
 		tmp = next;
 	}
 	tokens->next = NULL;
+	// i = 0;
+	// while (i < arg_count)
+	// {
+	// 	printf("ARG list is : %s", tokens->args[i]);
+	// 	i++;
+	// }
 }
