@@ -66,9 +66,10 @@ void	parse_tokens(t_token *tokens)
         printf("ARG[%d]: %s\n", i, tokens->args[i]);
 		tmp = tmp->next;
 		i++;
-        
+
 	}
 	tokens->args[arg_count] = NULL;
+	printf("this is the arg : %s", tokens->args);
 	// Free the original list except the first token since we need to preserve tokens->cmd
 	tmp = tokens->next;
 	while (tmp)

@@ -46,6 +46,17 @@ char	*ft_strdup(const char *s)
 	return (new_string);
 }
 
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*new_string;
+
+	new_string = malloc (sizeof(char) * (n + 1));
+	if (!new_string)
+		return (0);
+	ft_strlcpy(new_string, s, (n + 1));
+	return (new_string);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	total_length;
