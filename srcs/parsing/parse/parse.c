@@ -88,18 +88,19 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		t_list *current = tokens_list;
-		int i = 0;
-		while (current != NULL)
-		{
-			t_token *token = (t_token *)current->content;
-			printf("CMD : %s\n", token->cmd);
-			while (token->args[i] != NULL)
-			{
-				printf("ARG[%d]: %s\n", i, token->args[i]);
-				i++;
-			}
-			current = current->next;
-		}
+		exec(current);
+		// int i = 0;
+		// while (current != NULL)
+		// {
+		// 	t_token *token = (t_token *)current->content;
+		// 	printf("CMD : %s\n", token->cmd);
+		// 	while (token->args[i] != NULL)
+		// 	{
+		// 		printf("ARG[%d]: %s\n", i, token->args[i]);
+		// 		i++;
+		// 	}
+		// 	current = current->next;
+		// }
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);
 		return (0);
