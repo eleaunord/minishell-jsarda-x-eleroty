@@ -79,7 +79,7 @@ typedef struct s_list
 {
 	struct s_list		*next;
 	struct s_list		*prev;
-	char				*content;
+	void				*content;
 	struct s_token		tokens_in_node;
 }						t_list;
 

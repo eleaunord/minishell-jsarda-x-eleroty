@@ -139,13 +139,13 @@ t_token *tokenize_input(char *line)
     }
 
     // Print tokens for debugging
-    t_token *current = tokens;
-    while (current != NULL)
-    {
-        printf("Token value : %s\n", (char *)current->value);
-        printf("Token type : %d\n", (int)current->type);
-        current = current->next;
-    }
+    // t_token *current = tokens;
+    // while (current != NULL)
+    // {
+    //     printf("Token value : %s\n", (char *)current->value);
+    //     printf("Token type : %d\n", (int)current->type);
+    //     current = current->next;
+    // }
 
     return tokens;
 }

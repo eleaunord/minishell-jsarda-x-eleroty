@@ -20,6 +20,8 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	{
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens);
+		// attach tokens to the current list node
+		current->content = tokens;
 		current = current->next;
 	}
 	return (1);
@@ -89,10 +91,13 @@ int	main(int argc, char *argv[], char *env[])
 		int i = 0;
 		while (current != NULL)
 		{
-			printf("NODE : %s\n", current->content);
-			printf("ARG list is : %s", current->tokens_in_node.args[i]);
-			i++;
-				// Print each node's content
+			t_token *token = (t_token *)current->content;
+			printf("CMD : %s\n", token->cmd);
+			while (token->args[i] != NULL)
+			{
+				printf("ARG[%d]: %s\n", i, token->args[i]);
+				i++;
+			}
 			current = current->next;
 		}
 		ft_lstclear(&tokens_list, free); // Clear the list after processing

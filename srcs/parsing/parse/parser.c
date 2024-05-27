@@ -36,13 +36,12 @@ void	parse_tokens(t_token *tokens)
 		return ;
 	// Set the first token's value to cmd
 	tokens->cmd = ft_strdup(tokens->value);
-    printf("CMD %s\n", tokens->cmd);
 	if (!tokens->cmd)
 		return ;
 	// Move to the next token for counting arguments
 	tmp = tokens->next;
 	arg_count = count_arguments(tmp);
-	printf("ARG COUNT %d\n", arg_count);
+	// printf("ARG COUNT %d\n", arg_count);
 	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
 	if (!tokens->args)
 	{
@@ -64,7 +63,6 @@ void	parse_tokens(t_token *tokens)
 			free(tokens->cmd);
 			return ;
 		}
-        printf("ARG[%d]: %s\n", i, tokens->args[i]);
 		tmp = tmp->next;
 		i++;
 
