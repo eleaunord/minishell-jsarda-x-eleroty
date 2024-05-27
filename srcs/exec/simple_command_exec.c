@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 18:14:43 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/05/27 18:30:03 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	is_built_in(t_list *list)
 {
 	if (ft_strncmp(list->tokens_in_node->cmd, "pwd", ft_strlen(list->tokens_in_node->cmd)) == 0)
 		return (ft_pwd(), 0);
-	if (ft_strncmp(list->tokens_in_node->cmd, "echo", ft_strlen(list->tokens_in_node->cmd)) != 0)
+	if (ft_strncmp(list->tokens_in_node->cmd, "echo", ft_strlen(list->tokens_in_node->cmd)) == 0)
 		return (ft_echo(list->tokens_in_node->args), 0);
 	// if (ft_strncmp(list->cmd, "cd", ft_strlen(list->cmd)) != 0)
 	// 		return (printf("here\n"), ft_cd(list->args, "srcs/"), 0);
@@ -99,8 +99,8 @@ void	exec_simple_cmd(t_exec *exec, t_list *list)
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
-	// if (is_built_in(list) != -1)
-	// 	return ;
+	if (is_built_in(list) != -1)
+		return ;
 	else if (pid == 0)
 	{
 		// printf("is buitind : %d\n", is_built_in(list));

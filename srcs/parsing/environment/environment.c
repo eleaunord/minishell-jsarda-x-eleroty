@@ -20,9 +20,25 @@ empty at least "OLDPWD" available
 
 */
 
-// Initialize an environment variable list from an array of strings (env) and stores it in a structure (t_env). 
+// Initialize an environment variable list from an array of strings (env) and stores it in a structure (t_env).
 
+// Function to print the environment list
+void	print_env(t_env *list)
+{
+	t_env	*start;
 
+	start = list;
+	if (!list)
+	{
+		printf("The environment list is empty.\n");
+		return ;
+	}
+	do
+	{
+		printf("%s\n", list->value);
+		list = list->next;
+	} while (list != start);
+}
 // Allocates memory for a new t_env element and initializes its value field with the provided elem.
 static int	list_new_elem_str(t_env **new, char *elem)
 {
@@ -52,7 +68,7 @@ int	append(t_env **list, char *elem)
 		add_first(list, new);
 	else
 	{
-		new->prev = (*list)->prev; //last element of the existing list
+		new->prev = (*list)->prev; // last element of the existing list
 		new->next = (*list);
 		(*list)->prev->next = new;
 		(*list)->prev = new;

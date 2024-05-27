@@ -115,6 +115,7 @@ void	add_token_to_list(t_token **tokens, t_token *new_token)
 t_token	*tokenize_input(char *line)
 {
 	t_token	*tokens;
+	
 	char	*word;
 	int		i;
 	int		start;
@@ -141,6 +142,5 @@ t_token	*tokenize_input(char *line)
 		}
 		i++;
 	}
-
 	return (tokens);
 }

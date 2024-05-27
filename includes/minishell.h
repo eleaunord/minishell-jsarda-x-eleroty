@@ -123,19 +123,19 @@ typedef struct s_position_tracker
 
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
-void	convert_to_exec_args(t_list *list, t_exec *exec_struct);
-void	exec(t_list *list);
+void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
+void					exec(t_list *list);
 
 // BUILTINS
-void	ft_pwd(void);
-void	ft_echo(char **args);
+void					ft_pwd(void);
+void					ft_echo(char **args);
 
 // PARSING FUNCTIONS
-int	init_env(t_minishell *data, char **env);
-int	open_quote_check(char *line);
-t_token *tokenize_input(char *line);
-void	parse_tokens(t_token *tokens);
-int	is_space(char *line);
+int						init_env(t_minishell *data, char **env);
+int						open_quote_check(char *line);
+t_token					*tokenize_input(char *line);
+void					parse_tokens(t_token *tokens);
+int						is_space(char *line);
 int						is_separator(char *c);
 char					*create_token(char *str, int start, int end);
 void					ft_split_operators(t_list *token_list);
@@ -147,16 +147,18 @@ char					*process_in_quotes(char *line, t_position_tracker *p,
 							t_command **cmd, t_list *mini);
 void					ft_split_pipes_spaces(char *line, t_list **tokens_list);
 char					*remove_quotes(char *line);
-int	ft_strcmp(char *s1, char *s2);
-int	main(int argc, char *argv[], char *env[]);
-int	tokenizer(char *line, t_list **nodes, t_minishell *mini);
+int						ft_strcmp(char *s1, char *s2);
+int						main(int argc, char *argv[], char *env[]);
+int						tokenizer(char *line, t_list **nodes,
+							t_minishell *mini);
 void					free_env(char ***envp);
 void					free_minishell(t_minishell *mini);
 void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *mini, char **env_array);
+void					print_env(t_env *list);
 // LIBFT FUNCTIONS
-void	ft_putstr_fd(char *s, int fd);
-char	*ft_strndup(const char *s, size_t n);
+void					ft_putstr_fd(char *s, int fd);
+char					*ft_strndup(const char *s, size_t n);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 char					*ft_strjoin(char const *s1, char const *s2);
 void					ft_putendl_fd(char const *s, int fd);

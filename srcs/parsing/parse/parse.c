@@ -24,6 +24,8 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 		current->tokens_in_node = tokens;
 		current = current->next;
 	}
+	line = input;
+	free(input);
 	return (1);
 }
 
@@ -70,6 +72,10 @@ int	main(int argc, char *argv[], char *env[])
 	{
 		return (1);
 	}
+
+	// PRINT ENV
+	//print_env(data.env);
+
 	// Main shell execution Loop
 	while (1)
 	{
@@ -93,7 +99,7 @@ int	main(int argc, char *argv[], char *env[])
 		exec(current);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
-		// printf("current: %s\n", current->tokens_in_node->args[0]);
+
 		// //
 		// while (current != NULL)
 		// {
@@ -107,8 +113,7 @@ int	main(int argc, char *argv[], char *env[])
 		// }
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);
-		
+		return (0);
 		
 	}		
-	return (0);
 }
