@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 13:54:57 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/27 18:14:43 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	is_built_in(t_list *list)
 {
-	if (ft_strncmp(list->tokens_in_node.cmd, "pwd", ft_strlen(list->tokens_in_node.cmd)) == 0)
+	if (ft_strncmp(list->tokens_in_node->cmd, "pwd", ft_strlen(list->tokens_in_node->cmd)) == 0)
 		return (ft_pwd(), 0);
-	if (ft_strncmp(list->tokens_in_node.cmd, "echo", ft_strlen(list->tokens_in_node.cmd)) != 0)
-		return (ft_echo(list->tokens_in_node.args), 0);
+	if (ft_strncmp(list->tokens_in_node->cmd, "echo", ft_strlen(list->tokens_in_node->cmd)) != 0)
+		return (ft_echo(list->tokens_in_node->args), 0);
 	// if (ft_strncmp(list->cmd, "cd", ft_strlen(list->cmd)) != 0)
 	// 		return (printf("here\n"), ft_cd(list->args, "srcs/"), 0);
 	// if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) != 0)
@@ -95,19 +95,24 @@ void	exec_simple_cmd(t_exec *exec, t_list *list)
 {
 	pid_t	pid;
 	int		status;
-
+	(void)list;
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
+	// if (is_built_in(list) != -1)
+	// 	return ;
 	else if (pid == 0)
 	{
+		// printf("is buitind : %d\n", is_built_in(list));
+		// printf("this is the children : %d\n", pid);
 		// redir_exec(list);
-		if (is_built_in(list) == - 1)
+		
 			if (execve("/bin/ls", exec->av, NULL) == -1)
 				perror("execve");
 	}
 	else
 	{
+		printf("this is the parent : %d\n", pid);
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
 		if (WIFEXITED(status))
@@ -123,6 +128,7 @@ void	exec(t_list *list)
 	int		i;
 
 	exec_struct.av = NULL;
+	// if (is_built_in(list) == -1)
 	convert_to_exec_args(list, &exec_struct);
 	if (exec_struct.av != NULL)
 	{

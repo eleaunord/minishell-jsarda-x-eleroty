@@ -21,7 +21,7 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens);
 		// attach tokens to the current list node
-		current->content = tokens;
+		current->tokens_in_node = tokens;
 		current = current->next;
 	}
 	return (1);
@@ -58,6 +58,7 @@ int	main(int argc, char *argv[], char *env[])
 	t_list		*tokens_list;
 	t_minishell	data;
 	int			flag;
+	t_list		*current;
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -87,22 +88,27 @@ int	main(int argc, char *argv[], char *env[])
 			return (0);
 		}
 		add_history(input_line);
-		t_list *current = tokens_list;
+		current = tokens_list;
+
 		exec(current);
-		// int i = 0;
+		// DEBUG
+		// printf("current: %s\n", current->tokens_in_node->cmd);
+		// printf("current: %s\n", current->tokens_in_node->args[0]);
+		// //
 		// while (current != NULL)
 		// {
-		// 	t_token *token = (t_token *)current->content;
-		// 	printf("CMD : %s\n", token->cmd);
-		// 	while (token->args[i] != NULL)
-		// 	{
-		// 		printf("ARG[%d]: %s\n", i, token->args[i]);
-		// 		i++;
-		// 	}
+		// 	printf("NODE : %s\n", (char *)current->content);
+		// 	printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
+		// 	int i = 0;
+		// NB CHANGE i pour test 
+		// 	while (i < 5)
+		// 		printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
 		// 	current = current->next;
 		// }
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);
-		return (0);
-	}
+		
+		
+	}		
+	return (0);
 }

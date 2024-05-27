@@ -78,10 +78,5 @@ void	parse_tokens(t_token *tokens)
 		tmp = next;
 	}
 	tokens->next = NULL;
-	// i = 0;
-	// while (i < arg_count)
-	// {
-	// 	printf("ARG list is : %s", tokens->args[i]);
-	// 	i++;
-	// }
+
 }
