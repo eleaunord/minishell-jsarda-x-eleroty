@@ -1,13 +1,5 @@
 #include "../../../includes/minishell.h"
 
-void	ft_strupdate(char **str, char *newstr)
-{
-	char	*temp;
-
-	temp = *str;
-	*str = newstr;
-	free(temp);
-}
 
 int	ft_strchr_index(const char *s, int c)
 {
