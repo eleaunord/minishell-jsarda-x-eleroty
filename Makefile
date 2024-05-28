@@ -8,6 +8,8 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_utils.c \
 					libft/ft_strcmp.c \
 					libft/ft_putstr_fd.c \
+					libft/ft_memcpy.c \
+					libft/ft_itoa.c \
 					srcs/parsing/tokenization/tokens.c \
 					srcs/parsing/parse/parse.c \
 					srcs/parsing/parse/parser.c \
@@ -21,6 +23,10 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_pwd.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
+					srcs/parsing/environment/expander.c \
+					srcs/parsing/environment/is_expansible.c \
+					srcs/parsing/environment/env_variables.c \
+					srcs/parsing/environment/brace_expansion.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)

@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-char	*expand_variables(char *token)
+char	*expand_variables(char *token, t_minishell *mini)
 {
 	int		i;
 	int		start;
@@ -16,7 +16,7 @@ char	*expand_variables(char *token)
 		{
 			if (check_env_var(token) != 0)
 				extract_substring(token, start, i, &final_str);
-			envar = is_envar_expansible(token, &i, &final_str);
+			envar = is_envar_expansible(token, &i, &final_str, mini);
 			if (envar != NULL)
 				return (envar);
 			start = i + 1;
@@ -64,30 +64,37 @@ char	*ft_strtrim(char const *s1, char const *set)
 	return (str);
 }
 
-char	*minishell_expansion(char *token)
+char	*minishell_expansion(char *token,  t_minishell *mini)
 {
 	char	*str;
+	char	*tmp;
 
 	str = NULL;
-	if (token[0] == "\'")
+	if (token[0] == 39)
 		str = ft_strtrim(token, "\'");
 	if (ft_strchr(token, '$') == NULL)
 		str = ft_strdup(token);
 	if (str != NULL) // aka non expensible 
 		return (str);
-	str = expand_variables(token);
+	str = expand_variables(token, mini);
     //
 	if (*token == 34)
-		return (ft_strupdate(&str, ft_strtrim(str, "\"")), str);
+	{
+		tmp = str;
+		str = ft_strtrim(str, "\"");
+		free(tmp);
+		return (str);
+	}
 	return (str);
 }
-void	expander(t_token *token)
+
+void	expander(t_token *token,  t_minishell *mini)
 {
 	char	*temp;
 
 	while (token != NULL)
 	{
-		temp = minishell_expansion(token->value);
+		temp = minishell_expansion(token->value, mini);
 		if (temp == NULL)
 		{
 			token = token->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/28 14:40:56 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/28 15:57:58 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ void	exec(t_list *list, t_minishell data)
 	int		i;
 
 	exec_struct.av = NULL;
-	print_env(data.env);
 	convert_to_exec_args(list, &exec_struct);
 	if (exec_struct.av != NULL)
 	{
