@@ -1,0 +1,288 @@
+#include "../../../includes/minishell.h"
+#include "../../../includes/minishell.h"
+
+int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
+{
+	t_list	*current;
+	t_token	*tokens;
+	char	*input;
+
+	input = NULL;
+	(void)mini;
+	if (open_quote_check(line))
+	{
+		free(line);
+		return (0);
+	}
+	input = remove_quotes(line);
+	ft_split_pipes_spaces(input, nodes);
+	current = *nodes;
+	while (current != NULL)
+	{
+		tokens = tokenize_input(current->content);
+		parse_tokens(tokens);
+		// attach tokens to the current list node
+		current->tokens_in_node = tokens;
+		current = current->next;
+	}
+	return (1);
+}
+
+// Segfault on free functions
+
+int	main(int argc, char *argv[], char *env[])
+{
+	char		*input_line;
+	t_list		*tokens_list;
+	t_minishell	data;
+	int			flag;
+
+	input_line = NULL;
+	tokens_list = NULL;
+	flag = 1;
+	(void)argc;
+	(void)argv;
+	init_minishell(&data);
+	if (init_env(&data, env))
+	{
+		return (1);
+	}
+	// Main shell execution Loop
+	while (1)
+	{
+		input_line = readline("prompt> ");
+		if (!input_line)
+		{
+			rl_clear_history(); // ?
+			break ;
+		}
+		if (check_line(&input_line))
+			break ;
+		if (!tokenizer(input_line, &tokens_list, &data))
+		{
+			add_history(input_line);
+			free(input_line);
+			return (0);
+		}
+		add_history(input_line);
+		t_list *current = tokens_list;
+		printf("current%s", current->tokens_in_node.cmd);
+		exec(current);
+		ft_lstclear(&tokens_list, free); // Clear the list after processing
+		free(input_line);
+		return (0);
+	}
+}
+
+int	tokenizer(char *line, t_list *nodes, t_minishell *mini)
+{
+	t_list	*current;
+	t_token	*tokens;
+	char	*input;
+	t_token	*c;
+	t_token	*curr;
+	int		i;
+
+	input = NULL;
+	(void)mini;
+	if (open_quote_check(line))
+	{
+		free(line);
+		return (0);
+	}
+	// DEBUG : input line with open quote check
+	printf("Input line 1: %s\n", line);
+	input = remove_quotes(line);
+	// DEBUG : input line without quotes
+	printf("Input line 2 : %s\n", input);
+	// TO DO
+	// if (contains_dollar(line))
+	// {
+	// 	input =  expand_variables(line, mini->env);
+	// }
+	ft_split_pipes_spaces(input, &nodes);
+	// DEBUG : input line without spaces
+	printf("Input line 3 : %s\n", input);
+	current = nodes;
+	while (nodes != NULL)
+	{
+		// DEBUG
+		printf("Node : %s\n", nodes->content);
+		tokens = tokenize_input(nodes->content);
+		// DEBUG
+		c = tokens;
+		while (c != NULL)
+		{
+			printf("Token value : %s\n", (char *)c->value);
+			printf("Token type : %d\n", (int)c->type);
+			c = c->next;
+		}
+		parse_tokens(tokens);
+		// DEBUG
+		curr = tokens;
+		while (curr != NULL)
+		{
+			printf("Token CMD : %s\n", (char *)curr->cmd);
+			i = 0;
+			while (curr->args && curr->args[i] != NULL)
+				printf("Arg Token : %s\n", (char *)curr->args[i++]);
+			curr = curr->next;
+		}
+		nodes = nodes->next;
+	}
+	nodes = current;
+	return (1);
+}
+void	init_minishell(t_minishell *mini)
+{
+	mini->env = NULL;
+	mini->nodes = NULL;
+	// a remplir au fur et a mesure
+}
+int	is_space(char *line)
+{
+	int	a;
+
+	a = 0;
+	while (line[a] == ' ' || line[a] == '\t' || line[a] == '\n')
+		a += 1;
+	if (line[a] == '\0')
+		return (1);
+	return (0);
+}
+int	check_line(char **line)
+{
+	if (*line[0] == '\0' || is_space(*line) || ft_strncmp(*line, "\n", 0))
+		return (1);
+	return (0);
+}
+// Segfault on free functions
+
+int	main(int argc, char *argv[], char *env[])
+{
+	char *input_line;
+	t_list *tokens_list;
+	t_minishell data;
+	int flag;
+
+	input_line = NULL;
+	tokens_list = NULL;
+	flag = 1;
+	(void)argc;
+	(void)argv;
+
+	// Initialize minishell struct
+	init_minishell(&data);
+	// Initialize shell environment
+	if (init_env(&data, env))
+	{
+		// free_minishell(&data);
+		return (1);
+	}
+	// Main shell execution Loop
+	while (1)
+	{
+		input_line = readline("prompt> ");
+		if (!input_line)
+		{
+			rl_clear_history(); // ?
+			break ;
+		}
+		if (check_line(&input_line))
+			break ;
+		if (!tokenizer(input_line, tokens_list, &data))
+		{
+			add_history(input_line);
+			free(input_line);
+			return (0);
+		}
+		// Parse tokens
+		add_history(input_line);
+		// free(input_line);
+		// return (1);
+		// exec command
+		printf("NODE : %s\n", tokens_list->content);
+		while (tokens_list != NULL)
+		{
+			// DEBUG
+			// exec(current);
+			// free_input(&minishell);
+			tokens_list = tokens_list->next;
+		}
+		ft_lstclear(&tokens_list, free);
+		free(input_line);
+		// Cleanup shell
+		// free_minishell(&data);
+		return (0);
+	}
+}
+
+int	count_arguments(t_token *current)
+{
+	int	arg_count;
+
+	arg_count = 0;
+	while (current && current->type == TOKEN_WORD)
+	{
+		arg_count++;
+		current = current->next;
+	}
+	return (arg_count);
+}
+
+void	parse_tokens(t_token *tokens)
+{
+	int		arg_count;
+	int		i;
+	t_token	*tmp;
+	t_token	*next;
+
+	if (!tokens)
+		return ;
+	// Set the first token's value to cmd
+	tokens->cmd = ft_strdup(tokens->value);
+    printf("CMD %s\n", tokens->cmd);
+	if (!tokens->cmd)
+		return ;
+	// Move to the next token for counting arguments
+	tmp = tokens->next;
+	arg_count = count_arguments(tmp);
+	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
+	if (!tokens->args)
+	{
+		free(tokens->cmd);
+		return ;
+	}
+	i = 0;
+	while (i < arg_count)
+	{
+		tokens->args[i] = ft_strdup(tmp->value);
+		if (!tokens->args[i])
+		{
+			// Handle strdup failure, free allocated memory
+			while (i > 0)
+			{
+				free(tokens->args[--i]);
+			}
+			free(tokens->args);
+			free(tokens->cmd);
+			return ;
+		}
+        printf("ARG[%d]: %s\n", i, tokens->args[i]);
+		tmp = tmp->next;
+		i++;
+
+	}
+	tokens->args[arg_count] = NULL;
+	printf("this is the arg : %s", tokens->args);
+	// Free the original list except the first token since we need to preserve tokens->cmd
+	tmp = tokens->next;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp->value);
+		free(tmp);
+		tmp = next;
+	}
+	tokens->next = NULL;
+}

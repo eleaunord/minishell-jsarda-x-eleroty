@@ -1,113 +1,96 @@
+#include "../../../includes/minishell.h"
 
-#include "../../includes/minishell.h"
-
-char	*create_inside_quotes_token(char *str, int start, int end)
+void	close_quote_check(int *dq, int *sq, int *index, char c)
 {
-	char	*substring;
+	if ((c == '\'' || c == '"') && !*sq && !*dq)
+	{
+		if (c == '\'' && !*dq)
+			*sq = true;
+		else if (c == '"' && !*sq)
+			*dq = true;
+		if (index)
+			++(*index);
+	}
+	else if ((c == '\'' || c == '"'))
+	{
+		if (c == '\'' && !*dq && *sq)
+			*sq = false;
+		else if (c == '"' && !*sq && *dq)
+			*dq = false;
+		if (index)
+			++(*index);
+	}
+}
+
+int	open_quote_check(char *line)
+{
+	int	double_quote;
+	int	single_quote;
 	int		i;
-	int		j;
 
-	if (start > end)
-		return (ft_strdup(""));
-	substring = (char *)malloc(sizeof(char) * ((end - start) + 2));
-	if (substring == NULL)
-		exit(1);
 	i = 0;
-	j = start;
-	while (j <= end)
+	double_quote = 0;
+	single_quote = 0;
+	while (line && line[i])
 	{
-		if (str[j] == '\0')
-			break ;
-		substring[i++] = str[j];
-		j++;
+		close_quote_check(&double_quote, &single_quote, &i, line[i]);
+		if (line[i] && line[i] != '\'' && line[i] != '"')
+			++i;
 	}
-	substring[i] = '\0';
-	return (substring);
+	if (double_quote || single_quote)
+	{
+		// print_error("open quote\n"); => ?
+		return (1);
+	}
+	return (0);
 }
-char	*process_single_quotes(char *line, t_position_tracker *pos,
-		t_command **cmd, t_tokens *mini)
+char	*remove_quotes(char *line)
 {
-	int		quote_pos;
-	char	*single_quote_str;
-	char	*temp;
-	char	*token;
+	int		len;
+	char	*temp_line;
 
-	(void)cmd;
-	(void)mini;
-	quote_pos = pos->i + 1;
-	if (pos->i > pos->start)
+	len = strlen(line);
+	temp_line = (char *)malloc(len + 1);
+	if (!temp_line)
 	{
-		temp = create_token(line, pos->start, pos->i - 1);
-		// update mini
+		fprintf(stderr, "Memory allocation error\n");
+		return (NULL);
 	}
-	else
-		temp = ft_strdup("");
-	while (line[quote_pos] && line[quote_pos] != '\'')
-		quote_pos++;
-	if (line[quote_pos] == '\'')
+	int i, j = 0;
+	char quote = 0; // To keep track of the current quote character
+	for (i = 0; i < len; i++)
 	{
-		single_quote_str = create_inside_quotes_token(line, pos->i + 1,
-				quote_pos - 1);
-		token = ft_strjoin(temp, single_quote_str);
-		pos->i = quote_pos;
-		pos->start = quote_pos + 1;
-		free(temp);
-		free(single_quote_str);
-		temp = NULL;
-		single_quote_str = NULL;
-		return (token);
+		if (line[i] == '"' || line[i] == '\'')
+		{
+			if (quote == 0)
+			{
+				// Starting a new quote block
+				quote = line[i];
+			}
+			else if (quote == line[i])
+			{
+				// Ending the current quote block
+				quote = 0;
+			}
+			else
+			{
+				// Inside a different type of quote, just copy the character
+				temp_line[j++] = line[i];
+			}
+		}
+		else
+		{
+			// Normal character, just copy it
+			temp_line[j++] = line[i];
+		}
 	}
-	free(temp);
-	return (NULL);
-}
-
-char	*process_double_quotes(char *line, t_position_tracker *pos,
-		t_command **cmd, t_tokens *mini)
-{
-	int		quote_pos;
-	char	*double_quote_str;
-	char	*temp;
-	char	*token;
-
-	(void)cmd;
-	(void)mini;
-	quote_pos = pos->i + 1;
-	temp = create_token(line, pos->start, pos->i - 1);
-	// update mini
-	while (line[quote_pos] && line[quote_pos] != '"')
-		quote_pos++;
-	if (line[quote_pos] == '"')
-	{
-		double_quote_str = create_inside_quotes_token(line, pos->i + 1,
-				quote_pos - 1);
-		// update mini
-		token = ft_strjoin(temp, double_quote_str);
-		pos->i = quote_pos;
-		pos->start = quote_pos + 1;
-		free(temp);
-		free(double_quote_str);
-		temp = NULL;
-		double_quote_str = NULL;
-		return (token);
-	}
-	return (NULL);
-}
-
-char	*process_in_quotes(char *line, t_position_tracker *p, t_command **cmd,
-		t_tokens *mini)
-{
-	char				*temp;
-
-	//"cat -ls" => cat -ls
-	temp = NULL;
-	if (line[p->i] == '\'')
-		temp = process_single_quotes(line, p, cmd, mini);
-	else
-		temp = process_double_quotes(line, p, cmd, mini);
-	// cat -ls => cat and -ls
-	return (temp);
-	// if ((!line[p->i + 1] || is_space(line[p->i + 1])) && *temp)
-	//     //add command (cmd, *temp, QUOTED);
-	// else
-	// 	push_back(cmd, *temp, CONTINUE);
+	// if (quote != 0)
+	// {
+	// 	// There was an unclosed quote
+	// 	free(temp_line);
+	// 	fprintf(stderr, "Error: Unmatched quote\n");
+	// 	return (NULL);
+	// }
+	temp_line[j] = '\0';
+	return (temp_line);
 }

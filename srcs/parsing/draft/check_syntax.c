@@ -37,7 +37,7 @@ Syntax errors to check
 // 	}
 // }
 
-// int check_syntax(char *buf, t_tokens *minishell)
+// int check_syntax(char *buf, t_list *minishell)
 // {
 	// categorize(input, buffer);
 // 	return (0);
@@ -45,10 +45,10 @@ Syntax errors to check
 
 // buffer : where the categorized characters will be sotred
 
-// int	tokenizer(char *input, t_tokens *minishell, t_command **command)
+// int	tokenizer(char *input, t_list *minishell, t_command **command)
 // {
 // 	char	*buffer;
-// 	t_tokens	*token_list;
+// 	t_list	*token_list;
 
 // 	token_list = NULL;
 // 	buffer = (char *)malloc(sizeof(char) * ft_strlen(input) + 1);
@@ -62,7 +62,7 @@ Syntax errors to check
 // 	token_list = ft_split_tokens(input, minishell, command);
 // 	if (token_list != NULL)
 // 	{
-// 		print_tokens(token_list);
+// 		print_list(token_list);
 // 		return (1);
 // 	}
 // 	else

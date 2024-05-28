@@ -6,10 +6,22 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_substr.c \
 					libft/ft_str.c \
 					libft/ft_utils.c \
-					parsing/tokenization/tokens.c \
-					parsing/tokenization/tokens_utils.c \
-					parsing/tokenization/quotes.c \
-					parsing/tokenization/operators.c \
+					libft/ft_strcmp.c \
+					libft/ft_putstr_fd.c \
+					srcs/parsing/tokenization/tokens.c \
+					srcs/parsing/parse/parse.c \
+					srcs/parsing/parse/parser.c \
+					srcs/parsing/tokenization/pipes_spaces.c \
+					srcs/parsing/tokenization/quotes.c \
+					srcs/exec/simple_command_exec.c \
+					utils/perror.c \
+					utils/convert_to_execve_args.c \
+					utils/count_args.c \
+					srcs/builtins/ft_echo.c \
+					srcs/builtins/ft_pwd.c \
+					srcs/parsing/environment/environment.c \
+					srcs/parsing/environment/free.c \
+					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)
 
@@ -35,4 +47,11 @@ all:		${NAME}
 bonus:		all
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
