@@ -72,10 +72,8 @@ int	main(int argc, char *argv[], char *env[])
 	{
 		return (1);
 	}
-
 	// PRINT ENV
 	//print_env(data.env);
-
 	// Main shell execution Loop
 	while (1)
 	{
@@ -83,10 +81,10 @@ int	main(int argc, char *argv[], char *env[])
 		if (!input_line)
 		{
 			rl_clear_history(); // ?
-			break ;
+			continue ;
 		}
 		if (check_line(&input_line))
-			break ;
+			continue ;
 		if (!tokenizer(input_line, &tokens_list, &data))
 		{
 			add_history(input_line);
@@ -96,24 +94,24 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		current = tokens_list;
 
-		exec(current);
+		exec(current, data);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 
-		// //
+		// //	t_env				*env;
 		// while (current != NULL)
 		// {
 		// 	printf("NODE : %s\n", (char *)current->content);
 		// 	printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
 		// 	int i = 0;
-		// NB CHANGE i pour test 
+		// NB CHANGE i pour test
 		// 	while (i < 5)
 		// 		printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
 		// 	current = current->next;
 		// }
+
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);
-		return (0);
-		
-	}		
+	}
+	return (0);
 }

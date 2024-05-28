@@ -46,6 +46,7 @@ Règles de Tokenisation :
 # define ARG 7
 # define SINGLE_QUOTE 39
 # define PATH_MAX 500
+# define NUM_OF_BUILT_INS 2
 // TOKEN LINKED LIST
 
 /*
@@ -75,14 +76,6 @@ typedef struct s_token
 }						t_token;
 
 // NODES
-typedef struct s_list
-{
-	struct s_list		*next;
-	struct s_list		*prev;
-	void				*content;
-	struct s_token		*tokens_in_node;
-}						t_list;
-
 // Env struct
 typedef struct s_env
 {
@@ -91,6 +84,15 @@ typedef struct s_env
 	struct s_env		*next;
 	struct s_env		*prev;
 }						t_env;
+
+typedef struct s_list
+{
+	struct s_list		*next;
+	struct s_list		*prev;
+	void				*content;
+	struct s_token		*tokens_in_node;
+}						t_list;
+
 
 // Struct qui centralise tout
 typedef struct s_minishell
@@ -124,10 +126,10 @@ typedef struct s_position_tracker
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
 void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
-void					exec(t_list *list);
+void					exec(t_list *list, t_minishell data);
 
 // BUILTINS
-void					ft_pwd(void);
+void					ft_pwd(char **args);
 void					ft_echo(char **args);
 
 // PARSING FUNCTIONS

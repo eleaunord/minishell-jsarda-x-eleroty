@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 18:30:03 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/05/28 14:40:56 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,32 @@
 
 int	is_built_in(t_list *list)
 {
-	if (ft_strncmp(list->tokens_in_node->cmd, "pwd", ft_strlen(list->tokens_in_node->cmd)) == 0)
-		return (ft_pwd(), 0);
-	if (ft_strncmp(list->tokens_in_node->cmd, "echo", ft_strlen(list->tokens_in_node->cmd)) == 0)
-		return (ft_echo(list->tokens_in_node->args), 0);
-	// if (ft_strncmp(list->cmd, "cd", ft_strlen(list->cmd)) != 0)
-	// 		return (printf("here\n"), ft_cd(list->args, "srcs/"), 0);
-	// if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) != 0)
-	// 	return (ft_exit(), 0);
-	// if (ft_strncmp(cmd, "env", ft_strlen(cmd)) != 0)
-	// 	return (ft_env(), 0);
-	// if (ft_strncmp(cmd, "export", ft_strlen(cmd)) != 0)
-	// 	return (ft_export(), 0);
-	// if (ft_strncmp(cmd, "unset", ft_strlen(cmd)) != 0)
-	// 	return (ft_unset(), 0);
+	int		i;
+	char	*built_in[NUM_OF_BUILT_INS];
+
+	built_in[0] = "pwd";
+	built_in[1] = "echo";
+	i = 0;
+	while (i < NUM_OF_BUILT_INS)
+	{
+		if (ft_strcmp(list->tokens_in_node->cmd, built_in[i]) == 0)
+			return (i);
+		i++;
+	}
 	return (-1);
+}
+
+void	exec_built_in(t_list *list)
+{
+	int		index;
+	void	(*built_in_funcs[NUM_OF_BUILT_INS])(char **);
+
+	built_in_funcs[0] = &ft_pwd;
+	built_in_funcs[1] = &ft_echo;
+	index = is_built_in(list);
+	if (index == -1)
+		return ;
+	built_in_funcs[index](list->tokens_in_node->args);
 }
 
 // void	handle_redir(t_redirection redir)
@@ -91,24 +102,22 @@ int	is_built_in(t_list *list)
 // 	handle_redir(redirection);
 // }
 
-void	exec_simple_cmd(t_exec *exec, t_list *list)
+void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell data)
 {
 	pid_t	pid;
 	int		status;
-	(void)list;
+
+	if (is_built_in(list) != -1)
+		return (exec_built_in(list));
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
-	if (is_built_in(list) != -1)
-		return ;
 	else if (pid == 0)
 	{
-		// printf("is buitind : %d\n", is_built_in(list));
-		// printf("this is the children : %d\n", pid);
-		// redir_exec(list);
-		
-			if (execve("/bin/ls", exec->av, NULL) == -1)
-				perror("execve");
+		//redir_exec(list);
+		if (execve("/bin/cat", exec->av, (char *const *)data.env) == -1)
+			perror("execve");
+		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
 	}
 	else
 	{
@@ -122,23 +131,20 @@ void	exec_simple_cmd(t_exec *exec, t_list *list)
 	}
 }
 
-void	exec(t_list *list)
+void	exec(t_list *list, t_minishell data)
 {
 	t_exec	exec_struct;
 	int		i;
 
 	exec_struct.av = NULL;
-	// if (is_built_in(list) == -1)
+	print_env(data.env);
 	convert_to_exec_args(list, &exec_struct);
 	if (exec_struct.av != NULL)
 	{
 		i = 0;
-		exec_simple_cmd(&exec_struct, list);
+		exec_simple_cmd(&exec_struct, list, data);
 		while (exec_struct.av[i] != NULL)
-		{
-			free(exec_struct.av[i]);
-			i++;
-		}
+			free(exec_struct.av[i++]);
 		free(exec_struct.av);
 	}
 }

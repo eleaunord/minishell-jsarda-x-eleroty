@@ -3,15 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 10:41:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 18:30:53 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/05/28 14:27:37 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+int check_arg(char *str)
+{
+	int i;
+
+	i = 0;
+	if (str[i] == '-')
+	{
+		i = 1;
+		while(str[i] == 'n')
+			i++;
+	}
+	if (str[i])
+		return (-1);
+	return (1);
+}
 void	ft_echo(char **args)
 {
 	int	i;
@@ -19,7 +34,9 @@ void	ft_echo(char **args)
 
 	i = 0;
 	n_option = 0;
-	if (count_args(args) > 1)
+	if (check_arg(args[0]) == 1)
+		n_option = 1;
+	if (count_args(args) >= 1)
 	{
 		while (args[i] && ft_strcmp(args[i], "-n") == 0)
 		{
