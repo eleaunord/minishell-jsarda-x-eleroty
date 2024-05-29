@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:51:44 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 16:52:46 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,28 @@ char	*get_path_value(t_minishell *data, char *key)
 		i++;
 	}
 	return (env->value);
+}
+char	**create_char_env(t_env *env)
+{
+	t_env	*temp_env;
+	char	**dest;
+	int		i;
+
+	dest = NULL;
+	i = 0;
+	temp_env = env;
+	dest = (char **)malloc(sizeof(char *) * (len_list(temp_env) + 1));
+	if (!dest)
+		return (NULL);
+	dest[i] = (temp_env->str);
+	temp_env = temp_env->next;
+	i++;
+	while (temp_env != env)
+	{
+		dest[i] = (temp_env->str);
+		temp_env = temp_env->next;
+		i++;
+	}
+	dest[i] = NULL;
+	return (dest);
 }

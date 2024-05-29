@@ -39,7 +39,7 @@ char	*ft_strdup(const char *s)
 {
 	char	*new_string;
 
-	new_string = malloc (sizeof(char) * (ft_strlen(s) + 1));
+	new_string = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!new_string)
 		return (0);
 	ft_strlcpy(new_string, s, (ft_strlen(s) + 1));
@@ -50,7 +50,7 @@ char	*ft_strndup(const char *s, size_t n)
 {
 	char	*new_string;
 
-	new_string = malloc (sizeof(char) * (n + 1));
+	new_string = malloc(sizeof(char) * (n + 1));
 	if (!new_string)
 		return (0);
 	ft_strlcpy(new_string, s, (n + 1));
@@ -86,16 +86,13 @@ char	*ft_strjoin(char const *s1, char const *s2)
 }
 char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
+	while (*s)
 	{
-		if (s[i] == (char) c)
-			return ((char *) s + i);
-		i++;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
-	if (s[i] == (char) c)
-		return ((char *) s + i);
-	return (0);
+	if (c == '\0')
+		return ((char *)s);
+	return (NULL);
 }

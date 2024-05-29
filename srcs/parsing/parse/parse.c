@@ -18,9 +18,15 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	current = *nodes;
 	while (current != NULL)
 	{
-		tokens = tokenize_input(current->content);
+		printf("NODE : %s\n", (char *)current->content);
+		tokens = tokenize_input((char *)current->content);
+		t_token *titi = tokens;
+		while (titi)
+    	{
+        	printf("Token: %s\n", titi->value);
+        	titi = titi->next;
+    	}
 		parse_tokens(tokens);
-		printf("%s", (char *)tokens);
 		// attach tokens to the current list node
 		current->tokens_in_node = tokens;
 		current = current->next;
@@ -62,6 +68,8 @@ int	main(int argc, char *argv[], char *env[])
 	t_minishell	data;
 	int			flag;
 	t_list		*current;
+	t_token		*token;
+	int			i;
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -94,25 +102,33 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		current = tokens_list;
-
-		exec(current, &data);
+		// exec(current, &data);
 		// DEBUG
-		// printf("current: %s\n", current->tokens_in_node->cmd);
-
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", (char *)current->content);
-		// 	printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
-		// 	int i = 0;
-		// 	while (current->tokens_in_node->args[i] != NULL)
-		// 		i++;
-		// 	int end = i;
-		// 	i = 0;
-		// 	while (i < end)
-		// 		printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
-		// 	current = current->next;
-		// }
-
+		while (current != NULL)
+		{
+			printf("NODE : %s\n", (char *)current->content);
+			token = current->tokens_in_node;
+			while (token != NULL)
+			{
+				printf("TOKEN VALUE : %s\n", token->value);
+				printf("TOKEN TYPE : %d\n", token->type);
+					// Assuming you want to print the integer value of the enum
+				// Print the command if it exists
+				if (token->cmd)
+					printf("CMD : %s\n", token->cmd);
+				// Print the arguments if they exist
+				i = 0;
+				while (token->args && token->args[i] != NULL)
+				{
+					printf("ARGS : %s\n", token->args[i]);
+					i++;
+				}
+				// Move to the next token in the linked list
+				token = token->next;
+			}
+			// Move to the next node in the linked list
+			current = current->next;
+		}
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);
 	}

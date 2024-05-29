@@ -17,7 +17,7 @@ int	count_arguments(t_token *current)
 	int	arg_count;
 
 	arg_count = 0;
-	while (current && current->type == TOKEN_WORD)
+	while (current && current->type == WORD_TOKEN)
 	{
 		arg_count++;
 		current = current->next;
