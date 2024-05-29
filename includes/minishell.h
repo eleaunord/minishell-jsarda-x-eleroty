@@ -8,10 +8,10 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
- #include <sys/types.h>
-#include <sys/stat.h>
 
 // TOKEN LIST
 
@@ -61,10 +61,14 @@ liste chainee de token pour chaque elements de la ligne de commande
 */
 
 // MINISHELL STRUCT
-
 typedef enum e_token_type
 {
 	TOKEN_WORD,
+	// "word" ; = 0 (bc first enumerator in our enum e_token_type)
+	APPEND_TOKEN,    // ">>" ; = 1
+	REDIR_OUT_TOKEN, // ">" ; = 2
+	HEREDOC_TOKEN,   // "<<" ; = 3
+	REDIR_IN_TOKEN,  // "<" ; = 4
 }						t_token_type;
 
 // TOKENS INSIDE NODES
@@ -81,6 +85,7 @@ typedef struct s_token
 // Env struct
 typedef struct s_env
 {
+	char				*str;
 	char				*key;
 	char				*value;
 	struct s_env		*next;
@@ -127,9 +132,10 @@ typedef struct s_position_tracker
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
 void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
-void	exec(t_list *list, t_minishell *data);
-char	*get_cmd_path(char *cmd, t_minishell *data);
-char	*get_path_value(t_minishell *data, char *key);
+void					exec(t_list *list, t_minishell *data);
+char					*get_cmd_path(char *cmd, t_minishell *data);
+char					*get_path_value(t_minishell *data, char *key);
+char					**create_char_env(t_env *env);
 // BUILTINS
 void					ft_pwd(char **args);
 void					ft_echo(char **args);
@@ -174,10 +180,15 @@ int						is_brace_expansion(char *token, int *i,
 void					proceed_expansion(char *token, int *i, char **final_str,
 							t_minishell *mini);
 void					ft_putstr_fd(char *s, int fd);
+void					special_tokens(char **input, t_token **tokens);
+t_token					*new_token(t_token_type type, char *value);
+void					word_token(char **input, t_token **tokens, int *start,
+							int *i);
+void					add_token_to_list(t_token **tokens, t_token *new_token);
 
 // LIBFT FUNCTIONS
-char	**ft_split(char const *s, char c);
-void free_split(char **split);
+char					**ft_split(char const *s, char c);
+void					free_split(char **split);
 void					ft_putstr_fd(char *s, int fd);
 char					*ft_strndup(const char *s, size_t n);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);

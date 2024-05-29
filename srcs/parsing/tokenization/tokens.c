@@ -1,130 +1,48 @@
+
 #include "../../../includes/minishell.h"
-#include <string.h>
 
-
-// Function to create a new token
-t_token	*new_token(t_token_type type, char *value)
+void	word_token(char **input, t_token **tokens, int *start, int *i)
 {
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = type;
-	token->value = ft_strdup(value);
-	token->cmd = NULL;
-	token->args = NULL;
-	if (!token->value)
-	{
-		free(token);
-		return (NULL);
-	}
-	token->next = NULL;
-	return (token);
-}
-
-// Function to add a token to the list
-void	add_token_to_list(t_token **tokens, t_token *new_token)
-{
-	t_token	*last;
-
-	if (!*tokens)
-		*tokens = new_token;
-	else
-	{
-		last = *tokens;
-		while (last->next)
-			last = last->next;
-		last->next = new_token;
-	}
-}
-
-// Function to tokenize input
-// t_token	*tokenize_input(char *line)
-// {
-// 	t_token	*tokens;
-	
-// 	char	*word;
-// 	int		i;
-// 	int		start;
-// 	int		length;
-
-// 	tokens = NULL;
-// 	i = 0;
-// 	start = 0;
-// 	length = ft_strlen(line);
-// 	while (i <= length) // Adjust condition to handle entire string
-// 	{
-// 		if (line[i] == ' ' || line[i] == '\0')
-// 		{
-// 			if (i > start) // Ensure non-empty token
-// 			{
-// 				word = ft_strndup(line + start, i - start);
-// 				if (word)
-// 				{
-// 					add_token_to_list(&tokens, new_token(TOKEN_WORD, word));
-// 					free(word);
-// 				}
-// 			}
-// 			start = i + 1; // Update start position for next token
-// 		}
-// 		i++;
-// 	}
-// 	return (tokens);
-// }
-
-
-void	word_token(char **input, t_token **tokens)
-{
-	char	*start;
 	char	*word;
 
-	start = *input;
-	if (*input > start)
+	// If the current position is a space or null terminator, it's a boundary
+	if ((*input)[*i] == ' ' || (*input)[*i] == '\0')
 	{
-		word = ft_strndup(start, *input - start);
-		if (word)
+		// Only create a token if we have a non-empty word
+		if (*i > *start)
 		{
-			add_token_to_list(tokens, new_token(TOKEN_WORD, word));
-			free(word);
+			word = ft_strndup(*input + *start, *i - *start);
+			if (word)
+			{
+				add_token_to_list(tokens, new_token(TOKEN_WORD, word));
+				free(word);
+			}
 		}
+		// Update the start position to the next character
+		*start = *i + 1;
 	}
 }
-void	check_if_inside_quotes(char c, int *in_quotes, char *quote_char)
+void	special_tokens(char **input, t_token **tokens)
 {
-	if (!*in_quotes && (c == '\'' || c == '\"'))
+	if (**input == '>')
 	{
-		*in_quotes = 1;
-		*quote_char = c;
+		if (*(*input + 1) == '>')
+		{
+			add_token_to_list(tokens, new_token(APPEND_TOKEN, ">>"));
+			(*input)++;
+		}
+		else
+			add_token_to_list(tokens, new_token(REDIR_OUT_TOKEN, ">"));
 	}
-	else if (*in_quotes && c == *quote_char)
-		*in_quotes = 0;
-}
-t_token	*tokenize_input(char *line)
-{
-	t_token	*tokens;
-	int		start;
-	int		length;
-	int		i;
-	int		inside_quotes;
-	char	quote_char;
-
-	inside_quotes = 0;
-	quote_char = '\0';
-	tokens = NULL;
-	i = 0;
-	start = 0;
-	length = ft_strlen(line);
-	while (i <= length)
+	else if (**input == '<')
 	{
-		// while (line[i] && line[i] == ' ')
-		// 	i++;
-		// check_if_inside_quotes(line[i], &inside_quotes, &quote_char);
-		// if ((line[i] == '>' || line[i] == '<') && !inside_quotes)
-		// 	special_tokens(&line, &tokens);
-		// else
-		word_token(&line, &tokens);
-		i++;
+		if (*(*input + 1) == '<')
+		{
+			add_token_to_list(tokens, new_token(HEREDOC_TOKEN, "<<"));
+			(*input)++;
+		}
+		else
+			add_token_to_list(tokens, new_token(REDIR_IN_TOKEN, "<"));
 	}
-	return (tokens);
+	(*input)++;
 }

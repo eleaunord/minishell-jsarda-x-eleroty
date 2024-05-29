@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:11:51 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 17:33:56 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,12 @@ void	exec_built_in(t_list *list)
 // 	handle_redir(redirection);
 // }
 
-void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,char *path)
+void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
+		char *path)
 {
 	pid_t	pid;
 	int		status;
+	char	**env;
 
 	if (is_built_in(list) != -1)
 		return (exec_built_in(list));
@@ -114,8 +116,15 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,char *path)
 		perror("fork");
 	else if (pid == 0)
 	{
-		//redir_exec(list);
-		if (execve(path, exec->av, (char *const *)data->env) == -1)
+		// redir_exec(list);
+		
+		// ICI !!!
+		printf("hi");
+		env = create_char_env(data->env);
+		if (!env)
+			free_minishell(data);
+		printf("%s", (char *)env);
+		if (execve(path, exec->av, env) == -1)
 			perror("execve");
 		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
 	}
@@ -135,7 +144,7 @@ void	exec(t_list *list, t_minishell *data)
 {
 	t_exec	exec_struct;
 	int		i;
-	char *path;
+	char	*path;
 
 	exec_struct.av = NULL;
 	convert_to_exec_args(list, &exec_struct);

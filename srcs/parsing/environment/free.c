@@ -2,8 +2,8 @@
 
 void	free_env_list(t_env *list)
 {
-	t_env	*start;
 	t_env	*temp;
+	t_env	*start;
 
 	start = list;
 	if (!list)
@@ -12,6 +12,7 @@ void	free_env_list(t_env *list)
 	{
 		temp = list;
 		list = list->next;
+		free(temp->str);
 		free(temp->key);
 		free(temp->value);
 		free(temp);

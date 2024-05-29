@@ -94,8 +94,7 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		current = tokens_list;
-
-		// exec(current, &data);
+		exec(current, &data);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 

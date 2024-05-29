@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 15:27:07 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:16:10 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 17:23:52 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 	path_value = get_path_value(data, "PATH");
 	if (!path_value)
 		return (NULL);
-	printf("hello\n");
 	paths = ft_split(path_value, ':');
 	//free(path_value);
 	if (!paths)
