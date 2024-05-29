@@ -95,23 +95,23 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		current = tokens_list;
 
-		exec(current, &data);
+		// exec(current, &data);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", (char *)current->content);
-		// 	printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
-		// 	int i = 0;
-		// 	while (current->tokens_in_node->args[i] != NULL)
-		// 		i++;
-		// 	int end = i;
-		// 	i = 0;
-		// 	while (i < end)
-		// 		printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
-		// 	current = current->next;
-		// }
+		while (current != NULL)
+		{
+			printf("NODE : %s\n", (char *)current->content);
+			printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
+			int i = 0;
+			while (current->tokens_in_node->args[i] != NULL)
+				i++;
+			int end = i;
+			i = 0;
+			while (i < end)
+				printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
+			current = current->next;
+		}
 
 		ft_lstclear(&tokens_list, free); // Clear the list after processing
 		free(input_line);

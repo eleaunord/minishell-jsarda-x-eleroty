@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:28:25 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 14:59:03 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char	*get_path_value(t_minishell *data, char *key)
 	int	env_size;
 
 	env_size = 50;
+	
 	// printf("data env key%s\n",data->env->key);
 	// printf("%s\n", data->env->key);
 	// printf("size of the env%d\n",env_size);
