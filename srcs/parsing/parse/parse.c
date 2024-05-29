@@ -20,7 +20,6 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	{
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens);
-		expander(tokens, mini);
 		printf("%s", (char *)tokens);
 		// attach tokens to the current list node
 		current->tokens_in_node = tokens;
@@ -70,12 +69,12 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argc;
 	(void)argv;
 	init_minishell(&data);
-	if (init_env(&data, env))
+	if (!init_env(&data, env))
 	{
 		return (1);
 	}
 	// PRINT ENV
-	//print_env(data.env);
+	// print_env(data.env);
 	// Main shell execution Loop
 	while (1)
 	{
@@ -96,7 +95,7 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		current = tokens_list;
 
-		// exec(current, data);
+		exec(current, data);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 

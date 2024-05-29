@@ -23,10 +23,6 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_pwd.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
-					srcs/parsing/environment/expander.c \
-					srcs/parsing/environment/is_expansible.c \
-					srcs/parsing/environment/env_variables.c \
-					srcs/parsing/environment/brace_expansion.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)

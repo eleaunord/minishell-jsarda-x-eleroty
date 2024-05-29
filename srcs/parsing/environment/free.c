@@ -1,19 +1,21 @@
 #include "../../../includes/minishell.h"
 
-void	free_env_list(t_env *env_list)
+void	free_env_list(t_env *list)
 {
-	t_env	*current;
-	t_env	*next;
+	t_env	*start;
+	t_env	*temp;
 
-	current = env_list;
-	while (current != NULL)
+	start = list;
+	if (!list)
+		return ;
+	do
 	{
-		next = current->next;
-			// Store the next pointer before freeing the current node
-		free(current->value); // Free the string associated with the node
-		free(current);        // Free the node itself
-		current = next;       // Move to the next node
-	}
+		temp = list;
+		list = list->next;
+		free(temp->key);
+		free(temp->value);
+		free(temp);
+	} while (list != start);
 }
 
 void	free_nodes(t_list **tokens_list)
