@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:11:51 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 14:53:41 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,17 +117,15 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,char *path)
 		//redir_exec(list);
 		if (execve(path, exec->av, (char *const *)data->env) == -1)
 			perror("execve");
-		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
 	}
 	else
 	{
-		printf("this is the parent : %d\n", pid);
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
-		if (WIFEXITED(status))
-			printf("Child exited with status %d\n", WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			printf("Child was killed by signal %d\n", WTERMSIG(status));
+	// 	if (WIFEXITED(status))
+	// 		printf("Child exited with status %d\n", WEXITSTATUS(status));
+	// 	else if (WIFSIGNALED(status))
+	// 		printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
 }
 
@@ -139,12 +137,14 @@ void	exec(t_list *list, t_minishell *data)
 
 	exec_struct.av = NULL;
 	convert_to_exec_args(list, &exec_struct);
-	// print_env(data.env);
 	if (exec_struct.av != NULL)
 	{
 		path = get_cmd_path(list->tokens_in_node->cmd, data);
+		if (path)
+			exec_simple_cmd(&exec_struct, list, data, path);
+		else
+			printf("Command not found: %s\n", list->tokens_in_node->cmd);
 		i = 0;
-		exec_simple_cmd(&exec_struct, list, data, path);
 		while (exec_struct.av[i] != NULL)
 			free(exec_struct.av[i++]);
 		free(exec_struct.av);
