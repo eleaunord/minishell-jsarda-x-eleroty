@@ -10,6 +10,8 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
+ #include <sys/types.h>
+#include <sys/stat.h>
 
 // TOKEN LIST
 
@@ -93,7 +95,6 @@ typedef struct s_list
 	struct s_token		*tokens_in_node;
 }						t_list;
 
-
 // Struct qui centralise tout
 typedef struct s_minishell
 {
@@ -126,8 +127,9 @@ typedef struct s_position_tracker
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
 void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
-void					exec(t_list *list, t_minishell data);
-void	get_path(t_minishell data);
+void	exec(t_list *list, t_minishell *data);
+char	*get_cmd_path(char *cmd, t_minishell *data);
+char	*get_path_value(t_minishell *data, char *key);
 // BUILTINS
 void					ft_pwd(char **args);
 void					ft_echo(char **args);
@@ -158,7 +160,7 @@ void					free_minishell(t_minishell *mini);
 void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *mini, char **env_array);
 void					print_env(t_env *list);
-void					expander(t_token *token);
+void					expander(t_token *token, t_minishell *mini);
 int						check_env_var(char *token);
 void					extract_substring(char *token, int start, int end,
 							char **final_str);
@@ -174,6 +176,8 @@ void					proceed_expansion(char *token, int *i, char **final_str,
 void					ft_putstr_fd(char *s, int fd);
 
 // LIBFT FUNCTIONS
+char	**ft_split(char const *s, char c);
+void free_split(char **split);
 void					ft_putstr_fd(char *s, int fd);
 char					*ft_strndup(const char *s, size_t n);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -192,6 +196,7 @@ void					*ft_bzero(void *s, size_t bytes);
 char					*ft_strdup(const char *s);
 int						ft_lstsize(t_list *lst);
 size_t					count_args(char **args);
+char					*ft_strchr(const char *s, int c);
 
 // USEFUL FUNCTIONS FOR DEBUG
 void					print_list(t_list *head);

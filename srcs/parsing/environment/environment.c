@@ -35,17 +35,31 @@ void	print_env(t_env *list)
 	}
 	do
 	{
-		printf("%s\n", list->value);
+		printf("Key: %s, Value: %s\n", list->key, list->value);
 		list = list->next;
 	} while (list != start);
 }
 // Allocates memory for a new t_env element and initializes its value field with the provided elem.
+// Allocates memory for a new t_env element and initializes its key and value fields.
 static int	list_new_elem_str(t_env **new, char *elem)
 {
+	char	*equal_sign;
+
 	(*new) = malloc(sizeof(t_env));
 	if (*new == NULL)
 		return (0);
-	(*new)->value = elem;
+	equal_sign = strchr(elem, '=');
+	if (equal_sign)
+	{
+		(*new)->key = strndup(elem, equal_sign - elem); // allocate and copy key
+		(*new)->value = strdup(equal_sign + 1);        
+			// allocate and copy value
+	}
+	else
+	{
+		(*new)->key = strdup(elem); // allocate and copy the whole string as key
+		(*new)->value = NULL;       // no value
+	}
 	(*new)->next = NULL;
 	(*new)->prev = NULL;
 	return (1);
@@ -85,7 +99,7 @@ int	init_env(t_minishell *data, char **env)
 	list = NULL;
 	while (env[i])
 	{
-		tmp = ft_strdup(env[i]);
+		tmp = strdup(env[i]); // Assuming ft_strdup is similar to strdup
 		if (!tmp)
 		{
 			free_env_list(list);
@@ -93,11 +107,13 @@ int	init_env(t_minishell *data, char **env)
 		}
 		if (!append(&list, tmp))
 		{
+			free(tmp);
 			free_env_list(list);
 			return (0);
 		}
+		free(tmp);
 		i++;
 	}
 	data->env = list;
-	return (0);
+	return (1);
 }

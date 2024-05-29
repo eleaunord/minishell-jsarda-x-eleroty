@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 13:34:43 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 14:11:51 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	exec_built_in(t_list *list)
 // 	handle_redir(redirection);
 // }
 
-void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell data,char *path)
+void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,char *path)
 {
 	pid_t	pid;
 	int		status;
@@ -115,7 +115,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell data,char *path)
 	else if (pid == 0)
 	{
 		//redir_exec(list);
-		if (execve(path, exec->av, (char *const *)data.env) == -1)
+		if (execve(path, exec->av, (char *const *)data->env) == -1)
 			perror("execve");
 		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
 	}
@@ -131,7 +131,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell data,char *path)
 	}
 }
 
-void	exec(t_list *list, t_minishell data)
+void	exec(t_list *list, t_minishell *data)
 {
 	t_exec	exec_struct;
 	int		i;
@@ -142,7 +142,7 @@ void	exec(t_list *list, t_minishell data)
 	// print_env(data.env);
 	if (exec_struct.av != NULL)
 	{
-		path = get_cmd_path();
+		path = get_cmd_path(list->tokens_in_node->cmd, data);
 		i = 0;
 		exec_simple_cmd(&exec_struct, list, data, path);
 		while (exec_struct.av[i] != NULL)

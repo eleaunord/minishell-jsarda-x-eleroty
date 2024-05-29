@@ -7,7 +7,10 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_str.c \
 					libft/ft_utils.c \
 					libft/ft_strcmp.c \
+					libft/ft_split.c \
 					libft/ft_putstr_fd.c \
+					libft/ft_memcpy.c \
+					libft/ft_itoa.c \
 					srcs/parsing/tokenization/tokens.c \
 					srcs/parsing/parse/parse.c \
 					srcs/parsing/parse/parser.c \
@@ -16,12 +19,14 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/exec/simple_command_exec.c \
 					srcs/exec/get_env_path.c \
 					utils/perror.c \
+					utils/ft_free.c \
 					utils/convert_to_execve_args.c \
 					utils/count_args.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_pwd.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
+					srcs/exec/env_utils.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)

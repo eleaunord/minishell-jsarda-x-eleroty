@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 15:27:07 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 13:31:30 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 14:16:10 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 	char		*path;
 	char		*cmd_path;
 
+	statbuf = NULL;
 	if (!cmd || !data)
 		return (NULL);
 	path_value = get_path_value(data, "PATH");
 	if (!path_value)
 		return (NULL);
+	printf("hello\n");
 	paths = ft_split(path_value, ':');
 	//free(path_value);
 	if (!paths)
@@ -37,6 +39,7 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 		if (!cmd_path)
 			return (free_split(paths), NULL);
 		path = ft_strjoin(cmd_path, cmd);
+		printf("path : %s\n", path);
 		free(cmd_path);
 		if (!path)
 			return (free_split(paths), NULL);

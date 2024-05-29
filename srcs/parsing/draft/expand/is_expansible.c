@@ -65,14 +65,14 @@ int	cmd_exit_status(char *token, int start, int *i, char **final_str,
 	char	*sub;
 	char	*expanded_var;
 	char	*temp;
-	int		i;
+	// int		i;
 
 	if (ft_strchr(token, '?') != NULL)
 	{
 		start = ft_strchr_index(token, '?');
 		if (ft_strlen(token) == 2)
 			return (handle_single_char_token(final_str, mini));
-		i = 0;
+		// i = 0;
 		while (is_alpha_underscore(token[*i + 1]))
 			*i += 1;
 		sub = ft_substr(token, start + 1, (*i - start));
@@ -124,7 +124,7 @@ If the variable is not found, an empty string is used instead.
 Updates *final_str accordingly.
 */
 
-void	proceeds_expansion(char *token, int *i, char **final_str,
+void	proceed_expansion(char *token, int *i, char **final_str,
 		t_minishell *mini)
 {
 	int		start;
@@ -163,7 +163,7 @@ int	is_btwn_single_quotes(char *token)
 	return (0);
 }
 
-char	*is_envar_expansible(char *token, int *i, char **final_str)
+char	*is_envar_expansible(char *token, int *i, char **final_str, t_minishell *mini)
 {
 	int		start;
 	int		end;
@@ -174,7 +174,7 @@ char	*is_envar_expansible(char *token, int *i, char **final_str)
 		if (is_brace_expansion(token, i, final_str) == 1)
 			return (NULL);
 		if (is_alpha_underscore(token[*i + 1]) || token[*i + 1] == '?')
-			proceed_expansion(token, i, final_str);
+			proceed_expansion(token, i, final_str, mini);
 		else
 			append_dollar_sign(final_str);
 	}
