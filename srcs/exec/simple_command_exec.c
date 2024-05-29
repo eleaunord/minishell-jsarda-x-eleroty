@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 17:33:56 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/05/29 17:55:00 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		perror("fork");
 	else if (pid == 0)
 	{
+		// rentre pas ici 
 		// redir_exec(list);
 		
 		// ICI !!!
@@ -123,7 +124,8 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		env = create_char_env(data->env);
 		if (!env)
 			free_minishell(data);
-		printf("%s", (char *)env);
+		// printf("%s", (char *)env);
+		(void)data;
 		if (execve(path, exec->av, env) == -1)
 			perror("execve");
 		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
@@ -148,9 +150,14 @@ void	exec(t_list *list, t_minishell *data)
 
 	exec_struct.av = NULL;
 	convert_to_exec_args(list, &exec_struct);
-	// print_env(data.env);
+	//print_env(data->env);
 	if (exec_struct.av != NULL)
 	{
+		// t_env *env_list = data->env;
+		// char **env = create_char_env(env_list);
+		// if (!env)
+		// 	free_minishell(data);
+		// printf("%s", (char *)env);
 		path = get_cmd_path(list->tokens_in_node->cmd, data);
 		i = 0;
 		exec_simple_cmd(&exec_struct, list, data, path);

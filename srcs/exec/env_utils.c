@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 17:32:32 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/05/29 17:55:42 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	get_key(char *key, int env_size, char *key_word)
 	int	index;
 
 	index = 0;
-	printf("%s\n", key);
 	while (index < env_size)
 	{
 		if (ft_strcmp(&key[index], key_word) == 0)
@@ -42,18 +41,25 @@ char	*get_path_value(t_minishell *data, char *key)
 	return (&data->env->value[index]);
 }
 
-int	ft_sizeenv(t_env *lst)
+int	get_env_list_size(t_env *list)
 {
-	int	counter;
+	int		count;
+	t_env	*start;
 
-	counter = 0;
-	while (lst != NULL)
+	count = 0;
+	start = list;
+	if (!list)
+		return (0);
+	while (list)
 	{
-		++counter;
-		lst = lst->next;
+		count++;
+		list = list->next;
+		if (list == start)
+			break ;
 	}
-	return (counter);
+	return (count);
 }
+
 // Creates a char ** array from the linked list env
 char	**create_char_env(t_env *env)
 {
@@ -62,9 +68,10 @@ char	**create_char_env(t_env *env)
 	int		i;
 	int		size;
 
+	printf("hi");
 	if (!env)
 		return (NULL);
-	size = ft_sizeenv(env);
+	size = get_env_list_size(env);
 	dest = (char **)malloc(sizeof(char *) * (size + 1));
 	if (!dest)
 		return (NULL);
@@ -72,7 +79,6 @@ char	**create_char_env(t_env *env)
 	for (i = 0; i < size; i++)
 	{
 		dest[i] = ft_strdup(temp_env->str);
-			// Duplicate the string to create independent copies
 		if (!dest[i])
 		{
 			while (i > 0)
@@ -84,8 +90,7 @@ char	**create_char_env(t_env *env)
 		}
 		temp_env = temp_env->next;
 	}
-	dest[i] = NULL; // Null-terminate the array
-	// Print the array for debugging
+	dest[i] = NULL;
 	for (i = 0; dest[i]; i++)
 	{
 		printf("%s\n", dest[i]);
