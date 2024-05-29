@@ -127,7 +127,7 @@ typedef struct s_position_tracker
 void					perror_handler(char *type);
 void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
 void					exec(t_list *list, t_minishell data);
-
+void	get_path(t_minishell data);
 // BUILTINS
 void					ft_pwd(char **args);
 void					ft_echo(char **args);

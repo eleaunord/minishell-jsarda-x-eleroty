@@ -14,6 +14,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
 					srcs/exec/simple_command_exec.c \
+					srcs/exec/get_env_path.c \
 					utils/perror.c \
 					utils/convert_to_execve_args.c \
 					utils/count_args.c \
