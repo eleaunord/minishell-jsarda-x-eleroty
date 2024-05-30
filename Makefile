@@ -25,6 +25,7 @@ SRCS        :=   libft/ft_lst.c \
 					utils/count_args.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_pwd.c \
+					srcs/builtins/ft_cd.c \
 					srcs/builtins/ft_exit.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
@@ -34,7 +35,7 @@ SRCS        :=   libft/ft_lst.c \
 OBJS        := $(SRCS:.c=.o)
 
 .c.o:
-	${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+	@${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 
 CLR_RMV		:= \033[0m
@@ -47,7 +48,7 @@ RM		    := rm -f
 
 ${NAME}:	${OBJS}
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
-			${CC} ${CFLAGS} -o ${NAME} ${OBJS} $(LIBS)
+			@${CC} ${CFLAGS} -o ${NAME} ${OBJS} $(LIBS)
 			@echo "$(GREEN)$(NAME) created[0m ✔️"
 
 all:		${NAME}
@@ -55,10 +56,12 @@ all:		${NAME}
 bonus:		all
 
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
+	@echo "$(RED)Cleaned object files${CLR_RMV}"
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@echo "$(RED)Cleaned all build files${CLR_RMV}"
 
 re: fclean all
 

@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/30 15:00:31 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/30 16:05:24 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	is_built_in(t_list *list)
 	built_in[0] = "pwd";
 	built_in[1] = "echo";
 	built_in[2] = "exit";
+	built_in[3] = "cd";
 	i = 0;
 	while (i < NUM_OF_BUILT_INS)
 	{
@@ -38,6 +39,7 @@ void	exec_built_in(t_minishell *data, t_list *list)
 	built_in_funcs[0] = &ft_pwd;
 	built_in_funcs[1] = &ft_echo;
 	built_in_funcs[2] = &ft_exit;
+	built_in_funcs[3] = &ft_cd;
 	index = is_built_in(list);
 	if (index == -1)
 		return ;

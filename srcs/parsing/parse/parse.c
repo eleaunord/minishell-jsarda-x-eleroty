@@ -80,8 +80,10 @@ int	main(int argc, char *argv[], char *env[])
 
 	while (1)
 	{
-		(getcwd(cwd, PATH_MAX));
-		input_line = readline(ft_strjoin(cwd, "$ "));
+		getcwd(cwd, PATH_MAX);
+		char *prompt = ft_strjoin(COLOR_GREEN, cwd);
+        char *colored_prompt = ft_strjoin(prompt, COLOR_RESET "$ ");
+		input_line = readline(colored_prompt);
 		if (!input_line)
 		{
 			rl_clear_history(); // ?

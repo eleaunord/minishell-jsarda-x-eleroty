@@ -39,6 +39,9 @@ Règles de Tokenisation :
 
 */
 
+#define COLOR_RESET   "\x1b[0m"
+#define COLOR_GREEN   "\x1b[32m"
+
 # define INPUT 1   //"<"
 # define HEREDOC 2 //"<<"
 # define TRUNC 3   //">"
@@ -48,7 +51,7 @@ Règles de Tokenisation :
 # define ARG 7
 # define SINGLE_QUOTE 39
 # define PATH_MAX 500
-# define NUM_OF_BUILT_INS 3
+# define NUM_OF_BUILT_INS 4
 // TOKEN LINKED LIST
 
 /*
@@ -141,6 +144,7 @@ char					**create_char_env(t_env *env);
 void	ft_exit(t_minishell *data, char **args);
 void					ft_pwd(t_minishell *data, char **args);
 void					ft_echo(t_minishell *data, char **args);
+void				ft_cd(t_minishell *data, char **args);
 
 // PARSING FUNCTIONS
 int						init_env(t_minishell *data, char **env);

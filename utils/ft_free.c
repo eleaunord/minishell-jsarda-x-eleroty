@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:04:41 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:04:51 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/30 15:59:51 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,13 @@
 
 void free_split(char **split)
 {
-	for (int i = 0; split[i]; i++)
+	int	i;
+
+	i = 0;
+	while (split[i])
+	{
 		free(split[i]);
+		i++;
+	}
 	free(split);
 }
