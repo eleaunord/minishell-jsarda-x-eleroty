@@ -6,19 +6,14 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:55:30 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/30 13:16:51 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/30 14:55:06 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// function is num
-
-// ft_atoi
-
 void	ft_exit(t_minishell *data, char **args)
 {
-	printf("%s\n", args[1]);
 	if (args[1])
 	{
 		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 1);

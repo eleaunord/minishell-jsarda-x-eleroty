@@ -62,6 +62,7 @@ int	main(int argc, char *argv[], char *env[])
 	t_minishell	data;
 	int			flag;
 	t_list		*current;
+	char cwd[PATH_MAX];
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -76,9 +77,11 @@ int	main(int argc, char *argv[], char *env[])
 	// PRINT ENV
 	// print_env(data.env);
 	// Main shell execution Loop
+
 	while (1)
 	{
-		input_line = readline("prompt> ");
+		(getcwd(cwd, PATH_MAX));
+		input_line = readline(ft_strjoin(cwd, "$ "));
 		if (!input_line)
 		{
 			rl_clear_history(); // ?
