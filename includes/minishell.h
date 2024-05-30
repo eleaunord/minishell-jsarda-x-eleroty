@@ -3,10 +3,10 @@
 
 // Librairies
 # include <fcntl.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdbool.h>
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
