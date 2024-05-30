@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:53:41 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 15:53:28 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	exec(t_list *list, t_minishell *data)
 	int		i;
 	char *path;
 
+	path = NULL;
 	exec_struct.av = NULL;
 	convert_to_exec_args(list, &exec_struct);
 	if (exec_struct.av != NULL)

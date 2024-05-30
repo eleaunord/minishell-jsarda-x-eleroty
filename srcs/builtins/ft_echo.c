@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 10:41:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/28 15:06:52 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/29 15:39:03 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,23 @@ void	ft_echo(char **args)
 
 	i = 0;
 	n_option = 0;
-	while (check_arg(args[i]) == 1)
+	while (args[i] && check_arg(args[i]) == 1)
 	{
 		n_option = 1;
 		i++;
 	}
-	if (count_args(args) >= 1)
+	while (args[i] && ft_strcmp(args[i], "-n") == 0)
 	{
-		while (args[i] && ft_strcmp(args[i], "-n") == 0)
-		{
-			n_option = 1;
-			i++;
-		}
-		while (args[i])
-		{
-			ft_putstr_fd(args[i], 1);
-			if (args[i + 1] && args[i][0] != '\0')
-				write(1, " ", 1);
-			i++;
-		}
+		n_option = 1;
+		i++;
 	}
-	if (n_option == 0)
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], 1);
+		if (args[i + 1])
+			write(1, " ", 1);
+		i++;
+	}
+	if (!n_option)
 		write(1, "\n", 1);
 }
