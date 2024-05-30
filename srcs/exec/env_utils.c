@@ -3,42 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 17:55:42 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/05/30 09:44:13 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	get_key(char *key, int env_size, char *key_word)
+int	get_key(t_env *env, char *key)
 {
 	int	index;
 
 	index = 0;
-	while (index < env_size)
+	while (env)
 	{
-		if (ft_strcmp(&key[index], key_word) == 0)
+		if (env->key && ft_strcmp(env->key, key) == 0)
 			return (index);
+		env = env->next;
 		index++;
 	}
 	return (-1);
 }
-
 char	*get_path_value(t_minishell *data, char *key)
 {
-	int	index;
-	int	env_size;
+	int		index;
+	t_env	*env;
 
-	env_size = 50;
-	// printf("data env key%s\n",data->env->key);
-	// printf("%s\n", data->env->key);
-	// printf("size of the env%d\n",env_size);
-	index = get_key(data->env->key, env_size, key);
+	env = data->env;
+	index = get_key(env, key);
 	if (index == -1)
 		return (NULL);
-	return (&data->env->value[index]);
+	for (int i = 0; i < index; i++)
+		env = env->next;
+	return (env->value);
 }
 
 int	get_env_list_size(t_env *list)
@@ -91,17 +90,15 @@ char	**create_char_env(t_env *env)
 		temp_env = temp_env->next;
 	}
 	dest[i] = NULL;
-	for (i = 0; dest[i]; i++)
-	{
-		printf("%s\n", dest[i]);
-	}
 	return (dest);
 }
 
 // Function to free the allocated char ** array
 void	free_char_env(char **env)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (env[i])
 	{
 		free(env[i]);

@@ -1,7 +1,6 @@
 
 #include "../includes/minishell.h"
 
-
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -40,4 +39,19 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	ft_bzero(mem, nmemb * size);
 	return (mem);
+}
+
+int	ft_isdigit(char *c)
+{
+	int i;
+
+	i = 0;
+	while (c[i])
+	{
+		if (c[i] <= 48 || c[i] >= 57)
+			return (0);
+		i++;
+	}
+	return (1);
+
 }

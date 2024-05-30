@@ -25,6 +25,7 @@ SRCS        :=   libft/ft_lst.c \
 					utils/count_args.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_pwd.c \
+					srcs/builtins/ft_exit.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
 					srcs/exec/env_utils.c \

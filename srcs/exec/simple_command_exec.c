@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/30 09:33:35 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/30 12:23:06 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	is_built_in(t_list *list)
 
 	built_in[0] = "pwd";
 	built_in[1] = "echo";
+	built_in[2] = "exit";
 	i = 0;
 	while (i < NUM_OF_BUILT_INS)
 	{
@@ -29,17 +30,18 @@ int	is_built_in(t_list *list)
 	return (-1);
 }
 
-void	exec_built_in(t_list *list)
+void	exec_built_in(t_minishell *data, t_list *list)
 {
 	int		index;
-	void	(*built_in_funcs[NUM_OF_BUILT_INS])(char **);
+	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_minishell *, char **);
 
 	built_in_funcs[0] = &ft_pwd;
 	built_in_funcs[1] = &ft_echo;
+	built_in_funcs[2] = &ft_exit;
 	index = is_built_in(list);
 	if (index == -1)
 		return ;
-	built_in_funcs[index](list->tokens_in_node->args);
+	built_in_funcs[index](data, list->tokens_in_node->args);
 }
 
 // void	handle_redir(t_redirection redir)
@@ -110,7 +112,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 	char	**env;
 
 	if (is_built_in(list) != -1)
-		return (exec_built_in(list));
+		return (exec_built_in(data, list));
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
@@ -125,20 +127,17 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		if (!env)
 			free_minishell(data);
 		// printf("%s", (char *)env);
-		(void)data;
 		if (execve(path, exec->av, env) == -1)
 			perror("execve");
-		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
 	}
 	else
 	{
-		printf("this is the parent : %d\n", pid);
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
-		if (WIFEXITED(status))
-			printf("Child exited with status %d\n", WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			printf("Child was killed by signal %d\n", WTERMSIG(status));
+	// 	if (WIFEXITED(status))
+	// 		printf("Child exited with status %d\n", WEXITSTATUS(status));
+	// 	else if (WIFSIGNALED(status))
+	// 		printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
 }
 
@@ -146,22 +145,19 @@ void	exec(t_list *list, t_minishell *data)
 {
 	t_exec	exec_struct;
 	int		i;
-	char	*path;
+	char *path;
 
 	path = NULL;
 	exec_struct.av = NULL;
 	convert_to_exec_args(list, &exec_struct);
-	//print_env(data->env);
 	if (exec_struct.av != NULL)
 	{
-		// t_env *env_list = data->env;
-		// char **env = create_char_env(env_list);
-		// if (!env)
-		// 	free_minishell(data);
-		// printf("%s", (char *)env);
-		path = get_cmd_path(list->tokens_in_node->cmd, data);
-		i = 0;
+		if (is_built_in(list) == -1)
+			path = get_cmd_path(list->tokens_in_node->cmd, data);
 		exec_simple_cmd(&exec_struct, list, data, path);
+		// else
+		// 	printf("Command not found: %s\n", list->tokens_in_node->cmd);
+		i = 0;
 		while (exec_struct.av[i] != NULL)
 			free(exec_struct.av[i++]);
 		free(exec_struct.av);

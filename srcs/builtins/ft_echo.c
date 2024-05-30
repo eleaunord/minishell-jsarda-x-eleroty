@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 10:41:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 15:39:03 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/30 12:31:01 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,14 @@ int	check_arg(char *str)
 	return (1);
 }
 
-void	ft_echo(char **args)
+void	ft_echo(t_minishell *data, char **args)
 {
 	int	i;
 	int	n_option;
-
+	
 	i = 0;
 	n_option = 0;
+	(void)data;
 	while (args[i] && check_arg(args[i]) == 1)
 	{
 		n_option = 1;

@@ -48,7 +48,7 @@ Règles de Tokenisation :
 # define ARG 7
 # define SINGLE_QUOTE 39
 # define PATH_MAX 500
-# define NUM_OF_BUILT_INS 2
+# define NUM_OF_BUILT_INS 3
 // TOKEN LINKED LIST
 
 /*
@@ -107,6 +107,7 @@ typedef struct s_minishell
 	t_list				*nodes;
 	// a completer au fur et a mesure
 	int					exit;
+	int					exit_status;
 }						t_minishell;
 
 typedef struct s_exec
@@ -137,8 +138,9 @@ char					*get_cmd_path(char *cmd, t_minishell *data);
 char					*get_path_value(t_minishell *data, char *key);
 char					**create_char_env(t_env *env);
 // BUILTINS
-void					ft_pwd(char **args);
-void					ft_echo(char **args);
+void	ft_exit(t_minishell *data, char **args);
+void					ft_pwd(t_minishell *data, char **args);
+void					ft_echo(t_minishell *data, char **args);
 
 // PARSING FUNCTIONS
 int						init_env(t_minishell *data, char **env);
@@ -208,6 +210,7 @@ char					*ft_strdup(const char *s);
 int						ft_lstsize(t_list *lst);
 size_t					count_args(char **args);
 char					*ft_strchr(const char *s, int c);
+int	ft_isdigit(char *c);
 
 // USEFUL FUNCTIONS FOR DEBUG
 void					print_list(t_list *head);
