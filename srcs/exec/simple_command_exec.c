@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 15:53:28 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/05/30 09:33:35 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,12 @@ void	exec_built_in(t_list *list)
 // 	handle_redir(redirection);
 // }
 
-void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,char *path)
+void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
+		char *path)
 {
 	pid_t	pid;
 	int		status;
+	char	**env;
 
 	if (is_built_in(list) != -1)
 		return (exec_built_in(list));
@@ -114,18 +116,29 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,char *path)
 		perror("fork");
 	else if (pid == 0)
 	{
-		//redir_exec(list);
-		if (execve(path, exec->av, (char *const *)data->env) == -1)
+		// rentre pas ici
+		// redir_exec(list);
+
+		// ICI !!!
+		printf("hi");
+		env = create_char_env(data->env);
+		if (!env)
+			free_minishell(data);
+		// printf("%s", (char *)env);
+		(void)data;
+		if (execve(path, exec->av, env) == -1)
 			perror("execve");
+		// if (execve("./testing", exec->av, (char *const *)data.env) == -1)
 	}
 	else
 	{
+		printf("this is the parent : %d\n", pid);
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
-	// 	if (WIFEXITED(status))
-	// 		printf("Child exited with status %d\n", WEXITSTATUS(status));
-	// 	else if (WIFSIGNALED(status))
-	// 		printf("Child was killed by signal %d\n", WTERMSIG(status));
+		if (WIFEXITED(status))
+			printf("Child exited with status %d\n", WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
 }
 
@@ -133,19 +146,22 @@ void	exec(t_list *list, t_minishell *data)
 {
 	t_exec	exec_struct;
 	int		i;
-	char *path;
+	char	*path;
 
 	path = NULL;
 	exec_struct.av = NULL;
 	convert_to_exec_args(list, &exec_struct);
+	//print_env(data->env);
 	if (exec_struct.av != NULL)
 	{
+		// t_env *env_list = data->env;
+		// char **env = create_char_env(env_list);
+		// if (!env)
+		// 	free_minishell(data);
+		// printf("%s", (char *)env);
 		path = get_cmd_path(list->tokens_in_node->cmd, data);
-		if (path)
-			exec_simple_cmd(&exec_struct, list, data, path);
-		else
-			printf("Command not found: %s\n", list->tokens_in_node->cmd);
 		i = 0;
+		exec_simple_cmd(&exec_struct, list, data, path);
 		while (exec_struct.av[i] != NULL)
 			free(exec_struct.av[i++]);
 		free(exec_struct.av);

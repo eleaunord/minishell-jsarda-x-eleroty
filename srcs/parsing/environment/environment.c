@@ -22,7 +22,7 @@ empty at least "OLDPWD" available
 
 // Initialize an environment variable list from an array of strings (env) and stores it in a structure (t_env).
 
-// Function to print the environment list
+// Prints the environment list
 void	print_env(t_env *list)
 {
 	t_env	*start;
@@ -35,12 +35,12 @@ void	print_env(t_env *list)
 	}
 	do
 	{
-		printf("Key: %s, Value: %s\n", list->key, list->value);
+		printf("Key: %s, Value: %s, Str: %s\n", list->key, list->value,
+			list->str);
 		list = list->next;
 	} while (list != start);
 }
-// Allocates memory for a new t_env element and initializes its value field with the provided elem.
-// Allocates memory for a new t_env element and initializes its key and value fields.
+// Allocates memory for a new t_env element and initializes its fields with the provided elem.
 static int	list_new_elem_str(t_env **new, char *elem)
 {
 	char	*equal_sign;
@@ -48,22 +48,47 @@ static int	list_new_elem_str(t_env **new, char *elem)
 	(*new) = malloc(sizeof(t_env));
 	if (*new == NULL)
 		return (0);
+	(*new)->str = strdup(elem); // allocate and copy the entire string
+	if ((*new)->str == NULL)
+	{
+		free(*new);
+		return (0);
+	}
 	equal_sign = strchr(elem, '=');
 	if (equal_sign)
 	{
 		(*new)->key = strndup(elem, equal_sign - elem); // allocate and copy key
-		(*new)->value = strdup(equal_sign + 1);        
-			// allocate and copy value
+		if ((*new)->key == NULL)
+		{
+			free((*new)->str);
+			free(*new);
+			return (0);
+		}
+		(*new)->value = strdup(equal_sign + 1); // allocate and copy value
+		if ((*new)->value == NULL)
+		{
+			free((*new)->str);
+			free((*new)->key);
+			free(*new);
+			return (0);
+		}
 	}
 	else
 	{
 		(*new)->key = strdup(elem); // allocate and copy the whole string as key
-		(*new)->value = NULL;       // no value
+		if ((*new)->key == NULL)
+		{
+			free((*new)->str);
+			free(*new);
+			return (0);
+		}
+		(*new)->value = NULL; // no value
 	}
 	(*new)->next = NULL;
 	(*new)->prev = NULL;
 	return (1);
 }
+
 // Add the first element to the list.
 static void	add_first(t_env **list, t_env *new)
 {
