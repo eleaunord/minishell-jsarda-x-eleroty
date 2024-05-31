@@ -40,6 +40,7 @@ void	parse_tokens(t_token *tokens)
 		return ;
 	// Move to the next token for counting arguments
 	tmp = tokens->next;
+	
 	arg_count = count_arguments(tmp);
 	// printf("ARG COUNT %d\n", arg_count);
 	tokens->args = malloc(sizeof(char *) * (arg_count + 1));

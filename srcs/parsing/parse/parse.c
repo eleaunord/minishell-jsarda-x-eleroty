@@ -18,8 +18,10 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
+		//handle_redirections(tokens);
+		// condition if cmd already exists (redirection)
 		parse_tokens(tokens);
-
+		
 		// DEBUG
 		t_token *temp = tokens;
 		while (temp != NULL)

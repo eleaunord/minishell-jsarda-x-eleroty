@@ -43,7 +43,7 @@ t_token	*tokenize_input(char *node)
 	int		length;
 	int		start;
 	int		i;
-	t_token	*temp;
+	//t_token	*temp;
 
 	tokens = NULL;
 	i = 0;
