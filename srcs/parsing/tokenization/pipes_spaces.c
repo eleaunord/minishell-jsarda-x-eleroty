@@ -6,6 +6,11 @@ t_list	*create_node(char *token)
 	t_list	*new_node;
 
 	new_node = (t_list *)malloc(sizeof(t_list));
+	if (!new_node)
+	{
+		fprintf(stderr, "Memory allocation error\n");
+		exit(EXIT_FAILURE);
+	}
 	new_node->content = strdup(token);
 	new_node->next = NULL;
 	return (new_node);
@@ -33,43 +38,92 @@ void	append_node(t_list **tokens_list, char *token)
 	}
 }
 
-// Function to trim leading and trailing spaces from a string
+// Function to trim leading and trailing spaces from a string,
+	//ignoring spaces inside quotes
 char	*trim_whitespace(char *str)
 {
 	char	*end;
+	bool	in_quote;
+	char	quote_char;
 
+	in_quote = false;
+	quote_char = '\0';
 	// Trim leading space
-	while (isspace((unsigned char)*str))
+	while (*str && isspace((unsigned char)*str))
 		str++;
 	if (*str == 0) // All spaces?
 		return (str);
 	// Trim trailing space
 	end = str + strlen(str) - 1;
-	while (end > str && isspace((unsigned char)*end))
-		end--;
+	while (end > str)
+	{
+		if (*end == '\'' || *end == '"')
+		{
+			if (in_quote && *end == quote_char)
+			{
+				in_quote = false;
+				quote_char = '\0';
+			}
+			else if (!in_quote)
+			{
+				in_quote = true;
+				quote_char = *end;
+			}
+		}
+		if (!in_quote && isspace((unsigned char)*end))
+			end--;
+		else
+			break ;
+	}
 	// Write new null terminator character
 	end[1] = '\0';
 	return (str);
 }
 
-// Function to collapse multiple spaces into a single space
+// Function to collapse multiple spaces into a single space,
+	//ignoring spaces inside quotes
 char	*collapse_spaces(char *str)
 {
 	char	*dst;
 	char	*src;
+	bool	in_quote;
+	char	quote_char;
 	int		space;
 
+	in_quote = false;
+	quote_char = '\0';
+	space = 0;
 	dst = str;
 	src = str;
-	space = 0;
 	while (*src != '\0')
 	{
-		if (isspace((unsigned char)*src))
+		if (*src == '\'' || *src == '"')
 		{
-			if (!space)
+			if (in_quote && *src == quote_char)
 			{
-				*dst++ = ' ';
-				space = 1;
+				in_quote = false;
+				quote_char = '\0';
+			}
+			else if (!in_quote)
+			{
+				in_quote = true;
+				quote_char = *src;
+			}
+			*dst++ = *src;
+		}
+		else if (isspace((unsigned char)*src))
+		{
+			if (!in_quote)
+			{
+				if (!space)
+				{
+					*dst++ = ' ';
+					space = 1;
+				}
+			}
+			else
+			{
+				*dst++ = *src;
 			}
 		}
 		else
@@ -83,12 +137,13 @@ char	*collapse_spaces(char *str)
 	return (str);
 }
 
-// Main function to trim spaces and store tokens in the linked list
-void	ft_split_pipes_spaces(char *line, t_list **tokens_list)
+// Main function to trim spaces and store tokens in the linked list,
+	//preserving spaces inside quotes
+char	*ft_split_pipes_spaces(char *line, t_list **tokens_list)
 {
-	char *start;
-	char *pipe_pos;
-	char *segment;
+	char	*start;
+	char	*pipe_pos;
+	char	*segment;
 
 	*tokens_list = NULL; // Initialize the linked list
 	start = line;
@@ -106,4 +161,5 @@ void	ft_split_pipes_spaces(char *line, t_list **tokens_list)
 	segment = trim_whitespace(start);
 	segment = collapse_spaces(segment);
 	append_node(tokens_list, segment);
+	return (line);
 }

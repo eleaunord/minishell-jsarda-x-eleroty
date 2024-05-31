@@ -36,24 +36,37 @@ void	add_token_to_list(t_token **tokens, t_token *new_token)
 		last->next = new_token;
 	}
 }
+
 t_token	*tokenize_input(char *node)
 {
 	t_token	*tokens;
-	int		start;
 	int		length;
+	int		start;
 	int		i;
+	t_token	*temp;
 
 	tokens = NULL;
 	i = 0;
 	start = 0;
 	length = ft_strlen(node);
-	while (i <= length)
+	while (i < length)
 	{
 		if (node[i] == '>' || node[i] == '<')
-			special_tokens(&node, &tokens);
+		{
+			i = special_tokens(node + i, &tokens, i);
+		}
 		else
-			word_token(&node, &tokens, &start, &i);
-		i++;
+		{
+			i = word_token(node, &tokens, i);
+		}
 	}
+	//DEBUG
+	// temp = tokens;
+	// while (temp != NULL)
+	// {
+	// 	printf("TOKEN VALUE: %s\n", (char *)temp->value);
+	// 	printf("TYPE : %d\n", temp->type);
+	// 	temp = temp->next;
+	// }
 	return (tokens);
 }
