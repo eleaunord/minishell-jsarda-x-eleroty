@@ -99,6 +99,7 @@ typedef struct s_token
 	// REDIRECTIONS
 	char *filename;
 	int					sstdout;
+	int processed;
 }						t_token;
 
 // NODES
@@ -207,8 +208,7 @@ int	special_tokens(char *input, t_token **tokens, int index);
 t_token					*new_token(t_token_type type, char *value);
 int word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-void	handle_redirections(t_token *token);
-
+void	process_redirection(t_token **tokens);
 // LIBFT FUNCTIONS
 char					**ft_split(char const *s, char c);
 void					free_split(char **split);

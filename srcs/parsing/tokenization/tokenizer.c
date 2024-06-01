@@ -43,7 +43,7 @@ t_token	*tokenize_input(char *node)
 	int		length;
 	int		start;
 	int		i;
-	//t_token	*temp;
+	// t_token	*temp;
 
 	tokens = NULL;
 	i = 0;
@@ -60,6 +60,9 @@ t_token	*tokenize_input(char *node)
 			i = word_token(node, &tokens, i);
 		}
 	}
+
+	return (tokens);
+}
 	//DEBUG
 	// temp = tokens;
 	// while (temp != NULL)
@@ -68,5 +71,3 @@ t_token	*tokenize_input(char *node)
 	// 	printf("TYPE : %d\n", temp->type);
 	// 	temp = temp->next;
 	// }
-	return (tokens);
-}

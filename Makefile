@@ -14,7 +14,6 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/tokenization/tokens.c \
 					srcs/parsing/parse/parse.c \
 					srcs/parsing/parse/parser.c \
-					srcs/parsing/parse/redirections.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
 					srcs/parsing/tokenization/tokenizer.c \

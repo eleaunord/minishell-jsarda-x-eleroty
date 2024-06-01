@@ -18,8 +18,9 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
-		//handle_redirections(tokens);
-		// condition if cmd already exists (redirection)
+		
+		
+		// // condition if cmd already exists (redirection)
 		parse_tokens(tokens);
 		
 		// DEBUG
@@ -37,7 +38,7 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 				printf("ARGS : %s\n", (char *)temp->args[i++]);
 			temp = temp->next;
 		}
-		// attach tokens to the current list node
+		//attach tokens to the current list node
 		current->tokens_in_node = tokens;
 		current = current->next;
 	}
@@ -115,7 +116,7 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		current = tokens_list;
-		// exec(current, &data);
+		exec(current, &data);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 
