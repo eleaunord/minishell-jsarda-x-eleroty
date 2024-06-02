@@ -168,7 +168,6 @@ void				ft_cd(t_minishell *data, char **args);
 int						init_env(t_minishell *data, char **env);
 int						open_quote_check(char *line);
 t_token					*tokenize_input(char *line);
-void					parse_tokens(t_token *tokens);
 int						is_space(char *line);
 int						is_separator(char *c);
 char					*create_token(char *str, int start, int end);
@@ -208,7 +207,8 @@ int	special_tokens(char *input, t_token **tokens, int index);
 t_token					*new_token(t_token_type type, char *value);
 int word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-void	process_redirection(t_token **tokens);
+void	parse_tokens(t_token *tokens);
+
 // LIBFT FUNCTIONS
 char					**ft_split(char const *s, char c);
 void					free_split(char **split);
