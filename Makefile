@@ -19,10 +19,10 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/tokenization/tokenizer.c \
 					srcs/exec/simple_command_exec.c \
 					srcs/exec/get_env_path.c \
-					utils/perror.c \
-					utils/ft_free.c \
-					utils/convert_to_execve_args.c \
-					utils/count_args.c \
+					srcs/exec/perror.c \
+					srcs/exec/ft_free.c \
+					srcs/exec/convert_to_execve_args.c \
+					srcs/exec/count_args.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_pwd.c \
 					srcs/builtins/ft_cd.c \
@@ -30,6 +30,9 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
 					srcs/exec/env_utils.c \
+					srcs/exec/expansion.c \
+					srcs/exec/brace_expansion.c \
+					srcs/exec/is_expansible.c \
 				
 
 OBJS        := $(SRCS:.c=.o)

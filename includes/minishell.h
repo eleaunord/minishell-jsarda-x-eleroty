@@ -74,20 +74,6 @@ typedef enum e_token_type
 	REDIR_IN_TOKEN,  // "<" ; = 4
 }						t_token_type;
 
-// typedef	struct			s_redir
-// {
-// 	char				*out1;
-// 	char				*out2;
-// 	char				*in;
-// 	int					sstdout;
-// 	int					sstderr;
-// 	int					sstdin;
-// 	int					end;
-// 	int					i;
-// 	char				*name;
-// 	char				*value;
-// }						t_redir;
-
 // TOKENS INSIDE NODES
 typedef struct s_token
 {
@@ -208,6 +194,7 @@ t_token					*new_token(t_token_type type, char *value);
 int word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
 void	parse_tokens(t_token *tokens);
+void	call_expander(t_list *list, t_minishell *data);
 
 // LIBFT FUNCTIONS
 char					**ft_split(char const *s, char c);

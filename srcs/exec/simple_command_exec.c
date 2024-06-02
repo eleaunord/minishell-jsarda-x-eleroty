@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/30 16:05:24 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/02 16:55:05 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 	{
 		// rentre pas ici
 		// redir_exec(list);
-
 		// ICI !!!
-		printf("hi");
 		env = create_char_env(data->env);
 		if (!env)
 			free_minishell(data);
@@ -136,10 +134,10 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 	{
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
-	// 	if (WIFEXITED(status))
-	// 		printf("Child exited with status %d\n", WEXITSTATUS(status));
-	// 	else if (WIFSIGNALED(status))
-	// 		printf("Child was killed by signal %d\n", WTERMSIG(status));
+		// 	if (WIFEXITED(status))
+		// 		printf("Child exited with status %d\n", WEXITSTATUS(status));
+		// 	else if (WIFSIGNALED(status))
+		// 		printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
 }
 
@@ -147,10 +145,14 @@ void	exec(t_list *list, t_minishell *data)
 {
 	t_exec	exec_struct;
 	int		i;
-	char *path;
+	char	*path;
 
 	path = NULL;
 	exec_struct.av = NULL;
+	// Call expansion function here
+	call_expander(list, data);
+	// $PATH => /home/eleroty/.local/ etc.
+
 	convert_to_exec_args(list, &exec_struct);
 	if (exec_struct.av != NULL)
 	{
