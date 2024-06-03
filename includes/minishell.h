@@ -3,10 +3,10 @@
 
 // Librairies
 # include <fcntl.h>
-# include <stdio.h>
-# include <readline/readline.h>
 # include <readline/history.h>
+# include <readline/readline.h>
 # include <stdbool.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -39,8 +39,8 @@ Règles de Tokenisation :
 
 */
 
-#define COLOR_RESET   "\x1b[0m"
-#define COLOR_GREEN   "\x1b[32m"
+# define COLOR_RESET "\x1b[0m"
+# define COLOR_GREEN "\x1b[32m"
 
 # define INPUT 1   //"<"
 # define HEREDOC 2 //"<<"
@@ -51,7 +51,7 @@ Règles de Tokenisation :
 # define ARG 7
 # define SINGLE_QUOTE 39
 # define PATH_MAX 500
-# define NUM_OF_BUILT_INS 4
+# define NUM_OF_BUILT_INS 5
 // TOKEN LINKED LIST
 
 /*
@@ -140,11 +140,16 @@ void					exec(t_list *list, t_minishell *data);
 char					*get_cmd_path(char *cmd, t_minishell *data);
 char					*get_path_value(t_minishell *data, char *key);
 char					**create_char_env(t_env *env);
+void					exec_pipeline(char ***cmds, int num_cmds);
+void					exec_simple_cmd(t_exec *exec, t_list *list,
+							t_minishell *data, char *path);
+int						is_built_in(t_list *list);
 // BUILTINS
-void	ft_exit(t_minishell *data, char **args);
+void					ft_exit(t_minishell *data, char **args);
 void					ft_pwd(t_minishell *data, char **args);
 void					ft_echo(t_minishell *data, char **args);
-void				ft_cd(t_minishell *data, char **args);
+void					ft_cd(t_minishell *data, char **args);
+void					ft_env(t_minishell *data, char **args);
 
 // PARSING FUNCTIONS
 int						init_env(t_minishell *data, char **env);
@@ -164,7 +169,6 @@ char					*process_in_quotes(char *line, t_position_tracker *p,
 void					ft_split_pipes_spaces(char *line, t_list **tokens_list);
 char					*remove_quotes(char *line);
 int						ft_strcmp(char *s1, char *s2);
-int						main(int argc, char *argv[], char *env[]);
 int						tokenizer(char *line, t_list **nodes,
 							t_minishell *mini);
 void					free_env(char ***envp);
@@ -214,7 +218,7 @@ char					*ft_strdup(const char *s);
 int						ft_lstsize(t_list *lst);
 size_t					count_args(char **args);
 char					*ft_strchr(const char *s, int c);
-int	ft_isdigit(char *c);
+int						ft_isdigit(char *c);
 
 // USEFUL FUNCTIONS FOR DEBUG
 void					print_list(t_list *head);

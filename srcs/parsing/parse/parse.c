@@ -34,6 +34,7 @@ void	init_minishell(t_minishell *mini)
 {
 	mini->env = NULL;
 	mini->nodes = NULL;
+	mini->exit = 0;
 	// a remplir au fur et a mesure
 }
 int	is_space(char *line)
@@ -71,9 +72,7 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argv;
 	init_minishell(&data);
 	if (!init_env(&data, env))
-	{
 		return (1);
-	}
 	// PRINT ENV
 	// print_env(data.env);
 	// Main shell execution Loop
@@ -84,10 +83,10 @@ int	main(int argc, char *argv[], char *env[])
 		char *prompt = ft_strjoin(COLOR_GREEN, cwd);
         char *colored_prompt = ft_strjoin(prompt, COLOR_RESET "$ ");
 		input_line = readline(colored_prompt);
-		if (!input_line)
+		if (!input_line) // ctrl d
 		{
 			rl_clear_history(); // ?
-			continue ;
+			return (0);
 		}
 		if (check_line(&input_line))
 			continue ;
@@ -100,6 +99,8 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		current = tokens_list;
 		exec(current, &data);
+		if (data.exit) // free all
+			return (0);
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 

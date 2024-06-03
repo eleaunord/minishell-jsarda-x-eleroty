@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/30 09:44:13 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/03 09:55:45 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,27 +67,25 @@ char	**create_char_env(t_env *env)
 	int		i;
 	int		size;
 
-	printf("hi");
+	i = 0;
 	if (!env)
 		return (NULL);
 	size = get_env_list_size(env);
-	dest = (char **)malloc(sizeof(char *) * (size + 1));
+	dest = malloc(sizeof(char *) * (size + 1));
 	if (!dest)
 		return (NULL);
 	temp_env = env;
-	for (i = 0; i < size; i++)
+	while (i < size)
 	{
 		dest[i] = ft_strdup(temp_env->str);
 		if (!dest[i])
 		{
 			while (i > 0)
-			{
 				free(dest[--i]);
-			}
-			free(dest);
-			return (NULL);
+			return (free(dest), NULL);
 		}
 		temp_env = temp_env->next;
+		i++;
 	}
 	dest[i] = NULL;
 	return (dest);

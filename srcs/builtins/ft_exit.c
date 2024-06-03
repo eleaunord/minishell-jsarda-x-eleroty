@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:55:30 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/30 16:39:25 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/03 10:31:41 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	ft_exit(t_minishell *data, char **args)
 {
 	if (args[1])
 	{
-		printf("%s", args[1]);
 		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 1);
 		return ;
 	}

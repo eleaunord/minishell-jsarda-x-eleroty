@@ -24,12 +24,15 @@ SRCS        :=   libft/ft_lst.c \
 					utils/convert_to_execve_args.c \
 					utils/count_args.c \
 					srcs/builtins/ft_echo.c \
+					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \
 					srcs/builtins/ft_cd.c \
 					srcs/builtins/ft_exit.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
 					srcs/exec/env_utils.c \
+					srcs/exec/pipe_exec.c \
+					srcs/exec/exec.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)

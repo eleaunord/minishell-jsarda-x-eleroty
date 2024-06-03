@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 10:01:41 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 10:01:43 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/03 10:00:11 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/03 10:31:14 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_cd(t_minishell *data, char **args)
+void		ft_env(t_minishell *data, char **args)
 {
-	int	cd_ret;
+	(void)args;
 
-	if (!args[0])
-		cd_ret = chdir(get_path_value(data, "HOME"));
-	else
+	while (data->env)
 	{
-		cd_ret = chdir(args[0]);
-		if (cd_ret < 0)
-			cd_ret *= -1;
-		if (cd_ret != 0)
-			perror("minishell: cd:");
+		ft_putendl_fd(data->env->value, 1);
+		data->env = data->env->next;
 	}
+	if (data->env)
+		ft_putendl_fd(data->env->value, 1);
+	return ;
 }
