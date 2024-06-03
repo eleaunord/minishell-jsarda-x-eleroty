@@ -171,23 +171,23 @@ char	*is_envar_expansible(char *token, int *i, char **final_str, t_minishell *mi
 
 	(void)final_str;
 	(void)mini;
-	// if (is_btwn_single_quotes(*final_str) == 0)
-	// {
-	// 	if (is_brace_expansion(token, i, final_str) == 1)
-	// 		return (NULL);
-	// 	if (is_alpha_underscore(token[*i + 1]) || token[*i + 1] == '?')
-	// 		proceed_expansion(token, i, final_str, mini);
-	// 	else
-	// 		append_dollar_sign(final_str);
-	// }
-	// else
-	// {
+	if (is_btwn_single_quotes(*final_str) == 0)
+	{
+		if (is_brace_expansion(token, i, final_str) == 1)
+			return (NULL);
+		if (is_alpha_underscore(token[*i + 1]) || token[*i + 1] == '?')
+			proceed_expansion(token, i, final_str, mini);
+		else
+			append_dollar_sign(final_str);
+	}
+	else
+	{
 		start = *i;
 		while (is_alpha_underscore(token[*i + 1]))
 			*i += 1;
 		end = *i;
 		sub = ft_substr(token, start, (end - start + 1));
 		return (sub);
-	// }
-	// return (NULL);
+	}
+	return (NULL);
 }

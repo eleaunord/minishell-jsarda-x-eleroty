@@ -83,9 +83,11 @@ typedef struct s_token
 	char				*cmd;
 	char				**args;
 	// REDIRECTIONS
-	char *filename;
+	char				*filename;
 	int					sstdout;
-	int processed;
+	int					processed;
+	// EXPANSIONS
+	char				*key_expansion;
 }						t_token;
 
 // NODES
@@ -148,7 +150,7 @@ void					exec_pipeline(char ***cmds, int num_cmds);
 void					exec_simple_cmd(t_exec *exec, t_list *list,
 							t_minishell *data, char *path);
 int						is_built_in(t_list *list);
-void	handle_redir(t_token *redir);
+void					handle_redir(t_token *redir);
 // BUILTINS
 void					ft_exit(t_minishell *data, char **args);
 void					ft_pwd(t_minishell *data, char **args);
@@ -170,7 +172,8 @@ t_list					*ft_split_list(char *line, t_list *minishell,
 char					*create_token(char *str, int start, int end);
 char					*process_in_quotes(char *line, t_position_tracker *p,
 							t_command **cmd, t_list *mini);
-char	*ft_split_pipes_spaces(char *line, t_list **tokens_list);
+char					*ft_split_pipes_spaces(char *line,
+							t_list **tokens_list);
 char					*remove_quotes(char *line);
 int						ft_strcmp(char *s1, char *s2);
 int						tokenizer(char *line, t_list **nodes,
@@ -181,7 +184,7 @@ void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *mini, char **env_array);
 void					print_env(t_env *list);
 void					expander(t_token *token, t_minishell *mini);
-int						check_env_var(char *token);
+
 void					extract_substring(char *token, int start, int end,
 							char **final_str);
 char					*is_envar_expansible(char *token, int *i,
@@ -194,12 +197,15 @@ int						is_brace_expansion(char *token, int *i,
 void					proceed_expansion(char *token, int *i, char **final_str,
 							t_minishell *mini);
 void					ft_putstr_fd(char *s, int fd);
-int	special_tokens(char *input, t_token **tokens, int index);
+int						special_tokens(char *input, t_token **tokens,
+							int index);
 t_token					*new_token(t_token_type type, char *value);
-int word_token(char *input, t_token **tokens, int index);
+int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-void	parse_tokens(t_token *tokens);
-void	call_expander(t_list *list, t_minishell *data);
+void					parse_tokens(t_token *tokens);
+void					call_expander(t_list *list, t_minishell *data);
+char	*expand_variables(char *token);
+void process_expansions(t_token **tokens);
 
 // LIBFT FUNCTIONS
 char					**ft_split(char const *s, char c);

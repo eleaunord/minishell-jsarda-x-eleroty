@@ -10,44 +10,7 @@ echo "'hey tu vas chew moi' 'non'" =>
 	ARG[4]: moi'
 	ARG[5]: 'non'
 */
-// void	handle_redirection_token(t_token **tokens)
-// {
-// 	t_token	*tmp;
-// 	t_token	*next_token;
-// 	int		flags;
 
-// 	if (!tokens || !*tokens || !(*tokens)->next)
-// 		return ;
-// 	tmp = *tokens;
-// 	next_token = tmp->next;
-// 	if (next_token && next_token->type == TOKEN_WORD)
-// 	{
-// 		// Determine the flags for opening the file
-// 		flags = O_CREAT | O_RDWR;
-// 		if (tmp->type == APPEND_TOKEN)
-// 			flags |= O_APPEND;
-// 		else
-// 			flags |= O_TRUNC;
-// 		// Process the redirection based on type
-// 		tmp->filename = next_token->value;
-// 		tmp->sstdout = open(next_token->value, flags, 0644);
-// 		if (tmp->sstdout < 0)
-// 		{
-// 			perror("open");
-// 			return ;
-// 		}
-// 		// Mark the tokens as processed
-// 		tmp->processed = 1;
-// 		next_token->processed = 1;
-// 		// Move past the redirection token and its argument
-// 		*tokens = next_token->next;
-// 	}
-// 	else
-// 	{
-// 		// If there's no valid next token, move to the next token
-// 		*tokens = tmp->next;
-// 	}
-// }
 
 int	count_arguments(t_token *current)
 {
@@ -82,6 +45,7 @@ void process_redirection(t_token **tokens)
     }
 }
 
+
 void parse_tokens(t_token *tokens)
 {
     int arg_count;
@@ -99,9 +63,9 @@ void parse_tokens(t_token *tokens)
     // Process redirections first
     tokens->processed = 0;
     process_redirection(&tokens);
-
-
-
+    tokens->key_expansion = NULL;
+    process_expansions(&tokens);
+    // printf("PRINT HERE %s\n", tokens->key_expansion);
     // Move to the next token for counting arguments
     tmp = tokens->next;
     arg_count = count_arguments(tmp);

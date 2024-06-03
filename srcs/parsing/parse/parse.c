@@ -27,7 +27,9 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 		// while (temp != NULL)
 		// {
 		// 	printf("TOKEN now: %s\n", temp->value);
-		// 	printf("TYPE now: %d\n", temp->type);
+		// 	// printf("TYPE now: %d\n", temp->type);
+		// 	if (temp->key_expansion != NULL)
+		// 		printf("Key expansion: %s\n", temp->key_expansion);
 		// 	temp = temp->next;
 		// }
 

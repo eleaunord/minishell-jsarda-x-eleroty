@@ -34,7 +34,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/exec/redir.c \
 					srcs/exec/pipe_exec.c \
 					srcs/exec/exec.c \
-					srcs/exec/expansion.c \
+					srcs/parsing/parse/expansion.c \
 
 OBJS        := $(SRCS:.c=.o)
 
