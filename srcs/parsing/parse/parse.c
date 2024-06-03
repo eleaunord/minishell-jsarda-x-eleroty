@@ -73,9 +73,7 @@ int	main(int argc, char *argv[], char *env[])
 	t_minishell	data;
 	int			flag;
 	t_list		*current;
-	char		cwd[PATH_MAX];
-	char		*prompt;
-	char		*colored_prompt;
+	// char		cwd[PATH_MAX];
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -90,28 +88,35 @@ int	main(int argc, char *argv[], char *env[])
 	// Main shell execution Loop
 	while (1)
 	{
-		getcwd(cwd, PATH_MAX);
-		prompt = ft_strjoin(COLOR_GREEN, cwd);
-		colored_prompt = ft_strjoin(prompt, COLOR_RESET "$ ");
-		input_line = readline(colored_prompt);
+		// getcwd(cwd, PATH_MAX);
+		input_line = readline(">Prompt : ");
 		if (!input_line) // ctrl d
 		{
 			rl_clear_history(); // ?
-			return (0);
+			// return (0);
+			break;
 		}
 		if (check_line(&input_line))
+		{
+			free(input_line);
 			continue ;
+		}
+
 		if (!tokenizer(input_line, &tokens_list, &data))
 		{
 			add_history(input_line);
 			free(input_line);
-			return (0);
+			//return (0);
+			continue;
 		}
 		add_history(input_line);
 		current = tokens_list;
 		exec(current, &data);
 		if (data.exit) // free all
-			return (0);
+		{
+			//return (0);
+			break;
+		}
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 
@@ -139,5 +144,9 @@ int	main(int argc, char *argv[], char *env[])
 		// Clear the list after processing
 		free(input_line);
 	}
+	    // Cleanup before exiting
+    ft_lstclear(&tokens_list, free);
+    free(input_line);
+    free_minishell(&data);
 	return (0);
 }

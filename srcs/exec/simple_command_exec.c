@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 13:51:21 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/03 15:24:28 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,26 @@ void	exec_built_in(t_minishell *data, t_list *list)
 	built_in_funcs[index](data, list->tokens_in_node->args);
 }
 
+int	check_if_redir(char *cmd)
+{
+	if (ft_strcmp(cmd, ">") == 0)
+		return (0);
+	if (ft_strcmp(cmd, "<") == 0)
+		return (0);
+	if (ft_strcmp(cmd, "<<") == 0)
+		return (0);
+	if (ft_strcmp(cmd, ">>") == 0)
+		return (0);
+	return (1);
+}
+
 void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		char *path)
 {
 	pid_t	pid;
 	int		status;
 	char	**env;
+	t_token	*current;
 
 	if (is_built_in(list) != -1)
 		return (exec_built_in(data, list));
@@ -62,20 +76,27 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		perror("fork");
 	else if (pid == 0)
 	{
-		// redir_exec(list);
+		current = list->tokens_in_node;
+		while (current)
+		{
+			handle_redir(current);
+			current = current->next;
+		}
 		env = create_char_env(data->env);
 		if (!env)
+		{
 			free_minishell(data);
-		if (execve(path, exec->av, env) == -1)
-			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+		if (list->tokens_in_node->cmd
+			&& check_if_redir(list->tokens_in_node->cmd) != 0)
+			if (execve(path, exec->av, env) == -1)
+				perror("execve");
+		exit(0); // free all
 	}
 	else
 	{
 		if (waitpid(pid, &status, 0) == -1)
 			perror("waitpid");
-		// 	if (WIFEXITED(status))
-		// 		printf("Child exited with status %d\n", WEXITSTATUS(status));
-		// 	else if (WIFSIGNALED(status))
-		// 		printf("Child was killed by signal %d\n", WTERMSIG(status));
 	}
 }

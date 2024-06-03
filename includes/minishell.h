@@ -148,6 +148,7 @@ void					exec_pipeline(char ***cmds, int num_cmds);
 void					exec_simple_cmd(t_exec *exec, t_list *list,
 							t_minishell *data, char *path);
 int						is_built_in(t_list *list);
+void	handle_redir(t_token *redir);
 // BUILTINS
 void					ft_exit(t_minishell *data, char **args);
 void					ft_pwd(t_minishell *data, char **args);

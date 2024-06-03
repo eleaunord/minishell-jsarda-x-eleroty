@@ -31,10 +31,10 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
 					srcs/exec/env_utils.c \
+					srcs/exec/redir.c \
 					srcs/exec/pipe_exec.c \
 					srcs/exec/exec.c \
 					srcs/exec/expansion.c \
-					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)
 
