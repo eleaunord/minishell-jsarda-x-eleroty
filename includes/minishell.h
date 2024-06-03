@@ -82,6 +82,10 @@ typedef struct s_token
 	struct s_token		*next;
 	char				*cmd;
 	char				**args;
+	// REDIRECTIONS
+	char *filename;
+	int					sstdout;
+	int processed;
 }						t_token;
 
 // NODES
@@ -155,7 +159,6 @@ void					ft_env(t_minishell *data, char **args);
 int						init_env(t_minishell *data, char **env);
 int						open_quote_check(char *line);
 t_token					*tokenize_input(char *line);
-void					parse_tokens(t_token *tokens);
 int						is_space(char *line);
 int						is_separator(char *c);
 char					*create_token(char *str, int start, int end);
@@ -166,7 +169,7 @@ t_list					*ft_split_list(char *line, t_list *minishell,
 char					*create_token(char *str, int start, int end);
 char					*process_in_quotes(char *line, t_position_tracker *p,
 							t_command **cmd, t_list *mini);
-void					ft_split_pipes_spaces(char *line, t_list **tokens_list);
+char	*ft_split_pipes_spaces(char *line, t_list **tokens_list);
 char					*remove_quotes(char *line);
 int						ft_strcmp(char *s1, char *s2);
 int						tokenizer(char *line, t_list **nodes,
@@ -190,11 +193,12 @@ int						is_brace_expansion(char *token, int *i,
 void					proceed_expansion(char *token, int *i, char **final_str,
 							t_minishell *mini);
 void					ft_putstr_fd(char *s, int fd);
-void					special_tokens(char **input, t_token **tokens);
+int	special_tokens(char *input, t_token **tokens, int index);
 t_token					*new_token(t_token_type type, char *value);
-void					word_token(char **input, t_token **tokens, int *start,
-							int *i);
+int word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
+void	parse_tokens(t_token *tokens);
+void	call_expander(t_list *list, t_minishell *data);
 
 // LIBFT FUNCTIONS
 char					**ft_split(char const *s, char c);

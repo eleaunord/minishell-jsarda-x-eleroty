@@ -33,6 +33,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/exec/env_utils.c \
 					srcs/exec/pipe_exec.c \
 					srcs/exec/exec.c \
+					srcs/exec/expansion.c \
 					# parsing/tokenization/operators.c \
 
 OBJS        := $(SRCS:.c=.o)

@@ -6,6 +6,7 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	t_token	*tokens;
 	char	*input;
 
+
 	input = NULL;
 	(void)mini;
 	if (open_quote_check(line))
@@ -13,20 +14,29 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 		free(line);
 		return (0);
 	}
-	input = remove_quotes(line);
-	ft_split_pipes_spaces(input, nodes);
+	input = ft_split_pipes_spaces(line, nodes);
 	current = *nodes;
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
+
 		parse_tokens(tokens);
-		printf("%s", (char *)tokens);
+
+		// DEBUG
+		// t_token *temp = tokens;
+		// while (temp != NULL)
+		// {
+		// 	printf("TOKEN now: %s\n", temp->value);
+		// 	printf("TYPE now: %d\n", temp->type);
+		// 	temp = temp->next;
+		// }
+
 		// attach tokens to the current list node
 		current->tokens_in_node = tokens;
 		current = current->next;
 	}
 	line = input;
-	free(input);
+	// free(input);
 	return (1);
 }
 
@@ -63,7 +73,9 @@ int	main(int argc, char *argv[], char *env[])
 	t_minishell	data;
 	int			flag;
 	t_list		*current;
-	char cwd[PATH_MAX];
+	char		cwd[PATH_MAX];
+	char		*prompt;
+	char		*colored_prompt;
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -76,12 +88,11 @@ int	main(int argc, char *argv[], char *env[])
 	// PRINT ENV
 	// print_env(data.env);
 	// Main shell execution Loop
-
 	while (1)
 	{
 		getcwd(cwd, PATH_MAX);
-		char *prompt = ft_strjoin(COLOR_GREEN, cwd);
-        char *colored_prompt = ft_strjoin(prompt, COLOR_RESET "$ ");
+		prompt = ft_strjoin(COLOR_GREEN, cwd);
+		colored_prompt = ft_strjoin(prompt, COLOR_RESET "$ ");
 		input_line = readline(colored_prompt);
 		if (!input_line) // ctrl d
 		{
@@ -104,21 +115,28 @@ int	main(int argc, char *argv[], char *env[])
 		// DEBUG
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 
+		// DEBUG
 		// while (current != NULL)
 		// {
 		// 	printf("NODE : %s\n", (char *)current->content);
+		// 	t_token *temp = current->tokens_in_node;
 		// 	printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
-		// 	int i = 0;
-		// 	while (current->tokens_in_node->args[i] != NULL)
-		// 		i++;
-		// 	int end = i;
-		// 	i = 0;
-		// 	while (i < end)
-		// 		printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
+		// 	while (temp != NULL)
+		// 	{
+		// 		printf("TOKEN : %s\n", temp->value);
+		// 		printf("TYPE: %d\n", temp->type);
+		// 		int end = 0;
+		// 		while (current->tokens_in_node->args[end] != NULL)
+		// 			end++;
+		// 		int i = 0;
+		// 		while (i < end)
+		// 			printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
+		// 		temp = temp->next;
+		// 	}
 		// 	current = current->next;
 		// }
-
-		ft_lstclear(&tokens_list, free); // Clear the list after processing
+		ft_lstclear(&tokens_list, free);
+		// Clear the list after processing
 		free(input_line);
 	}
 	return (0);
