@@ -125,8 +125,8 @@ void	process_expansions(t_token **tokens)
 	{
 		if (ft_strchr(tok->value, '$') != NULL)
 			tok->key_expansion = expand_variables(tok->value);
-		// printf("in loop %s\n", tok->key_expansion);
+       if (!tok->key_expansion || !*(tok->key_expansion))
+            tok->key_expansion = NULL;
 		tok = tok->next;
 	}
-	
 }

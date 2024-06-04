@@ -22,7 +22,7 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 
 		parse_tokens(tokens);
 
-		// DEBUG
+		// DEBUG 
 		// t_token *temp = tokens;
 		// while (temp != NULL)
 		// {
@@ -32,6 +32,7 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 		// 		printf("Key expansion: %s\n", temp->key_expansion);
 		// 	temp = temp->next;
 		// }
+
 
 		// attach tokens to the current list node
 		current->tokens_in_node = tokens;

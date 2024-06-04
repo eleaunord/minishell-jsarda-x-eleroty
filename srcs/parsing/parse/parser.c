@@ -65,7 +65,17 @@ void parse_tokens(t_token *tokens)
     process_redirection(&tokens);
     tokens->key_expansion = NULL;
     process_expansions(&tokens);
-    // printf("PRINT HERE %s\n", tokens->key_expansion);
+    printf("PRINT HERE %s\n", tokens->key_expansion);
+    		// DEBUG 
+		t_token *temp = tokens;
+		while (temp != NULL)
+		{
+			printf("TOKEN now: %s\n", temp->value);
+			// printf("TYPE now: %d\n", temp->type);
+			if (temp->key_expansion != NULL)
+				printf("Key expansion: %s\n", temp->key_expansion);
+			temp = temp->next;
+		}
     // Move to the next token for counting arguments
     tmp = tokens->next;
     arg_count = count_arguments(tmp);
