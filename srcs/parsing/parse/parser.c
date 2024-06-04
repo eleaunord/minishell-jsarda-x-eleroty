@@ -96,76 +96,38 @@ char *remove_quotes_from_word(char *word)
     result[j] = '\0';
     return result;
 }
-// int new_word_token(char *input, t_token **tokens, int index)
-// {
-//     char    *word;
-//     int     in_quotes;
-//     char    quote_char;
-//     int     word_start;
-//     int     word_end;
 
-//     in_quotes = 0;
-//     quote_char = '\0';
-//     word_start = index;
-
-//     while (input[index] != '\0')
-//     {
-//         if (!in_quotes && (input[index] == ' ' || input[index] == '>' || input[index] == '<'))
-//         {
-//             break;
-//         }
-//         close_quote_check(&in_quotes, &in_quotes, NULL, input[index]);
-//         index++;
-//     }
-
-//     // Only create a token if we have a non-empty word
-//     if (index > word_start)
-//     {
-//         word_end = index;
-//         // Remove quotes if present
-//         char *temp_line = ft_strndup(input + word_start, word_end - word_start);
-//         if (temp_line)
-//         {
-//             word = remove_quotes_from_word(temp_line);
-//             free(temp_line);
-//             if (word)
-//             {
-//                 add_token_to_list(tokens, new_token(TOKEN_WORD, word));
-//                 free(word);
-//             }
-//         }
-//     }
-
-//     // Skip any trailing spaces after the current word token
-//     while (input[index] == ' ')
-//     {
-//         index++;
-//     }
-
-//     return index;
-// }
 void	update_tokens(t_token **tokens)
 {
-	t_token	*tok;
+	t_token	*current;
 
 	if (!tokens || !*tokens)
 		return ;
-	tok = *tokens;
-	while (tok)
+	current = *tokens;
+	current->filename = NULL;
+	while (current)
 	{
-		if (ft_strchr(tok->value, '$') != NULL && tok->key_expansion == NULL)
-			tok->value = remove_dollar_sign(tok->value);
-        //tok = new_word_token(tok);
-		tok = tok->next;
+		if (ft_strchr(current->value, '$') != NULL && current->key_expansion == NULL)
+			current->value = remove_dollar_sign(current->value);
+        if (ft_strchr(current->value, '\'') != NULL || ft_strchr(current->value, '\'') != NULL)
+			current->value = remove_quotes_from_word(current->value);
+        else
+            current->value = current->value;
+		current = current->next;
 	}
 }
+
+//word = remove_quotes_from_word(temp_line);
+// Modify my update_tokens function with this function so that it deals with quotes the same way bash in shell deals with quotes
+
+// Modify my update_tokens function with this function so that if we have the case of single quotes inside double quotes or doubles quotes inside single quotes the function should keep the quotes inside the quotes but remove the external quotes. If we have multpile 
 
 void	parse_tokens(t_token *tokens)
 {
 	int		arg_count;
 	int		i;
 	t_token	*tmp;
-	// t_token	*temp;
+	t_token	*temp;
 
 	if (!tokens)
 		return ;
@@ -174,22 +136,24 @@ void	parse_tokens(t_token *tokens)
 	if (!tokens->cmd)
 		return ;
 	// Process redirections first
-	tokens->processed = 0;
 	process_redirection(&tokens);
+    // Process expansion
 	tokens->key_expansion = NULL;
 	process_expansions(&tokens);
+	tokens->processed = 0;
 	update_tokens(&tokens);
-	// printf("PRINT HERE %s\n", tokens->key_expansion);
-	// DEBUG
-	// temp = tokens;
-	// while (temp != NULL)
-	// {
-	// 	printf("TOKEN now: %s\n", temp->value);
-	// 	// printf("TYPE now: %d\n", temp->type);
-	// 	if (temp->key_expansion != NULL)
-	// 		printf("Key expansion: %s\n", temp->key_expansion);
-	// 	temp = temp->next;
-	// }
+    // DEBUG
+	temp = tokens;
+	while (temp != NULL)
+	{
+		printf("TOKEN now: %s\n", temp->value);
+		printf("TYPE now: %d\n", temp->type);
+		if (temp->key_expansion != NULL)
+			printf("Key expansion: %s\n", temp->key_expansion);
+        else
+            printf("the fuck\n");
+		temp = temp->next;
+	}
 	// Move to the next token for counting arguments
 	tmp = tokens->next;
 	arg_count = count_arguments(tmp);
@@ -225,3 +189,4 @@ void	parse_tokens(t_token *tokens)
 	tokens->args[arg_count] = NULL;
 	// No need to free the original list since we are keeping all tokens intact
 }
+

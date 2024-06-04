@@ -117,7 +117,7 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		current = tokens_list;
-		exec(current, &data);
+		//exec(current, &data);
 		if (data.exit) // free all
 		{
 			//return (0);
@@ -139,9 +139,9 @@ int	main(int argc, char *argv[], char *env[])
 		// 		int end = 0;
 		// 		while (current->tokens_in_node->args[end] != NULL)
 		// 			end++;
-		// 		int i = 0;
-		// 		while (i < end)
-		// 			printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
+		// 		// int i = 0;
+		// 		// while (i < end)
+		// 		// 	printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
 		// 		temp = temp->next;
 		// 	}
 		// 	current = current->next;
