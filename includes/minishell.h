@@ -206,6 +206,8 @@ void					parse_tokens(t_token *tokens);
 void					call_expander(t_list *list, t_minishell *data);
 char	*expand_variables(char *token);
 void process_expansions(t_token **tokens);
+char	*ft_strcpy(char *dest, const char *src);
+void close_quote_check(int *dq, int *sq, int *index, char c);
 
 // LIBFT FUNCTIONS
 char					**ft_split(char const *s, char c);

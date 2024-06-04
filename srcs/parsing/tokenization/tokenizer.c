@@ -48,6 +48,7 @@ t_token	*tokenize_input(char *node)
 	tokens = NULL;
 	i = 0;
 	start = 0;
+
 	length = ft_strlen(node);
 	while (i < length)
 	{

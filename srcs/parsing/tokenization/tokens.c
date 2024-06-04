@@ -3,7 +3,7 @@
 
 int word_token(char *input, t_token **tokens, int index)
 {
-    char    *word;
+    //char    *word;
     int     in_quotes;
     char    quote_char;
     int     word_start;
@@ -19,41 +19,26 @@ int word_token(char *input, t_token **tokens, int index)
         {
             break;
         }
-        if (!in_quotes && (input[index] == '"' || input[index] == '\''))
-        {
-            in_quotes = 1;
-            quote_char = input[index];
-            index++;
-            continue;
-        }
-        if (in_quotes && input[index] == quote_char)
-        {
-            in_quotes = 0;
-            quote_char = '\0';
-            index++;
-            continue;
-        }
+        close_quote_check(&in_quotes, &in_quotes, NULL, input[index]);
         index++;
     }
 
     // Only create a token if we have a non-empty word
     if (index > word_start)
     {
-        // Adjust start and end positions to remove quotes if present
         word_end = index;
-        if (input[word_start] == '"' || input[word_start] == '\'')
+        // Remove quotes if present
+        char *temp_line = ft_strndup(input + word_start, word_end - word_start);
+        if (temp_line)
         {
-            word_start++;
-        }
-        if (input[word_end - 1] == '"' || input[word_end - 1] == '\'')
-        {
-            word_end--;
-        }
-        word = ft_strndup(input + word_start, word_end - word_start);
-        if (word)
-        {
-            add_token_to_list(tokens, new_token(TOKEN_WORD, word));
-            free(word);
+            add_token_to_list(tokens, new_token(TOKEN_WORD, temp_line));
+            // word = remove_quotes_from_word(temp_line);
+            // free(temp_line);
+            // if (word)
+            // {
+            //     add_token_to_list(tokens, new_token(TOKEN_WORD, word));
+            //     free(word);
+            // }
         }
     }
 
@@ -65,6 +50,9 @@ int word_token(char *input, t_token **tokens, int index)
 
     return index;
 }
+
+
+
 
 int	special_tokens(char *input, t_token **tokens, int index)
 {
