@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 14:45:25 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/04 16:11:43 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	redir_in(t_token *redir)
 
 void	redir_out(t_token *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -50,7 +50,8 @@ void	redir_out(t_token *redir)
 
 void	appen_redir_out(t_token *redir)
 {
-	int fd;
+	int	fd;
+
 	fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -65,6 +66,37 @@ void	appen_redir_out(t_token *redir)
 	close(fd);
 }
 
+// void	heredoc(char *eof, t_token *redir)
+// {
+// 	char	*buf;
+// 	int		fd;
+// 	(void)redir;
+// 	buf = NULL;
+// 	if (!eof)
+// 	{
+// 		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
+// 			2);
+// 		return ;
+// 	}
+// 	fd = open("test.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 	if (fd == -1)
+// 	{
+// 		perror("Error opening output file");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	while (1)
+// 	{
+// 		buf = readline("> ");
+// 		if (!ft_strncmp(eof, buf, INT_MAX))
+// 			break ;
+// 		ft_putendl_fd(buf ,fd);
+// 		free(buf);
+// 	}
+// 	close(fd);
+// 	//redir_in(redir);
+// 	free(buf);
+// }
+
 void	handle_redir(t_token *redir)
 {
 	if (redir->type == REDIR_IN_TOKEN)
@@ -73,5 +105,6 @@ void	handle_redir(t_token *redir)
 		redir_out(redir);
 	else if (redir->type == APPEND_TOKEN)
 		appen_redir_out(redir);
-	// Note: HEREDOC_REDIR is not handled in this function.
+	// else if (redir->type == HEREDOC_TOKEN)
+	// 	heredoc(redir->args[0], redir);
 }

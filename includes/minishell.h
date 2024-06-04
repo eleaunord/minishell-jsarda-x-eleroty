@@ -12,6 +12,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <limits.h>
 
 // TOKEN LIST
 
@@ -50,7 +51,6 @@ Règles de Tokenisation :
 # define CMD 6
 # define ARG 7
 # define SINGLE_QUOTE 39
-# define PATH_MAX 500
 # define NUM_OF_BUILT_INS 5
 // TOKEN LINKED LIST
 

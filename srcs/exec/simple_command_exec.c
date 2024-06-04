@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 15:24:28 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/04 16:19:14 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,9 @@ void	exec_built_in(t_minishell *data, t_list *list)
 	built_in_funcs[index](data, list->tokens_in_node->args);
 }
 
-int	check_if_redir(char *cmd)
+int	check_if_redir(t_token *token)
 {
-	if (ft_strcmp(cmd, ">") == 0)
-		return (0);
-	if (ft_strcmp(cmd, "<") == 0)
-		return (0);
-	if (ft_strcmp(cmd, "<<") == 0)
-		return (0);
-	if (ft_strcmp(cmd, ">>") == 0)
+	if (token->type >= 1 && token->type <= 4)
 		return (0);
 	return (1);
 }
@@ -69,18 +63,24 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 	char	**env;
 	t_token	*current;
 
-	if (is_built_in(list) != -1)
-		return (exec_built_in(data, list));
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
 	else if (pid == 0)
 	{
 		current = list->tokens_in_node;
-		while (current)
+		if (check_if_redir(current) == 0)
 		{
-			handle_redir(current);
-			current = current->next;
+			while (current)
+			{
+				handle_redir(current);
+				current = current->next;
+			}
+		}
+		if (is_built_in(list) != -1)
+		{
+			exec_built_in(data, list);
+			exit (0); // free all
 		}
 		env = create_char_env(data->env);
 		if (!env)
@@ -88,8 +88,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 			free_minishell(data);
 			exit(EXIT_FAILURE);
 		}
-		if (list->tokens_in_node->cmd
-			&& check_if_redir(list->tokens_in_node->cmd) != 0)
+		if (list->tokens_in_node->cmd)
 			if (execve(path, exec->av, env) == -1)
 				perror("execve");
 		exit(0); // free all

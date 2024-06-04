@@ -43,7 +43,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 
 int	ft_isdigit(char *c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (c[i])
@@ -53,5 +53,17 @@ int	ft_isdigit(char *c)
 		i++;
 	}
 	return (1);
+}
 
+int	ft_lstsize(t_list *lst)
+{
+	size_t	i;
+
+	i = 0;
+	while (lst)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i);
 }
