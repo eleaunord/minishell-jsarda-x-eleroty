@@ -24,7 +24,7 @@ int	count_arguments(t_token *current)
 	return (arg_count);
 }
 
-void	process_redirection(t_token **tokens)
+void	set_filename(t_token **tokens)
 {
 	t_token	*current;
 
@@ -57,71 +57,88 @@ char	*remove_dollar_sign(char *str)
 	return (new_str);
 }
 
-char *remove_quotes_from_word(char *word)
+char	*remove_quotes_from_word(char *word)
 {
-    if (!word)
-        return NULL;
+	int		len;
+	char	*result;
 
-    int len = strlen(word);
-    char *result = (char *)malloc(len + 1);
-    if (!result)
-    {
-        fprintf(stderr, "Memory allocation error\n");
-        return NULL;
-    }
-
-    int i, j = 0;
-    char quote = 0; // To keep track of the current quote character
-    for (i = 0; i < len; i++)
-    {
-        if (word[i] == '"' || word[i] == '\'')
-        {
-            if (quote == 0)
-            {
-                // Starting a new quote block
-                quote = word[i];
-            }
-            else if (quote == word[i])
-            {
-                // Ending the current quote block
-                quote = 0;
-            }
-        }
-        else
-        {
-            // Normal character, just copy it
-            result[j++] = word[i];
-        }
-    }
-    result[j] = '\0';
-    return result;
+	if (!word)
+		return (NULL);
+	len = strlen(word);
+	result = (char *)malloc(len + 1);
+	if (!result)
+	{
+		fprintf(stderr, "Memory allocation error\n");
+		return (NULL);
+	}
+	int i, j = 0;
+	char quote = 0; // To keep track of the current quote character
+	for (i = 0; i < len; i++)
+	{
+		if (word[i] == '\'' && quote == 0)
+		{
+			// Starting or ending a single quote block
+			while (word[++i] != '\'' && i < len)
+			{
+				result[j++] = word[i];
+			}
+		}
+		else if (word[i] == '"' && quote == 0)
+		{
+			// Starting a double quote block
+			quote = '"';
+		}
+		else if (word[i] == '"' && quote == '"')
+		{
+			// Ending a double quote block
+			quote = 0;
+		}
+		else if (quote == '"' && (word[i] == '\\' || word[i] == '$'
+				|| word[i] == '`'))
+		{
+			// Inside double quotes, special handling for \, $, and `
+			result[j++] = word[i];
+		}
+		else
+		{
+			// Normal character, just copy it
+			result[j++] = word[i];
+		}
+	}
+	result[j] = '\0';
+	return (result);
 }
 
 void	update_tokens(t_token **tokens)
 {
 	t_token	*current;
+	char	*dollar_sign_pos;
+	char	*new_value;
 
 	if (!tokens || !*tokens)
 		return ;
 	current = *tokens;
-	current->filename = NULL;
 	while (current)
 	{
-		if (ft_strchr(current->value, '$') != NULL && current->key_expansion == NULL)
+		// Check if the dollar sign is directly followed by a quote
+		dollar_sign_pos = ft_strchr(current->value, '$');
+		if (dollar_sign_pos != NULL && (*(dollar_sign_pos + 1) == '\''
+				|| *(dollar_sign_pos + 1) == '"'))
+		{
 			current->value = remove_dollar_sign(current->value);
-        if (ft_strchr(current->value, '\'') != NULL || ft_strchr(current->value, '\'') != NULL)
-			current->value = remove_quotes_from_word(current->value);
-        else
-            current->value = current->value;
+		}
+		if (ft_strchr(current->value, '\'') != NULL || ft_strchr(current->value,
+				'"') != NULL)
+		{
+			new_value = remove_quotes_from_word(current->value);
+			free(current->value);
+			current->value = new_value;
+		}
 		current = current->next;
 	}
 }
 
-//word = remove_quotes_from_word(temp_line);
-// Modify my update_tokens function with this function so that it deals with quotes the same way bash in shell deals with quotes
-
-// Modify my update_tokens function with this function so that if we have the case of single quotes inside double quotes or doubles quotes inside single quotes the function should keep the quotes inside the quotes but remove the external quotes. If we have multpile 
-
+//$$PATH
 void	parse_tokens(t_token *tokens)
 {
 	int		arg_count;
@@ -131,30 +148,43 @@ void	parse_tokens(t_token *tokens)
 
 	if (!tokens)
 		return ;
-	// Set the first token's value to cmd
-	tokens->cmd = ft_strdup(tokens->value);
-	if (!tokens->cmd)
-		return ;
-	// Process redirections first
-	process_redirection(&tokens);
-    // Process expansion
+	if (!(tokens->type >= 1 && tokens->type <= 4))
+    {
+        tokens->cmd = ft_strdup(tokens->value);
+        if (!tokens->cmd)
+            return;
+    }
+	else
+		tokens->cmd = NULL;
+	tokens->filename = NULL;
+	set_filename(&tokens);
 	tokens->key_expansion = NULL;
 	process_expansions(&tokens);
 	tokens->processed = 0;
 	update_tokens(&tokens);
-    // DEBUG
-	temp = tokens;
-	while (temp != NULL)
-	{
-		printf("TOKEN now: %s\n", temp->value);
-		printf("TYPE now: %d\n", temp->type);
-		if (temp->key_expansion != NULL)
-			printf("Key expansion: %s\n", temp->key_expansion);
-        else
-            printf("the fuck\n");
-		temp = temp->next;
-	}
-	// Move to the next token for counting arguments
+
+	// DEBUG
+	// temp = tokens;
+	// while (temp != NULL)
+	// {
+	// 	printf("CMD : %s\n", temp->cmd);
+	// 	printf("Token : %s\n", temp->value);
+	// 	printf("Type : %d\n", temp->type);
+	// 	if (temp->filename != NULL)
+	// 	{
+	// 		printf("Name of file: %s\n", temp->filename);
+	// 	}
+	// 	else
+	// 		printf("no file\n");
+	// 	if (temp->key_expansion != NULL)
+	// 	{
+	// 		printf("Key expansion: %s\n", temp->key_expansion);
+	// 	}
+	// 	else
+	// 		printf("no expansion\n");
+	// 	temp = temp->next;
+	// }
+	
 	tmp = tokens->next;
 	arg_count = count_arguments(tmp);
 	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
@@ -163,7 +193,6 @@ void	parse_tokens(t_token *tokens)
 		free(tokens->cmd);
 		return ;
 	}
-	// ok
 	i = 0;
 	tmp = tokens->next;
 	while (tmp)
@@ -173,7 +202,6 @@ void	parse_tokens(t_token *tokens)
 			tokens->args[i] = ft_strdup(tmp->value);
 			if (!tokens->args[i])
 			{
-				// Handle strdup failure, free allocated memory
 				while (i > 0)
 				{
 					free(tokens->args[--i]);
@@ -187,6 +215,4 @@ void	parse_tokens(t_token *tokens)
 		tmp = tmp->next;
 	}
 	tokens->args[arg_count] = NULL;
-	// No need to free the original list since we are keeping all tokens intact
 }
-

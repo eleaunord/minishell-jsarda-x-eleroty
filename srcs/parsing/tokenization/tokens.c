@@ -32,13 +32,6 @@ int word_token(char *input, t_token **tokens, int index)
         if (temp_line)
         {
             add_token_to_list(tokens, new_token(TOKEN_WORD, temp_line));
-           // word = remove_quotes_from_word(temp_line);
-            // free(temp_line);
-            // if (word)
-            // {
-            //     add_token_to_list(tokens, new_token(TOKEN_WORD, word));
-            //     free(word);
-            // }
         }
     }
 
