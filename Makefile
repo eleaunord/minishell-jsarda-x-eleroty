@@ -9,6 +9,7 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_strcmp.c \
 					libft/ft_split.c \
 					libft/ft_putstr_fd.c \
+					libft/ft_lstdelone.c \
 					libft/ft_memcpy.c \
 					libft/ft_itoa.c \
 					srcs/parsing/tokenization/tokens.c \
@@ -28,6 +29,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_pwd.c \
 					srcs/builtins/ft_cd.c \
 					srcs/builtins/ft_exit.c \
+					srcs/builtins/ft_unset.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
 					srcs/exec/env_utils.c \

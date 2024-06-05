@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 10:00:11 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/05 15:38:29 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/04 16:24:22 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/05 09:34:11 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-void	ft_env(t_minishell *data, char **args)
+void	*ft_lstdelone(void *lst)
 {
-	t_env	*start;
-
-	(void)args;
-	start = data->env;
-	if (!data->env)
-		return ; // need to add pwd , shlvl , _
-	ft_putendl_fd(data->env->str, 1);
-	data->env = data->env->next;
-	while (data->env != start)
+	if (lst)
 	{
-		ft_putendl_fd(data->env->str, 1);
-		data->env = data->env->next;
+		free(lst);
+		lst = NULL;
 	}
+	return (NULL);
 }
