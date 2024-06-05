@@ -148,26 +148,39 @@ void	parse_tokens(t_token *tokens)
 
 	if (!tokens)
 		return ;
-	if (!(tokens->type >= 1 && tokens->type <= 4))
-    {
-        tokens->cmd = ft_strdup(tokens->value);
-        if (!tokens->cmd)
-            return;
-    }
+	if (tokens->type >= 1 && tokens->type <= 4)
+		// if first token is a redirection
+	{
+		tmp = tokens->next;
+		if (tmp && tmp->next) // Check if there are at least three tokens
+		{
+			tmp = tmp->next; // Move to the third token
+			tokens->cmd = ft_strdup(tmp->value);
+			if (!tokens->cmd)
+				return ;
+		}
+		else
+		{
+			tokens->cmd = NULL;
+		}
+	}
 	else
-		tokens->cmd = NULL;
-	tokens->filename = NULL;
+	{
+		tokens->cmd = ft_strdup(tokens->value);
+		if (!tokens->cmd)
+			return ;
+	}
 	set_filename(&tokens);
 	tokens->key_expansion = NULL;
 	process_expansions(&tokens);
 	tokens->processed = 0;
 	update_tokens(&tokens);
-
 	// DEBUG
 	// temp = tokens;
+	// printf("CMD : %s\n", temp->cmd);
 	// while (temp != NULL)
 	// {
-	// 	printf("CMD : %s\n", temp->cmd);
+		
 	// 	printf("Token : %s\n", temp->value);
 	// 	printf("Type : %d\n", temp->type);
 	// 	if (temp->filename != NULL)
@@ -184,7 +197,6 @@ void	parse_tokens(t_token *tokens)
 	// 		printf("no expansion\n");
 	// 	temp = temp->next;
 	// }
-
 	tmp = tokens->next;
 	arg_count = count_arguments(tmp);
 	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
