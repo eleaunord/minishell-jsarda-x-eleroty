@@ -144,7 +144,7 @@ void	parse_tokens(t_token *tokens)
 	int		arg_count;
 	int		i;
 	t_token	*tmp;
-	t_token	*temp;
+	// t_token	*temp;
 
 	if (!tokens)
 		return ;
@@ -184,7 +184,7 @@ void	parse_tokens(t_token *tokens)
 	// 		printf("no expansion\n");
 	// 	temp = temp->next;
 	// }
-	
+
 	tmp = tokens->next;
 	arg_count = count_arguments(tmp);
 	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
