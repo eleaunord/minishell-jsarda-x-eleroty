@@ -90,6 +90,14 @@ typedef struct s_token
 	char				*key_expansion;
 }						t_token;
 
+typedef struct s_cmd
+{
+	char **av;
+	int argc;
+	t_redir redir;
+} t_cmd;
+
+
 // NODES
 // Env struct
 typedef struct s_env

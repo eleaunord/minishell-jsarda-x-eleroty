@@ -144,7 +144,7 @@ void	process_expansions(t_token **tokens)
 		{
 			tok->key_expansion = expand_variables(tok->value);
 		}
-		if (!tok->key_expansion || !*(tok->key_expansion))
+		if (!tok->key_expansion)
 			tok->key_expansion = NULL;
 		tok = tok->next;
 	}

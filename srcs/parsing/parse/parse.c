@@ -116,8 +116,38 @@ int	main(int argc, char *argv[], char *env[])
 			continue;
 		}
 		add_history(input_line);
-		current = tokens_list;
-		exec(current, &data);
+		current = tokens_list;		
+		while (current != NULL)
+		{
+			printf("NODE : %s\n", (char *)current->content);
+			t_token *temp = current->tokens_in_node;
+
+			while (temp != NULL)
+			{
+				printf("CMD : %s\n", temp->cmd);
+				printf("TOKEN : %s\n", temp->value);
+				printf("TYPE: %d\n", temp->type);
+
+				// int end = 0;
+			 
+				// while (temp->args[end] != NULL)
+				// {
+				// 	end++;
+				// }
+
+				int i = 0;
+				// printf("THE END%d", end);
+				while (i--)
+				{
+					printf("ARGS : %s\n", temp->args[i]);
+				}
+				
+				temp = temp->next;
+			}
+			
+			current = current->next;
+		}
+		//exec(current, &data);
 		if (data.exit) // free all
 		{
 			//return (0);
@@ -127,25 +157,7 @@ int	main(int argc, char *argv[], char *env[])
 		// printf("current: %s\n", current->tokens_in_node->cmd);
 
 		// DEBUG
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", (char *)current->content);
-		// 	t_token *temp = current->tokens_in_node;
-		// 	printf("CMD : %s\n", (char *)current->tokens_in_node->cmd);
-		// 	while (temp != NULL)
-		// 	{
-		// 		printf("TOKEN : %s\n", temp->value);
-		// 		printf("TYPE: %d\n", temp->type);
-		// 		int end = 0;
-		// 		while (current->tokens_in_node->args[end] != NULL)
-		// 			end++;
-		// 		// int i = 0;
-		// 		// while (i < end)
-		// 		// 	printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
-		// 		temp = temp->next;
-		// 	}
-		// 	current = current->next;
-		// }
+
 		ft_lstclear(&tokens_list, free);
 		// Clear the list after processing
 		free(input_line);
