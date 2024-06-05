@@ -8,15 +8,17 @@ t_token	*new_token(t_token_type type, char *value)
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->type = type;
-	token->value = ft_strdup(value);
-	token->cmd = NULL;
-	token->args = NULL;
+	token->value = ft_strdup(value);	
 	if (!token->value)
 	{
 		free(token);
 		return (NULL);
 	}
+	token->cmd = NULL;
+	token->args = NULL;
+	token->filename = NULL;
+	token->key_expansion = NULL;
+	token->type = type;
 	token->next = NULL;
 	return (token);
 }
@@ -48,9 +50,11 @@ t_token	*tokenize_input(char *node)
 	tokens = NULL;
 	i = 0;
 	start = 0;
+
 	length = ft_strlen(node);
 	while (i < length)
 	{
+		
 		if (node[i] == '>' || node[i] == '<')
 		{
 			i = special_tokens(node + i, &tokens, i);

@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/05 15:57:10 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/05 16:06:13 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		char *path)
 {
 	pid_t	pid;
-
+	
 	if (is_built_in(list) != -1)
 	{
 		exec_built_in(data, list);

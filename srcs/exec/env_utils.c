@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 13:54:15 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/03 16:26:04 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+// VARIABLE EXPANSION
+
+// char	*get_env_value(const char *name, t_minishell *mini)
+// {
+// 	t_env	*current;
+
+// 	current = mini->env;
+// 	while (current)
+// 	{
+// 		if (ft_strcmp(current->key, name) == 0)
+// 		{
+// 			return (current->value);
+// 		}
+// 		current = current->next;
+// 	}
+// 	return (NULL); // Variable not found
+// }
 
 int	get_key(t_env *env, char *key)
 {

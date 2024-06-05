@@ -18,8 +18,9 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	current = *nodes;
 	while (current != NULL)
 	{
-		tokens = tokenize_input(current->content);
 
+
+		tokens = tokenize_input(current->content);
 		parse_tokens(tokens);
 
 		// DEBUG
@@ -27,9 +28,14 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 		// while (temp != NULL)
 		// {
 		// 	printf("TOKEN now: %s\n", temp->value);
-		// 	printf("TYPE now: %d\n", temp->type);
+		// 	// printf("TYPE now: %d\n", temp->type);./mini
+		// 	if (temp->key_expansion != NULL)
+		// 		printf("Key expansion: %s\n", temp->key_expansion);
+		// 	else
+		// 		printf("hourr");
 		// 	temp = temp->next;
 		// }
+
 
 		// attach tokens to the current list node
 		current->tokens_in_node = tokens;
@@ -73,7 +79,7 @@ int	main(int argc, char *argv[], char *env[])
 	t_minishell	data;
 	int			flag;
 	t_list		*current;
-	// char		cwd[PATH_MAX];
+	char		cwd[PATH_MAX];
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -88,8 +94,8 @@ int	main(int argc, char *argv[], char *env[])
 	// Main shell execution Loop
 	while (1)
 	{
-		// getcwd(cwd, PATH_MAX);
-		input_line = readline(">Prompt : ");
+		getcwd(cwd, PATH_MAX);
+		input_line = readline(ft_strjoin(cwd, " $> "));
 		if (!input_line) // ctrl d
 		{
 			rl_clear_history(); // ?
@@ -133,9 +139,9 @@ int	main(int argc, char *argv[], char *env[])
 		// 		int end = 0;
 		// 		while (current->tokens_in_node->args[end] != NULL)
 		// 			end++;
-		// 		int i = 0;
-		// 		while (i < end)
-		// 			printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
+		// 		// int i = 0;
+		// 		// while (i < end)
+		// 		// 	printf("ARGS : %s\n", (char *)current->tokens_in_node->args[i++]);
 		// 		temp = temp->next;
 		// 	}
 		// 	current = current->next;
