@@ -11,20 +11,6 @@ echo "'hey tu vas chew moi' 'non'" =>
 	ARG[5]: 'non'
 */
 
-<<<<<<< HEAD
-int	count_arguments(t_token *tokens, t_token *cmd_token)
-{
-	int	count;
-
-	count = 0;
-	while (tokens)
-	{
-		if (tokens->type == TOKEN_WORD && tokens != cmd_token)
-		{
-			count++;
-		}
-		tokens = tokens->next;
-=======
 int	count_arguments(t_token *tokens)
 {
 	int		count;
@@ -39,7 +25,6 @@ int	count_arguments(t_token *tokens)
 			count++;
 		}
 		current = current->next;
->>>>>>> parsing
 	}
 	return (count);
 }
