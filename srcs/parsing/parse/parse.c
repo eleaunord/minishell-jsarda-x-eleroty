@@ -117,37 +117,29 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		current = tokens_list;		
-		while (current != NULL)
-		{
-			printf("NODE : %s\n", (char *)current->content);
-			t_token *temp = current->tokens_in_node;
-
-			while (temp != NULL)
-			{
-				printf("CMD : %s\n", temp->cmd);
-				printf("TOKEN : %s\n", temp->value);
-				printf("TYPE: %d\n", temp->type);
-
-				// int end = 0;
-			 
-				// while (temp->args[end] != NULL)
-				// {
-				// 	end++;
-				// }
-
-				int i = 0;
-				// printf("THE END%d", end);
-				while (i--)
-				{
-					printf("ARGS : %s\n", temp->args[i]);
-				}
-				
-				temp = temp->next;
-			}
+		// while (current != NULL)
+		// {
+		// 	printf("NODE : %s\n", (char *)current->content);
+		// 	t_token *temp = current->tokens_in_node;
+		// 	printf("CMD : %s\n", temp->cmd);
+		// 	while (temp != NULL)
+		// 	{
+		// 		printf("TOKEN : %s\n", temp->value);
+		// 		printf("TYPE: %d\n", temp->type);
+		// 		printf("cmd : %s\n", temp->cmd);
+		// 		printf("file name : %s\n", temp->filename);
+		// 		printf("key expansion : %s\n", temp->key_expansion);
+		// 		int i = 0;
+		// 		while (temp->args && i < count_arguments(temp)) 
+		// 		{
+		// 			printf("ARGS : %s\n", temp->args[i++]);
+		// 		}
+		// 		temp = temp->next;
+		// 	}
 			
-			current = current->next;
-		}
-		//exec(current, &data);
+		// 	current = current->next;
+		// }
+		exec(current, &data);
 		if (data.exit) // free all
 		{
 			//return (0);

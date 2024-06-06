@@ -11,21 +11,23 @@ echo "'hey tu vas chew moi' 'non'" =>
 	ARG[5]: 'non'
 */
 
-int count_arguments(t_token *tokens, t_token *cmd_token)
+int	count_arguments(t_token *tokens)
 {
-    int count = 0;
-    while (tokens)
-    {
-        if (tokens->type == TOKEN_WORD && tokens != cmd_token)
-        {
-            count++;
-        }
-        tokens = tokens->next;
-    }
-    return count;
+	int		count;
+	t_token	*current;
+
+	count = 0;
+	current = tokens;
+	while (current)
+	{
+		if (current->type == TOKEN_WORD && !current->processed)
+		{
+			count++;
+		}
+		current = current->next;
+	}
+	return (count);
 }
-
-
 
 void	set_filename(t_token **tokens)
 {
@@ -39,9 +41,11 @@ void	set_filename(t_token **tokens)
 	{
 		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
 		{
-			current->processed = 1;
 			if (current->next && current->next->type == TOKEN_WORD)
+			{
 				current->filename = current->next->value;
+				current->next->processed = 1;
+			}
 		}
 		current = current->next;
 	}
@@ -111,7 +115,17 @@ char	*remove_quotes_from_word(char *word)
 	result[j] = '\0';
 	return (result);
 }
-
+void init_parsing(t_token **tokens)
+{
+	t_token *current;
+	current = *tokens;
+	while (current)
+	{
+		current->processed = 0;
+		current = current->next;
+	}
+	
+}
 void	update_tokens(t_token **tokens)
 {
 	t_token	*current;
@@ -141,107 +155,108 @@ void	update_tokens(t_token **tokens)
 	}
 }
 
-// enlver filename des args 
+// enlver filename des args
 void parse_tokens(t_token *tokens)
 {
-    int arg_count;
-    int i;
-    t_token *tmp;
-    t_token *cmd_token = NULL;
+	int arg_count;
+	int i;
+	t_token *head = tokens;  // Keep the reference to the head of the list
 
-    if (!tokens)
-        return;
+	if (!tokens)
+	{
+		return;
+	}
+	init_parsing(&tokens);
 
-    if (tokens->type >= 1 && tokens->type <= 4)
-    {
-        tmp = tokens->next;
-        if (tmp && tmp->next)
-        {
-            tmp = tmp->next;
-            tokens->cmd = ft_strdup(tmp->value);
-            cmd_token = tmp;  // Mark this token as cmd_token
-            if (!tokens->cmd)
-                return;
-        }
-        else
-        {
-            tokens->cmd = NULL;
-        }
-    }
-    else
-    {
-        tokens->cmd = ft_strdup(tokens->value);
-        cmd_token = tokens;  // Mark this token as cmd_token
-        if (!tokens->cmd)
-            return;
-    }
+	// FIRST TOKEN
+	if (tokens->type >= APPEND_TOKEN && tokens->type <= REDIR_IN_TOKEN)
+	{
+		if (tokens->next && tokens->next->next)
+		{
+			tokens->cmd = ft_strdup(tokens->next->next->value);
+			if (!tokens->cmd)
+				return;
+			tokens->next->next->processed = 1;
+		}
+		else
+		{
+			tokens->cmd = NULL;
+		}
+	}
+	else if (tokens->type == TOKEN_WORD)
+	{
+		tokens->cmd = ft_strdup(tokens->value);
+		tokens->processed = 1;
+		if (!tokens->cmd)
+			return;
+	}
+	else
+		tokens->cmd = NULL;
 
-    set_filename(&tokens);
-    tokens->key_expansion = NULL;
-    process_expansions(&tokens);
-    tokens->processed = 0;
-    update_tokens(&tokens);
+	// SET FILENAME
+	tokens->filename = NULL;
+	set_filename(&tokens);
 
-    tmp = tokens->next;
-    arg_count = count_arguments(tmp, cmd_token);
-	printf("ARG COUNT %d\n", arg_count);
-    tokens->args = malloc(sizeof(char *) * (arg_count + 1));
-    if (!tokens->args)
-    {
-        free(tokens->cmd);
-        return;
-    }
+	// EXPAND
+	tokens->key_expansion = NULL;
+	process_expansions(&tokens);
 
-    i = 0;
-    tmp = tokens->next;
-    while (tmp)
-    {
-		
-        if (tmp->type == TOKEN_WORD && !tmp->processed && tmp != cmd_token)
-        {
-			printf("%s\n", tokens->args[i]);
-            tokens->args[i] = ft_strdup(tmp->value);
-            if (!tokens->args[i])
-            {
-                while (i > 0)
-                {
-                    free(tokens->args[--i]);
-                }
-                free(tokens->args);
-                free(tokens->cmd);
-                return;
-            }
-            i++;
-        }
-        tmp = tmp->next;
-    }
-    tokens->args[arg_count] = NULL;
+	// UPDATE
+	update_tokens(&tokens);
 
+	// SET ARGS
+	arg_count = count_arguments(tokens);
+	//printf("ARG COUNT : %d\n", arg_count);
+	head->args = malloc(sizeof(char *) * (arg_count + 1));
+	if (!head->args)
+	{
+		free(head->cmd);
+		return;
+	}
+	i = 0;
+	while (tokens)
+	{
+		if (tokens->type == TOKEN_WORD && !tokens->processed)
+		{
+			head->args[i] = ft_strdup(tokens->value);
+
+			if (!head->args[i])
+			{
+				while (i > 0)
+				{
+					free(head->args[--i]);
+				}
+				free(head->args);
+				free(head->cmd);
+				return;
+			}
+			i++;
+		}
+		tokens = tokens->next;
+	}
+	head->args[arg_count] = NULL;  // Null-terminate the args array
 }
 
 
+// DEBUG
+// temp = tokens;
+// printf("CMD : %s\n", temp->cmd);
+// while (temp != NULL)
+// {
 
-
-
-	// DEBUG
-	// temp = tokens;
-	// printf("CMD : %s\n", temp->cmd);
-	// while (temp != NULL)
-	// {
-		
-	// 	printf("Token : %s\n", temp->value);
-	// 	printf("Type : %d\n", temp->type);
-	// 	if (temp->filename != NULL)
-	// 	{
-	// 		printf("Name of file: %s\n", temp->filename);
-	// 	}
-	// 	else
-	// 		printf("no file\n");
-	// 	if (temp->key_expansion != NULL)
-	// 	{
-	// 		printf("Key expansion: %s\n", temp->key_expansion);
-	// 	}
-	// 	else
-	// 		printf("no expansion\n");
-	// 	temp = temp->next;
-	// }
+// 	printf("Token : %s\n", temp->value);
+// 	printf("Type : %d\n", temp->type);
+// 	if (temp->filename != NULL)
+// 	{
+// 		printf("Name of file: %s\n", temp->filename);
+// 	}
+// 	else
+// 		printf("no file\n");
+// 	if (temp->key_expansion != NULL)
+// 	{
+// 		printf("Key expansion: %s\n", temp->key_expansion);
+// 	}
+// 	else
+// 		printf("no expansion\n");
+// 	temp = temp->next;
+// }
