@@ -96,7 +96,6 @@ typedef struct s_token
 // 	t_redir redir;
 // } t_cmd;
 
-
 // NODES
 // Env struct
 typedef struct s_env
@@ -211,14 +210,14 @@ int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
 void					parse_tokens(t_token *tokens);
 void					call_expander(t_list *list, t_minishell *data);
-char	*expand_variables(char *token);
-void process_expansions(t_token **tokens);
-char	*ft_strcpy(char *dest, const char *src);
-void close_quote_check(int *dq, int *sq, int *index, char c);
-int count_arguments(t_token *tokens);
+char					*expand_variables(char *token);
+void					process_expansions(t_token **tokens);
+char					*ft_strcpy(char *dest, const char *src);
+void					close_quote_check(int *dq, int *sq, int *index, char c);
+int						count_arguments(t_token *tokens);
 
 // LIBFT FUNCTIONS
-void	*ft_lstdelone(void *lst);
+void					*ft_lstdelone(void *lst);
 char					**ft_split(char const *s, char c);
 void					free_split(char **split);
 void					ft_putstr_fd(char *s, int fd);
@@ -241,6 +240,7 @@ int						ft_lstsize(t_list *lst);
 size_t					count_args(char **args);
 char					*ft_strchr(const char *s, int c);
 int						ft_isdigit(char *c);
+void					*ft_calloc(size_t count, size_t size);
 
 // USEFUL FUNCTIONS FOR DEBUG
 void					print_list(t_list *head);

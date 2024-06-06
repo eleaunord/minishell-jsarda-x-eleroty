@@ -222,8 +222,7 @@ void parse_tokens(t_token *tokens)
 
 	// SET ARGS
 	arg_count = count_arguments(tokens);
-	//printf("ARG COUNT : %d\n", arg_count);
-	head->args = malloc(sizeof(char *) * (arg_count + 1));
+	head->args = ft_calloc(arg_count + 1, sizeof(char *));
 	if (!head->args)
 	{
 		free(head->cmd);
@@ -250,7 +249,6 @@ void parse_tokens(t_token *tokens)
 		}
 		tokens = tokens->next;
 	}
-	head->args[arg_count] = NULL;  // Null-terminate the args array
 }
 
 
