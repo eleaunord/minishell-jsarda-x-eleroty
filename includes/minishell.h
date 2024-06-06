@@ -162,7 +162,7 @@ void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *mini, char **env_array);
 void					print_env(t_env *list);
 void					expander(t_token *token, t_minishell *mini);
-
+void	free_tokens(t_token *tokens);
 void					extract_substring(char *token, int start, int end,
 							char **final_str);
 char					*is_envar_expansible(char *token, int *i,

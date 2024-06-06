@@ -10,7 +10,7 @@ t_list	*create_node(char *token)
 	{
 		exit(EXIT_FAILURE);
 	}
-	new_node->content = ft_strdup(token); // LEAK
+	new_node->content = ft_strdup(token); // LEAK HERE
     if (!new_node->content)
     {
         free(new_node); 
