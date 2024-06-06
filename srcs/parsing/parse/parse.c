@@ -6,7 +6,6 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	t_token	*tokens;
 	char	*input;
 
-
 	input = NULL;
 	(void)mini;
 	if (open_quote_check(line))
@@ -18,31 +17,12 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	current = *nodes;
 	while (current != NULL)
 	{
-
-
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens);
-
-		// DEBUG
-		// t_token *temp = tokens;
-		// while (temp != NULL)
-		// {
-		// 	printf("TOKEN now: %s\n", temp->value);
-		// 	// printf("TYPE now: %d\n", temp->type);./mini
-		// 	if (temp->key_expansion != NULL)
-		// 		printf("Key expansion: %s\n", temp->key_expansion);
-		// 	else
-		// 		printf("hourr");
-		// 	temp = temp->next;
-		// }
-
-
-		// attach tokens to the current list node
 		current->tokens_in_node = tokens;
 		current = current->next;
 	}
-	line = input;
-	// free(input);
+	line = input; // free (input); ?
 	return (1);
 }
 
@@ -117,29 +97,29 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		current = tokens_list;		
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", (char *)current->content);
-		// 	t_token *temp = current->tokens_in_node;
-		// 	printf("CMD : %s\n", temp->cmd);
-		// 	while (temp != NULL)
-		// 	{
-		// 		printf("TOKEN : %s\n", temp->value);
-		// 		printf("TYPE: %d\n", temp->type);
-		// 		printf("cmd : %s\n", temp->cmd);
-		// 		printf("file name : %s\n", temp->filename);
-		// 		printf("key expansion : %s\n", temp->key_expansion);
-		// 		int i = 0;
-		// 		while (temp->args && i < count_arguments(temp)) 
-		// 		{
-		// 			printf("ARGS : %s\n", temp->args[i++]);
-		// 		}
-		// 		temp = temp->next;
-		// 	}
+		while (current != NULL)
+		{
+			printf("NODE : %s\n", (char *)current->content);
+			t_token *temp = current->tokens_in_node;
+			printf("CMD : %s\n", temp->cmd);
+			while (temp != NULL)
+			{
+				printf("TOKEN : %s\n", temp->value);
+				printf("TYPE: %d\n", temp->type);
+				printf("cmd : %s\n", temp->cmd);
+				printf("file name : %s\n", temp->filename);
+				printf("key expansion : %s\n", temp->key_expansion);
+				int i = 0;
+				while (temp->args && i < count_arguments(temp)) 
+				{
+					printf("ARGS : %s\n", temp->args[i++]);
+				}
+				temp = temp->next;
+			}
 			
-		// 	current = current->next;
-		// }
-		exec(current, &data);
+			current = current->next;
+		}
+		//exec(current, &data);
 		if (data.exit) // free all
 		{
 			//return (0);
@@ -154,7 +134,6 @@ int	main(int argc, char *argv[], char *env[])
 		// Clear the list after processing
 		free(input_line);
 	}
-	    // Cleanup before exiting
     ft_lstclear(&tokens_list, free);
     free(input_line);
     free_minishell(&data);

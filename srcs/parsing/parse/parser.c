@@ -1,15 +1,20 @@
 #include "../../../includes/minishell.h"
 
-/*
-echo "'hey tu vas chew moi' 'non'" =>
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*start;
+	char	*end;
 
-	ARG[0]: 'hey
-	ARG[1]: tu
-	ARG[2]: vas
-	ARG[3]: chez
-	ARG[4]: moi'
-	ARG[5]: 'non'
-*/
+	if (!s1 || !set)
+		return (NULL);
+	start = (char *)s1;
+	while (*start && ft_strchr(set, *start))
+		start++;
+	end = (char *)(s1 + ft_strlen(s1) - 1);
+	while (end > start && ft_strchr(set, *end))
+		end--;
+	return (ft_substr(start, 0, end - start + 1));
+}
 
 int	count_arguments(t_token *tokens)
 {
@@ -151,9 +156,20 @@ void	update_tokens(t_token **tokens)
 			free(current->value);
 			current->value = new_value;
 		}
+		// New condition: Check if key_expansion is not NULL and is surrounded by double quotes
+		if (current->key_expansion != NULL &&
+			current->key_expansion[0] == '"' &&
+			current->key_expansion[strlen(current->key_expansion) - 1] == '"')
+		{
+			// Trim the double quotes from key_expansion
+			new_value = ft_strtrim(current->key_expansion, "\"");
+			free(current->key_expansion);
+			current->key_expansion = new_value;
+		}
 		current = current->next;
 	}
 }
+
 
 // enlver filename des args
 void parse_tokens(t_token *tokens)
