@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/05 16:06:13 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/06 09:50:50 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	is_built_in(t_list *list)
 	built_in[3] = "cd";
 	built_in[4] = "env";
 	built_in[5] = "unset";
+	built_in[6] = "export";
 	i = 0;
 	while (i < NUM_OF_BUILT_INS)
 	{
@@ -44,6 +45,7 @@ void	exec_built_in(t_minishell *data, t_list *list)
 	built_in_funcs[3] = &ft_cd;
 	built_in_funcs[4] = &ft_env;
 	built_in_funcs[5] = &ft_unset;
+	built_in_funcs[6] = &ft_export;
 	index = is_built_in(list);
 	if (index == -1)
 		return ;
@@ -99,7 +101,7 @@ void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
 		char *path)
 {
 	pid_t	pid;
-	
+
 	if (is_built_in(list) != -1)
 	{
 		exec_built_in(data, list);

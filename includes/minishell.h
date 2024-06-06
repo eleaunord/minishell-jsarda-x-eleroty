@@ -51,7 +51,7 @@ Règles de Tokenisation :
 # define CMD 6
 # define ARG 7
 # define SINGLE_QUOTE 39
-# define NUM_OF_BUILT_INS 6
+# define NUM_OF_BUILT_INS 7
 // TOKEN LINKED LIST
 
 /*
@@ -89,14 +89,6 @@ typedef struct s_token
 	// EXPANSIONS
 	char				*key_expansion;
 }						t_token;
-
-typedef struct s_cmd
-{
-	char **av;
-	int argc;
-	t_redir redir;
-} t_cmd;
-
 
 // NODES
 // Env struct
@@ -166,6 +158,7 @@ void					ft_echo(t_minishell *data, char **args);
 void					ft_cd(t_minishell *data, char **args);
 void					ft_env(t_minishell *data, char **args);
 void					ft_unset(t_minishell *data, char **args);
+void					ft_export(t_minishell *data, char **args);
 // PARSING FUNCTIONS
 int						init_env(t_minishell *data, char **env);
 int						open_quote_check(char *line);
@@ -212,13 +205,13 @@ int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
 void					parse_tokens(t_token *tokens);
 void					call_expander(t_list *list, t_minishell *data);
-char	*expand_variables(char *token);
-void process_expansions(t_token **tokens);
-char	*ft_strcpy(char *dest, const char *src);
-void close_quote_check(int *dq, int *sq, int *index, char c);
+char					*expand_variables(char *token);
+void					process_expansions(t_token **tokens);
+char					*ft_strcpy(char *dest, const char *src);
+void					close_quote_check(int *dq, int *sq, int *index, char c);
 
 // LIBFT FUNCTIONS
-void	*ft_lstdelone(void *lst);
+void					*ft_lstdelone(void *lst);
 char					**ft_split(char const *s, char c);
 void					free_split(char **split);
 void					ft_putstr_fd(char *s, int fd);

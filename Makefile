@@ -27,6 +27,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \
+					srcs/builtins/ft_export.c \
 					srcs/builtins/ft_cd.c \
 					srcs/builtins/ft_exit.c \
 					srcs/builtins/ft_unset.c \

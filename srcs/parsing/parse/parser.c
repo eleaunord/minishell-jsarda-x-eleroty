@@ -11,21 +11,21 @@ echo "'hey tu vas chew moi' 'non'" =>
 	ARG[5]: 'non'
 */
 
-int count_arguments(t_token *tokens, t_token *cmd_token)
+int	count_arguments(t_token *tokens, t_token *cmd_token)
 {
-    int count = 0;
-    while (tokens)
-    {
-        if (tokens->type == TOKEN_WORD && tokens != cmd_token)
-        {
-            count++;
-        }
-        tokens = tokens->next;
-    }
-    return count;
+	int	count;
+
+	count = 0;
+	while (tokens)
+	{
+		if (tokens->type == TOKEN_WORD && tokens != cmd_token)
+		{
+			count++;
+		}
+		tokens = tokens->next;
+	}
+	return (count);
 }
-
-
 
 void	set_filename(t_token **tokens)
 {
@@ -141,107 +141,97 @@ void	update_tokens(t_token **tokens)
 	}
 }
 
-// enlver filename des args 
-void parse_tokens(t_token *tokens)
+// enlver filename des args
+void	parse_tokens(t_token *tokens)
 {
-    int arg_count;
-    int i;
-    t_token *tmp;
-    t_token *cmd_token = NULL;
+	int		arg_count;
+	int		i;
+	t_token	*tmp;
+	t_token	*cmd_token;
 
-    if (!tokens)
-        return;
-
-    if (tokens->type >= 1 && tokens->type <= 4)
-    {
-        tmp = tokens->next;
-        if (tmp && tmp->next)
-        {
-            tmp = tmp->next;
-            tokens->cmd = ft_strdup(tmp->value);
-            cmd_token = tmp;  // Mark this token as cmd_token
-            if (!tokens->cmd)
-                return;
-        }
-        else
-        {
-            tokens->cmd = NULL;
-        }
-    }
-    else
-    {
-        tokens->cmd = ft_strdup(tokens->value);
-        cmd_token = tokens;  // Mark this token as cmd_token
-        if (!tokens->cmd)
-            return;
-    }
-
-    set_filename(&tokens);
-    tokens->key_expansion = NULL;
-    process_expansions(&tokens);
-    tokens->processed = 0;
-    update_tokens(&tokens);
-
-    tmp = tokens->next;
-    arg_count = count_arguments(tmp, cmd_token);
+	cmd_token = NULL;
+	if (!tokens)
+		return ;
+	if (tokens->type >= 1 && tokens->type <= 4)
+	{
+		tmp = tokens->next;
+		if (tmp && tmp->next)
+		{
+			tmp = tmp->next;
+			tokens->cmd = ft_strdup(tmp->value);
+			cmd_token = tmp; // Mark this token as cmd_token
+			if (!tokens->cmd)
+				return ;
+		}
+		else
+		{
+			tokens->cmd = NULL;
+		}
+	}
+	else
+	{
+		tokens->cmd = ft_strdup(tokens->value);
+		cmd_token = tokens; // Mark this token as cmd_token
+		if (!tokens->cmd)
+			return ;
+	}
+	set_filename(&tokens);
+	tokens->key_expansion = NULL;
+	process_expansions(&tokens);
+	tokens->processed = 0;
+	update_tokens(&tokens);
+	tmp = tokens->next;
+	arg_count = count_arguments(tmp, cmd_token);
 	printf("ARG COUNT %d\n", arg_count);
-    tokens->args = malloc(sizeof(char *) * (arg_count + 1));
-    if (!tokens->args)
-    {
-        free(tokens->cmd);
-        return;
-    }
-
-    i = 0;
-    tmp = tokens->next;
-    while (tmp)
-    {
-		
-        if (tmp->type == TOKEN_WORD && !tmp->processed && tmp != cmd_token)
-        {
-			printf("%s\n", tokens->args[i]);
-            tokens->args[i] = ft_strdup(tmp->value);
-            if (!tokens->args[i])
-            {
-                while (i > 0)
-                {
-                    free(tokens->args[--i]);
-                }
-                free(tokens->args);
-                free(tokens->cmd);
-                return;
-            }
-            i++;
-        }
-        tmp = tmp->next;
-    }
-    tokens->args[arg_count] = NULL;
-
+	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
+	if (!tokens->args)
+	{
+		free(tokens->cmd);
+		return ;
+	}
+	i = 0;
+	tmp = tokens->next;
+	while (tmp)
+	{
+		if (tmp->type == TOKEN_WORD && !tmp->processed && tmp != cmd_token)
+		{
+			tokens->args[i] = ft_strdup(tmp->value);
+			if (!tokens->args[i])
+			{
+				while (i > 0)
+				{
+					free(tokens->args[--i]);
+				}
+				free(tokens->args);
+				free(tokens->cmd);
+				return ;
+			}
+			i++;
+		}
+		tmp = tmp->next;
+	}
+	tokens->args[arg_count] = NULL;
 }
 
+// DEBUG
+// temp = tokens;
+// printf("CMD : %s\n", temp->cmd);
+// while (temp != NULL)
+// {
 
-
-
-
-	// DEBUG
-	// temp = tokens;
-	// printf("CMD : %s\n", temp->cmd);
-	// while (temp != NULL)
-	// {
-		
-	// 	printf("Token : %s\n", temp->value);
-	// 	printf("Type : %d\n", temp->type);
-	// 	if (temp->filename != NULL)
-	// 	{
-	// 		printf("Name of file: %s\n", temp->filename);
-	// 	}
-	// 	else
-	// 		printf("no file\n");
-	// 	if (temp->key_expansion != NULL)
-	// 	{
-	// 		printf("Key expansion: %s\n", temp->key_expansion);
-	// 	}
-	// 	else
-	// 		printf("no expansion\n");
-	// 	temp = temp->next;
-	// }
+// 	printf("Token : %s\n", temp->value);
+// 	printf("Type : %d\n", temp->type);
+// 	if (temp->filename != NULL)
+// 	{
+// 		printf("Name of file: %s\n", temp->filename);
+// 	}
+// 	else
+// 		printf("no file\n");
+// 	if (temp->key_expansion != NULL)
+// 	{
+// 		printf("Key expansion: %s\n", temp->key_expansion);
+// 	}
+// 	else
+// 		printf("no expansion\n");
+// 	temp = temp->next;
+// }
