@@ -14,34 +14,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-// TOKEN LIST
-
-/*
-
-Règles de Tokenisation :
-
-	Redirections :
-		< devient le token INPUT (1).
-		> devient le token TRUNC (3).
-		<< devient le token HEREDOC (2).
-		>> devient le token APPEND (4).
-
-	Premier Token :
-		Le premier token d'une ligne de commande est CMD (6),
-			sauf s'il s'agit d'une redirection.
-
-	Arguments :
-		Tous les tokens suivants un CMD ou une redirection (INPUT, TRUNC,
-			HEREDOC, APPEND) sont des ARG (7).
-
-	Pipes :
-		| devient le token PIPE (5).
-		Après un PIPE, le prochain token est soit une redirection, soit un CMD.
-
-*/
-
-# define COLOR_RESET "\x1b[0m"
-# define COLOR_GREEN "\x1b[32m"
 
 # define INPUT 1   //"<"
 # define HEREDOC 2 //"<<"
@@ -62,6 +34,12 @@ liste chainee de token pour chaque elements de la ligne de commande
 		| ) ; int = token aka type de token (CMD, PIPE)
 
 */
+// typedef struct s_cmd
+// {
+// 	char **av;
+// 	int argc;
+// 	t_redir redir;
+// } t_cmd;
 
 // MINISHELL STRUCT
 typedef enum e_token_type
@@ -89,14 +67,7 @@ typedef struct s_token
 	char				*key_expansion;
 }						t_token;
 
-// typedef struct s_cmd
-// {
-// 	char **av;
-// 	int argc;
-// 	t_redir redir;
-// } t_cmd;
 
-// NODES
 // Env struct
 typedef struct s_env
 {
@@ -216,6 +187,7 @@ void					process_expansions(t_token **tokens);
 char					*ft_strcpy(char *dest, const char *src);
 void					close_quote_check(int *dq, int *sq, int *index, char c);
 int						count_arguments(t_token *tokens);
+void free_nodes(t_list *list);
 
 // LIBFT FUNCTIONS
 void					*ft_lstdelone(void *lst);

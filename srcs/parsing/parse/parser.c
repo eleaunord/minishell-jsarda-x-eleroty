@@ -201,7 +201,7 @@ void parse_tokens(t_token *tokens)
 	}
 	else if (tokens->type == TOKEN_WORD)
 	{
-		tokens->cmd = ft_strdup(tokens->value);
+		tokens->cmd = ft_strdup(tokens->value); // LEAK
 		tokens->processed = 1;
 		if (!tokens->cmd)
 			return;
