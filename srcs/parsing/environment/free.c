@@ -3,7 +3,6 @@
 void	free_tokens(t_token *tokens)
 {
 	t_token	*temp;
-	int		i;
 
 	if (!tokens)
 		return ;
