@@ -84,11 +84,18 @@ typedef struct s_token
 	char				**args;
 	// REDIRECTIONS
 	char				*filename;
-	int					sstdout;
 	int					processed;
 	// EXPANSIONS
 	char				*key_expansion;
 }						t_token;
+
+// typedef struct s_cmd
+// {
+// 	char **av;
+// 	int argc;
+// 	t_redir redir;
+// } t_cmd;
+
 
 // NODES
 // Env struct
@@ -205,10 +212,11 @@ int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
 void					parse_tokens(t_token *tokens);
 void					call_expander(t_list *list, t_minishell *data);
-char					*expand_variables(char *token);
-void					process_expansions(t_token **tokens);
-char					*ft_strcpy(char *dest, const char *src);
-void					close_quote_check(int *dq, int *sq, int *index, char c);
+char	*expand_variables(char *token);
+void process_expansions(t_token **tokens);
+char	*ft_strcpy(char *dest, const char *src);
+void close_quote_check(int *dq, int *sq, int *index, char c);
+int count_arguments(t_token *tokens);
 
 // LIBFT FUNCTIONS
 void					*ft_lstdelone(void *lst);

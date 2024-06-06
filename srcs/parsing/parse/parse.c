@@ -122,27 +122,19 @@ int	main(int argc, char *argv[], char *env[])
 		// {
 		// 	printf("NODE : %s\n", (char *)current->content);
 		// 	t_token *temp = current->tokens_in_node;
-
+		// 	printf("CMD : %s\n", temp->cmd);
 		// 	while (temp != NULL)
 		// 	{
-		// 		printf("CMD : %s\n", temp->cmd);
 		// 		printf("TOKEN : %s\n", temp->value);
 		// 		printf("TYPE: %d\n", temp->type);
-
-		// 		// int end = 0;
-
-		// 		// while (temp->args[end] != NULL)
-		// 		// {
-		// 		// 	end++;
-		// 		// }
-
+		// 		printf("cmd : %s\n", temp->cmd);
+		// 		printf("file name : %s\n", temp->filename);
+		// 		printf("key expansion : %s\n", temp->key_expansion);
 		// 		int i = 0;
-		// 		// printf("THE END%d", end);
-		// 		while (i--)
+		// 		while (temp->args && i < count_arguments(temp))
 		// 		{
-		// 			printf("ARGS : %s\n", temp->args[i]);
+		// 			printf("ARGS : %s\n", temp->args[i++]);
 		// 		}
-
 		// 		temp = temp->next;
 		// 	}
 
