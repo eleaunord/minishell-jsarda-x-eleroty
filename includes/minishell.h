@@ -51,7 +51,7 @@ Règles de Tokenisation :
 # define CMD 6
 # define ARG 7
 # define SINGLE_QUOTE 39
-# define NUM_OF_BUILT_INS 6
+# define NUM_OF_BUILT_INS 7
 // TOKEN LINKED LIST
 
 /*
@@ -164,6 +164,7 @@ void					ft_echo(t_minishell *data, char **args);
 void					ft_cd(t_minishell *data, char **args);
 void					ft_env(t_minishell *data, char **args);
 void					ft_unset(t_minishell *data, char **args);
+void					ft_export(t_minishell *data, char **args);
 // PARSING FUNCTIONS
 int						init_env(t_minishell *data, char **env);
 int						open_quote_check(char *line);

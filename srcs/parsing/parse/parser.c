@@ -129,7 +129,7 @@ void init_parsing(t_token **tokens)
 		current->processed = 0;
 		current = current->next;
 	}
-	
+
 }
 void	update_tokens(t_token **tokens)
 {
@@ -251,6 +251,11 @@ void parse_tokens(t_token *tokens)
 	}
 }
 
+// DEBUG
+// temp = tokens;
+// printf("CMD : %s\n", temp->cmd);
+// while (temp != NULL)
+// {
 
 // DEBUG
 // temp = tokens;

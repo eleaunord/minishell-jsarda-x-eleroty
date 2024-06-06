@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:55:30 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 10:31:41 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/06 15:23:03 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 void	ft_exit(t_minishell *data, char **args)
 {
-	if (args[1])
+	int args_count;
+
+	args_count = count_args(args);
+	if (args_count > 1)
 	{
 		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 1);
 		return ;
 	}
-	else if (args[0])
+	else if (args_count == 1)
 	{
 		if (!ft_isdigit(args[0]))
 		{
