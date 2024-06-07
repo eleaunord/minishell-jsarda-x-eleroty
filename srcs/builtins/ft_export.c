@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/06 14:47:39 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/07 13:04:34 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,20 @@
 void	modify_value(t_env *current, const char *value)
 {
 	free(current->value);
-	current->value = strdup(value);
+	current->value = ft_strdup(value);
 	if (!current->value)
+	{
+		perror("strdup");
 		return ;
+	}
+	free(current->str);
+	current->str = malloc(ft_strlen(current->key) + ft_strlen(current->value) + 2);
+	if (!current->str)
+	{
+		perror("malloc");
+		return ;
+	}
+	sprintf(current->str, "%s=%s", current->key, current->value);
 }
 
 void	create_var(t_minishell *data, const char *key, const char *value)
@@ -30,8 +41,25 @@ void	create_var(t_minishell *data, const char *key, const char *value)
 		perror("malloc");
 		return ;
 	}
-	new_var->key = strdup(key);
-	new_var->value = strdup(value);
+	new_var->key = ft_strdup(key);
+	new_var->value = ft_strdup(value);
+	if (!new_var->key || !new_var->value)
+	{
+		perror("strdup");
+		free(new_var->key);
+		free(new_var->value);
+		free(new_var);
+		return ;
+	}
+	new_var->str = malloc(ft_strlen(key) + ft_strlen(value) + 2);
+	if (!new_var->str)
+	{
+		perror("malloc");
+		free(new_var->key);
+		free(new_var->value);
+		free(new_var);
+		return ;
+	}
 	new_var->next = data->env;
 	data->env = new_var;
 }
@@ -43,11 +71,12 @@ void	ft_export(t_minishell *data, char **args)
 	t_env	*prev;
 	char	**var;
 
+	if (!args || !data)
+		return ;
 	i = 0;
-
 	if (!args[i])
 	{
-		ft_env(data, args);
+		ft_env(data, args); // function print and ascci sorted
 		return ;
 	}
 	while (args[i])
@@ -61,9 +90,9 @@ void	ft_export(t_minishell *data, char **args)
 		}
 		current = data->env;
 		prev = NULL;
-		while (current != NULL)
+		while (current)
 		{
-			if (strcmp(current->key, var[0]) == 0)
+			if (ft_strcmp(current->key, var[0]) == 0)
 			{
 				modify_value(current, var[1]);
 				break ;

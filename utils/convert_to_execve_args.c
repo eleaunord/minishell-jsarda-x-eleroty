@@ -6,18 +6,26 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:07:08 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/06 18:09:38 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/06/07 14:44:42 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	init_exec_struc(t_exec *exec_struc)
+{
+	exec_struc->av = NULL;
+	exec_struc->path = NULL;
+}
 
 void	convert_to_exec_args(t_list *list, t_exec *exec_struct)
 {
 	int	arg_count;
 	int	i;
 	int	j;
-
+	init_exec_struc(exec_struct);
+	if (!list->tokens_in_node->cmd && list->tokens_in_node->args)
+		return ;
 	arg_count = count_args(list->tokens_in_node->args);
 	i = -1;
 	j = 0;

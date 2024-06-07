@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/06 09:50:50 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/07 11:17:48 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	is_built_in(t_list *list)
 	int		i;
 	char	*built_in[NUM_OF_BUILT_INS];
 
+	if (!list->tokens_in_node->cmd)
+		return (-1);
 	built_in[0] = "pwd";
 	built_in[1] = "echo";
 	built_in[2] = "exit";
@@ -81,11 +83,15 @@ void	exec_child_process(t_list *list, t_minishell *data, char *path,
 		exit(EXIT_FAILURE);
 	}
 	if (list->tokens_in_node->cmd)
+	{
 		if (execve(path, exec->av, env) == -1)
 		{
 			perror("execve");
-			fprintf(stderr, "minishell: %s: command not found\n", list->tokens_in_node->cmd);
+			fprintf(stderr, "minishell: %s: command not found\n",
+				list->tokens_in_node->cmd);
 		}
+	}
+	free_minishell(data);
 	exit(0);
 }
 
