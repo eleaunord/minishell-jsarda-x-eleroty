@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/07 12:04:24 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/07 16:50:57 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	redir_in(t_token *redir)
 {
 	int	fd;
 
-	// printf("in%s\n", redir->filename);
 	fd = open(redir->filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -116,45 +115,43 @@ char	*get_tmp_file(void)
 	return (strdup(template));
 }
 
-// void	heredoc(char **eof, t_token *redir)
-// {
-// 	char	*buf;
-// 	int		fd;
-// 	char	*file;
-// 	int		i;
+void	heredoc(char *eof, t_token *redir)
+{
+	char	*buf;
+	int		fd;
+	char	*file;
+	int		i;
 
-// 	i = 0;
-// 	(void)redir;
-// 	buf = NULL;
-// 	while (eof[i] != NULL)
-// 	{
-// 		file = get_tmp_file();
-// 		if (!eof[i])
-// 		{
-// 			ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
-// 				2);
-// 			continue ;
-// 		}
-// 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-// 		if (fd == -1)
-// 		{
-// 			perror("Error opening output file");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		while (1)
-// 		{
-// 			buf = readline("> ");
-// 			if (!ft_strncmp(eof, buf, INT_MAX))
-// 				break ;
-// 			ft_putendl_fd(buf, fd);
-// 			free(buf);
-// 		}
-// 		close(fd);
-// 		redir_in_heredoc(file);
-// 		unlink(file);
-// 		free(buf);
-// 	}
-// }
+	i = 0;
+	(void)redir;
+	buf = NULL;
+	file = get_tmp_file();
+	if (!eof)
+	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
+			2);
+		return ;
+	}
+	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		perror("Error opening output file");
+		exit(EXIT_FAILURE);
+	}
+	while (1)
+	{
+		buf = readline("> ");
+		printf("here\n");
+		if (!ft_strncmp(eof, buf, INT_MAX))
+			break ;
+		ft_putendl_fd(buf, fd);
+		free(buf);
+	}
+	close(fd);
+	redir_in_heredoc(file);
+	unlink(file);
+	free(buf);
+}
 
 void	handle_redir(t_token *redir)
 {
@@ -164,6 +161,6 @@ void	handle_redir(t_token *redir)
 		redir_out(redir);
 	else if (redir->type == APPEND_TOKEN)
 		appen_redir_out(redir);
-	// else if (redir->type == HEREDOC_TOKEN)
-	// 	heredoc(redir->limitators, redir);
+	else if (redir->type == HEREDOC_TOKEN)
+		heredoc(redir->filename, redir);
 }
