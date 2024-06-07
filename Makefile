@@ -18,26 +18,27 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
 					srcs/parsing/tokenization/tokenizer.c \
-					srcs/exec/simple_command_exec.c \
-					srcs/exec/get_env_path.c \
-					utils/perror.c \
-					utils/ft_free.c \
-					utils/convert_to_execve_args.c \
-					utils/count_args.c \
-					srcs/builtins/ft_echo.c \
-					srcs/builtins/ft_env.c \
-					srcs/builtins/ft_pwd.c \
-					srcs/builtins/ft_export.c \
-					srcs/builtins/ft_cd.c \
-					srcs/builtins/ft_exit.c \
-					srcs/builtins/ft_unset.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
-					srcs/exec/env_utils.c \
-					srcs/exec/redir.c \
-					srcs/exec/pipe_exec.c \
-					srcs/exec/exec.c \
 					srcs/parsing/parse/expansion.c \
+					# srcs/exec/env_utils.c \
+					# srcs/exec/redir.c \
+					# srcs/exec/pipe_exec.c \
+					# srcs/exec/exec.c \
+					# srcs/exec/simple_command_exec.c \
+					# srcs/exec/get_env_path.c \
+					# utils/perror.c \
+					# utils/ft_free.c \
+					# utils/convert_to_execve_args.c \
+					# utils/count_args.c \
+					# srcs/builtins/ft_echo.c \
+					# srcs/builtins/ft_env.c \
+					# srcs/builtins/ft_pwd.c \
+					# srcs/builtins/ft_export.c \
+					# srcs/builtins/ft_cd.c \
+					# srcs/builtins/ft_exit.c \
+					# srcs/builtins/ft_unset.c \
+
 
 OBJS        := $(SRCS:.c=.o)
 

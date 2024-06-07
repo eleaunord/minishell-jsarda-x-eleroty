@@ -49,9 +49,9 @@ void free_env_list(t_env *list)
 
 */
 
-void	free_nodes(t_list *list)
+void	free_nodes(t_node *list)
 {
-	t_list	*temp;
+	t_node	*temp;
 
 	while (list)
 	{

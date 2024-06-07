@@ -1,8 +1,9 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
+//mettre quasi tout dans nodes, cmd dans args[0] tt le temps
+int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 {
-	t_list	*current;
+	t_node	*current;
 	t_token	*tokens;
 	char	*input;
 
@@ -18,8 +19,8 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
-		parse_tokens(tokens);
-		current->tokens_in_node = tokens;
+		// current->tokens_in_node = tokens;
+		parse_tokens(tokens, current);
 		current = current->next;
 	}
 	line = input;
@@ -55,10 +56,10 @@ int	check_line(char **line)
 int	main(int argc, char *argv[], char *env[])
 {
 	char		*input_line;
-	t_list		*tokens_list;
+	t_node		*tokens_list;
 	t_minishell	data;
 	int			flag;
-	t_list		*current;
+	t_node		*current;
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -112,7 +113,7 @@ int	main(int argc, char *argv[], char *env[])
 
 		// 	current = current->next;
 		// }
-		exec(current, &data);
+		//exec(current, &data);
 		if (data.exit)
 		{
 			break ;

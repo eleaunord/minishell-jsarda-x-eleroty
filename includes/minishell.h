@@ -55,16 +55,8 @@ typedef struct s_token
 	struct s_token		*next;
 	char				*cmd; 
 	char				**args;
-
-	char				*filename_out; 
-	int					fd_out; 
-	char				*filename_in; 
-	int					fd_in;
-
-	bool				here_doc;
-	char				*limiter_hd;
 	// REDIRECTIONS
-	char				*filename; 
+	// char				*filename; 
 	int					processed;
 	// EXPANSIONS
 	char				*key_expansion;
@@ -81,13 +73,39 @@ typedef struct s_env
 	struct s_env		*prev;
 }						t_env;
 
-typedef struct s_list
+//NODES 
+// typedef struct s_list
+// {
+// 	struct s_list		*next;
+// 	struct s_list		*prev;
+// 	void				*content;
+// 	struct s_token		*tokens_in_node;
+// }						t_node;
+
+// TOKENS INSIDE NODES
+typedef struct s_node
 {
-	struct s_list		*next;
-	struct s_list		*prev;
+	// Making the nodes
+	struct s_node		*next;
+	struct s_node		*prev;
 	void				*content;
+	// Dealing with tokens
 	struct s_token		*tokens_in_node;
-}						t_list;
+	// From parsing to exec
+	char				*cmd; 
+	char				**args;
+	int arg_count;
+	char				*key_expansion; //in args
+	// Redirections 
+	char				*filename_out; // >
+	int					fd_out; 
+	char				*filename_in; 
+	int					fd_in; // <
+	// Heredoc
+	int				here_doc;
+	char				*limiter_hd;
+}						t_node;
+
 //Structure pour exec
 typedef struct t_redir
 {
@@ -102,7 +120,7 @@ typedef struct t_redir
 typedef struct s_minishell
 {
 	t_env				*env;
-	t_list				*nodes;
+	t_node				*nodes;
 	// EXITS
 	int					exit;
 	int					exit_status;
@@ -144,15 +162,15 @@ typedef struct s_position_tracker
 
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
-void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
-void					exec(t_list *list, t_minishell *data);
+void					convert_to_exec_args(t_node *list, t_exec *exec_struct);
+void					exec(t_node *list, t_minishell *data);
 char					*get_cmd_path(char *cmd, t_minishell *data);
 char					*get_path_value(t_minishell *data, char *key);
 char					**create_char_env(t_env *env);
 void					exec_pipeline(char ***cmds, int num_cmds);
-void					exec_simple_cmd(t_exec *exec, t_list *list,
+void					exec_simple_cmd(t_exec *exec, t_node *list,
 							t_minishell *data, char *path);
-int						is_built_in(t_list *list);
+int						is_built_in(t_node *list);
 void					handle_redir(t_token *redir);
 // BUILTINS
 void					ft_exit(t_minishell *data, char **args);
@@ -169,19 +187,18 @@ t_token					*tokenize_input(char *line);
 int						is_space(char *line);
 int						is_separator(char *c);
 char					*create_token(char *str, int start, int end);
-void					ft_split_operators(t_list *token_list);
-void					insert_node(t_list *elem, t_list *new_elem);
-t_list					*ft_split_list(char *line, t_list *minishell,
+void					ft_split_operators(t_node *token_list);
+void					insert_node(t_node *elem, t_node *new_elem);
+t_node					*ft_split_node(char *line, t_node *minishell,
 							t_command **command);
 char					*create_token(char *str, int start, int end);
 char					*process_in_quotes(char *line, t_position_tracker *p,
-							t_command **cmd, t_list *mini);
+							t_command **cmd, t_node *mini);
 char					*ft_split_pipes_spaces(char *line,
-							t_list **tokens_list);
+							t_node **tokens_list);
 char					*remove_quotes(char *line);
 int						ft_strcmp(char *s1, char *s2);
-int						tokenizer(char *line, t_list **nodes,
-							t_minishell *mini);
+int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
 void					free_env(char ***envp);
 void					free_minishell(t_minishell *mini);
 void					free_env_list(t_env *env_list);
@@ -206,14 +223,14 @@ int						special_tokens(char *input, t_token **tokens,
 t_token					*new_token(t_token_type type, char *value);
 int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-void					parse_tokens(t_token *tokens);
-void					call_expander(t_list *list, t_minishell *data);
+void					parse_tokens(t_token *tokens, t_node *node);
+void					call_expander(t_node *list, t_minishell *data);
 char					*expand_variables(char *token);
 void					process_expansions(t_token **tokens);
 char					*ft_strcpy(char *dest, const char *src);
 void					close_quote_check(int *dq, int *sq, int *index, char c);
 int						count_arguments(t_token *tokens);
-void free_nodes(t_list *list);
+void free_nodes(t_node *list);
 
 // LIBFT FUNCTIONS
 void					*ft_lstdelone(void *lst);
@@ -224,9 +241,9 @@ char					*ft_strndup(const char *s, size_t n);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 char					*ft_strjoin(char const *s1, char const *s2);
 void					ft_putendl_fd(char const *s, int fd);
-void					ft_lstclear(t_list **lst, void (*del)(void *));
-void					ft_lstadd_back(t_list **lst, t_list *new);
-t_list					*ft_lstnew(void *content);
+void					ft_lstclear(t_node **lst, void (*del)(void *));
+void					ft_lstadd_back(t_node **lst, t_node *new);
+t_node					*ft_lstnew(void *content);
 char					*ft_substr(char const *s, unsigned int start,
 							size_t len);
 size_t					ft_strlen(const char *s);
@@ -235,14 +252,14 @@ void					*ft_bzero(void *s, size_t bytes);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 void					*ft_bzero(void *s, size_t bytes);
 char					*ft_strdup(const char *s);
-int						ft_lstsize(t_list *lst);
+int						ft_lstsize(t_node *lst);
 size_t					count_args(char **args);
 char					*ft_strchr(const char *s, int c);
 int						ft_isdigit(char *c);
 void					*ft_calloc(size_t count, size_t size);
 
 // USEFUL FUNCTIONS FOR DEBUG
-void					print_list(t_list *head);
+void					print_node(t_node *head);
 
 // DRAFT
 
@@ -253,6 +270,6 @@ void					print_list(t_list *head);
 // 	struct s_list		*next;
 // 	struct s_list		*prev;
 // 	int					loop;
-// }						t_list;
+// }						t_node;
 
 #endif
