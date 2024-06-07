@@ -6,7 +6,6 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	t_token	*tokens;
 	char	*input;
 
-
 	input = NULL;
 	(void)mini;
 	if (open_quote_check(line))
@@ -18,31 +17,13 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	current = *nodes;
 	while (current != NULL)
 	{
-
-
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens);
-
-		// DEBUG
-		// t_token *temp = tokens;
-		// while (temp != NULL)
-		// {
-		// 	printf("TOKEN now: %s\n", temp->value);
-		// 	// printf("TYPE now: %d\n", temp->type);./mini
-		// 	if (temp->key_expansion != NULL)
-		// 		printf("Key expansion: %s\n", temp->key_expansion);
-		// 	else
-		// 		printf("hourr");
-		// 	temp = temp->next;
-		// }
-
-
-		// attach tokens to the current list node
 		current->tokens_in_node = tokens;
 		current = current->next;
 	}
 	line = input;
-	// free(input);
+
 	return (1);
 }
 
@@ -70,7 +51,6 @@ int	check_line(char **line)
 		return (1);
 	return (0);
 }
-// Segfault on free functions
 
 int	main(int argc, char *argv[], char *env[])
 {
@@ -79,7 +59,6 @@ int	main(int argc, char *argv[], char *env[])
 	t_minishell	data;
 	int			flag;
 	t_list		*current;
-	char		cwd[PATH_MAX];
 
 	input_line = NULL;
 	tokens_list = NULL;
@@ -89,17 +68,12 @@ int	main(int argc, char *argv[], char *env[])
 	init_minishell(&data);
 	if (!init_env(&data, env))
 		return (1);
-	// PRINT ENV
-	// print_env(data.env);
-	// Main shell execution Loop
 	while (1)
 	{
-		getcwd(cwd, PATH_MAX);
-		input_line = readline(ft_strjoin(cwd, " $> "));
+		input_line = readline("prompt > ");
 		if (!input_line) // ctrl d
 		{
-			rl_clear_history(); // ?
-			// return (0);
+			rl_clear_history();
 			break ;
 		}
 		if (check_line(&input_line))
@@ -110,10 +84,8 @@ int	main(int argc, char *argv[], char *env[])
 
 		if (!tokenizer(input_line, &tokens_list, &data))
 		{
-			printf("current in main : %s\n", tokens_list->tokens_in_node->args[0]);
 			add_history(input_line);
 			free(input_line);
-			//return (0);
 			continue;
 		}
 		add_history(input_line);
@@ -141,23 +113,48 @@ int	main(int argc, char *argv[], char *env[])
 		// 	current = current->next;
 		// }
 		exec(current, &data);
-		if (data.exit) // free all
+		if (data.exit)
 		{
-			//return (0);
-			break;
+			break ;
 		}
-		// DEBUG
-		// printf("current: %s\n", current->tokens_in_node->cmd);
-
-		// DEBUG
-
-		ft_lstclear(&tokens_list, free);
-		// Clear the list after processing
-		free(input_line);
+		//free(input_line);
+    	//free_nodes(tokens_list);
+		tokens_list = NULL;
 	}
-	    // Cleanup before exiting
-    ft_lstclear(&tokens_list, free);
     free(input_line);
     free_minishell(&data);
 	return (0);
 }
+
+
+// DEBUG
+
+	// PRINT ENV
+	// print_env(data.env);
+	// Main shell execution Loop
+
+
+// DEBUG
+
+		// while (current != NULL)
+		// {
+		// 	printf("NODE : %s\n", (char *)current->content);
+		// 	t_token *temp = current->tokens_in_node;
+		// 	printf("CMD : %s\n", temp->cmd);
+		// 	while (temp != NULL)
+		// 	{
+		// 		printf("TOKEN : %s\n", temp->value);
+		// 		printf("TYPE: %d\n", temp->type);
+		// 		printf("cmd : %s\n", temp->cmd);
+		// 		printf("file name : %s\n", temp->filename);
+		// 		printf("key expansion : %s\n", temp->key_expansion);
+		// 		int i = 0;
+		// 		while (temp->args && i < count_arguments(temp))
+		// 		{
+		// 			printf("ARGS : %s\n", temp->args[i++]);
+		// 		}
+		// 		temp = temp->next;
+		// 	}
+
+		// 	current = current->next;
+		// }

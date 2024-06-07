@@ -5,13 +5,17 @@ t_list	*create_node(char *token)
 {
 	t_list	*new_node;
 
-	new_node = (t_list *)malloc(sizeof(t_list));
+	new_node = (t_list *)malloc(sizeof(t_list)); // LEAK HERE
 	if (!new_node)
 	{
-		fprintf(stderr, "Memory allocation error\n");
 		exit(EXIT_FAILURE);
 	}
-	new_node->content = strdup(token);
+	new_node->content = ft_strdup(token); // LEAK HERE
+    if (!new_node->content)
+    {
+        free(new_node); 
+        exit(EXIT_FAILURE);
+    }
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -156,6 +160,7 @@ char	*ft_split_pipes_spaces(char *line, t_list **tokens_list)
 		append_node(tokens_list, segment);
 		// Move to the next segment after the pipe symbol
 		start = pipe_pos + 1;
+
 	}
 	// Process the last segment
 	segment = trim_whitespace(start);

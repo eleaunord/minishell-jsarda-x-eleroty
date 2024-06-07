@@ -14,34 +14,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-// TOKEN LIST
-
-/*
-
-Règles de Tokenisation :
-
-	Redirections :
-		< devient le token INPUT (1).
-		> devient le token TRUNC (3).
-		<< devient le token HEREDOC (2).
-		>> devient le token APPEND (4).
-
-	Premier Token :
-		Le premier token d'une ligne de commande est CMD (6),
-			sauf s'il s'agit d'une redirection.
-
-	Arguments :
-		Tous les tokens suivants un CMD ou une redirection (INPUT, TRUNC,
-			HEREDOC, APPEND) sont des ARG (7).
-
-	Pipes :
-		| devient le token PIPE (5).
-		Après un PIPE, le prochain token est soit une redirection, soit un CMD.
-
-*/
-
-# define COLOR_RESET "\x1b[0m"
-# define COLOR_GREEN "\x1b[32m"
 
 # define INPUT 1   //"<"
 # define HEREDOC 2 //"<<"
@@ -63,6 +35,7 @@ liste chainee de token pour chaque elements de la ligne de commande
 
 */
 
+
 // MINISHELL STRUCT
 typedef enum e_token_type
 {
@@ -80,24 +53,24 @@ typedef struct s_token
 	t_token_type		type;
 	char				*value;
 	struct s_token		*next;
-	char				*cmd;
+	char				*cmd; 
 	char				**args;
+
+	char				*filename_out; 
+	int					fd_out; 
+	char				*filename_in; 
+	int					fd_in;
+
+	bool				here_doc;
+	char				*limiter_hd;
 	// REDIRECTIONS
-	char				*filename;
+	char				*filename; 
 	int					processed;
 	// EXPANSIONS
 	char				*key_expansion;
 }						t_token;
 
-// typedef struct s_cmd
-// {
-// 	char **av;
-// 	int argc;
-// 	t_redir redir;
-// } t_cmd;
 
-
-// NODES
 // Env struct
 typedef struct s_env
 {
@@ -115,15 +88,30 @@ typedef struct s_list
 	void				*content;
 	struct s_token		*tokens_in_node;
 }						t_list;
+//Structure pour exec
+typedef struct t_redir
+{
+	char				*filename;
+	char				*eof;
+	char				**heredoc;
+	struct s_redir		*next;
+	struct s_redir		*prev;
+}						t_redir;
 
 // Struct qui centralise tout
 typedef struct s_minishell
 {
 	t_env				*env;
 	t_list				*nodes;
-	// a completer au fur et a mesure
+	// EXITS
 	int					exit;
 	int					exit_status;
+	// From parsing to exec
+	char				**args; //tableau
+	int argc;
+	t_redir redir;
+
+
 }						t_minishell;
 
 typedef struct s_exec
@@ -132,9 +120,17 @@ typedef struct s_exec
 	char				*path;
 }						t_exec;
 
+// typedef struct s_cmd
+// {
+// 	char **av;
+// 	int argc;
+// 	t_redir redir;
+// } t_cmd;
+
 typedef struct s_command
 {
 	char				*token;
+
 	int					length;
 	int					type;
 	struct s_command	*next;
@@ -192,7 +188,7 @@ void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *mini, char **env_array);
 void					print_env(t_env *list);
 void					expander(t_token *token, t_minishell *mini);
-
+void	free_tokens(t_token *tokens);
 void					extract_substring(char *token, int start, int end,
 							char **final_str);
 char					*is_envar_expansible(char *token, int *i,
@@ -212,11 +208,12 @@ int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
 void					parse_tokens(t_token *tokens);
 void					call_expander(t_list *list, t_minishell *data);
-char	*expand_variables(char *token);
-void process_expansions(t_token **tokens);
-char	*ft_strcpy(char *dest, const char *src);
-void close_quote_check(int *dq, int *sq, int *index, char c);
-int count_arguments(t_token *tokens);
+char					*expand_variables(char *token);
+void					process_expansions(t_token **tokens);
+char					*ft_strcpy(char *dest, const char *src);
+void					close_quote_check(int *dq, int *sq, int *index, char c);
+int						count_arguments(t_token *tokens);
+void free_nodes(t_list *list);
 
 // LIBFT FUNCTIONS
 void					*ft_lstdelone(void *lst);
@@ -242,6 +239,7 @@ int						ft_lstsize(t_list *lst);
 size_t					count_args(char **args);
 char					*ft_strchr(const char *s, int c);
 int						ft_isdigit(char *c);
+void					*ft_calloc(size_t count, size_t size);
 
 // USEFUL FUNCTIONS FOR DEBUG
 void					print_list(t_list *head);

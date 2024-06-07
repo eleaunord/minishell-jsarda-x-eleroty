@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   convert_to_execve_args.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:07:08 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/07 10:01:22 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/07 14:44:42 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	convert_to_exec_args(t_list *list, t_exec *exec_struct)
 		return (perror("strdup"), free(exec_struct->av));
 	while (++i < arg_count)
 	{
-		exec_struct->av[i + 1] = ft_strdup(list->tokens_in_node->args[i]);
+		exec_struct->av[i + 1] = ft_strdup(list->tokens_in_node->args[i]); // SEGFAULT au strlen de ft_strdup
 		if (!exec_struct->av[i + 1])
 		{
 			perror("strdup");

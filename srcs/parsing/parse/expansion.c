@@ -54,6 +54,11 @@ void	extract_substring(char *token, int start, int end, char **final_str)
 	free(temp);
 	free(sub);
 }
+/*
+	1. Check if the token is entirely enclosed in single quotes
+	2. Check if the character after $ is valid for variable expansion
+	3. Skip the '{' at start and '}' at end or Extract the variable name directly
+*/
 
 char	*expand_variables(char *token)
 {
@@ -72,7 +77,6 @@ char	*expand_variables(char *token)
 	if (!final_str)
 		return (NULL);
 	in_single_quotes = 0;
-	// Check if the token is entirely enclosed in single quotes
 	if (token[0] == '\'' && token[ft_strlen(token) - 1] == '\'')
 	{
 		free(final_str);
@@ -81,13 +85,10 @@ char	*expand_variables(char *token)
 	while (token[i])
 	{
 		if (token[i] == '\'')
-		{
 			in_single_quotes = !in_single_quotes;
-		}
 		else if (token[i] == '$' && !in_single_quotes)
 		{
 			start = i + 1;
-			// Check if the character after $ is valid for variable expansion
 			if (token[start] == '{' || is_alpha_underscore(token[start])
 				|| token[start] == '?')
 			{
@@ -95,15 +96,9 @@ char	*expand_variables(char *token)
 				if (end != 0)
 				{
 					if (brace_end)
-					{
-						// Skip the '{' at start and '}' at end
 						extract_substring(token, start + 1, end, &final_str);
-					}
 					else
-					{
-						// Extract the variable name directly
 						extract_substring(token, start, end + 1, &final_str);
-					}
 					i = end; // Move i to the end of the variable name
 				}
 			}

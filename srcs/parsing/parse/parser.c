@@ -1,15 +1,20 @@
 #include "../../../includes/minishell.h"
 
-/*
-echo "'hey tu vas chew moi' 'non'" =>
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*start;
+	char	*end;
 
-	ARG[0]: 'hey
-	ARG[1]: tu
-	ARG[2]: vas
-	ARG[3]: chez
-	ARG[4]: moi'
-	ARG[5]: 'non'
-*/
+	if (!s1 || !set)
+		return (NULL);
+	start = (char *)s1;
+	while (*start && ft_strchr(set, *start))
+		start++;
+	end = (char *)(s1 + ft_strlen(s1) - 1);
+	while (end > start && ft_strchr(set, *end))
+		end--;
+	return (ft_substr(start, 0, end - start + 1));
+}
 
 int	count_arguments(t_token *tokens)
 {
@@ -151,9 +156,20 @@ void	update_tokens(t_token **tokens)
 			free(current->value);
 			current->value = new_value;
 		}
+		// New condition: Check if key_expansion is not NULL and is surrounded by double quotes
+		if (current->key_expansion != NULL &&
+			current->key_expansion[0] == '"' &&
+			current->key_expansion[strlen(current->key_expansion) - 1] == '"')
+		{
+			// Trim the double quotes from key_expansion
+			new_value = ft_strtrim(current->key_expansion, "\"");
+			free(current->key_expansion);
+			current->key_expansion = new_value;
+		}
 		current = current->next;
 	}
 }
+
 
 // enlver filename des args
 void parse_tokens(t_token *tokens)
@@ -161,41 +177,53 @@ void parse_tokens(t_token *tokens)
 	int arg_count;
 	int i;
 	t_token *head = tokens;  // Keep the reference to the head of the list
-
+	int flag = 0;
 	if (!tokens)
 	{
 		return;
 	}
 	init_parsing(&tokens);
 
-	// FIRST TOKEN
-	if (tokens->type >= APPEND_TOKEN && tokens->type <= REDIR_IN_TOKEN)
-	{
-		if (tokens->next && tokens->next->next)
-		{
-			tokens->cmd = ft_strdup(tokens->next->next->value);
-			if (!tokens->cmd)
-				return;
-			tokens->next->next->processed = 1;
-		}
-		else
-		{
-			tokens->cmd = NULL;
-		}
-	}
-	else if (tokens->type == TOKEN_WORD)
-	{
-		tokens->cmd = ft_strdup(tokens->value);
-		tokens->processed = 1;
-		if (!tokens->cmd)
-			return;
-	}
-	else
-		tokens->cmd = NULL;
-
 	// SET FILENAME
 	tokens->filename = NULL;
 	set_filename(&tokens);
+	// FIRST TOKEN
+	t_token *tok = tokens;
+	if (tok->type >= APPEND_TOKEN && tok->type <= REDIR_IN_TOKEN)
+	{
+		t_token *next_token = tok->next; // filename
+
+		while (next_token != NULL)
+		{
+			printf("%s\n",next_token->next->value);
+			if (next_token->next->type == TOKEN_WORD && next_token->filename == NULL)
+			{
+				printf("HEY!");
+				tok->cmd = ft_strdup(next_token->next->value);
+				if (!tokens->cmd)
+					return;
+				next_token->next->processed = 1;
+				flag++;
+				break ;
+			}
+			next_token = next_token->next;
+		}
+		if (flag == 0)
+		{
+			tok->cmd = NULL;
+		}
+	}
+	else if (tok->type == TOKEN_WORD) // first token is cmd
+	{
+		tok->cmd = ft_strdup(tok->value); // LEAK
+		tok->processed = 1;
+		if (!tok->cmd)
+			return;
+	}
+	else
+		tok->cmd = NULL;
+
+
 
 	// EXPAND
 	tokens->key_expansion = NULL;
@@ -203,11 +231,25 @@ void parse_tokens(t_token *tokens)
 
 	// UPDATE
 	update_tokens(&tokens);
+	// DEBUG
+	t_token *temp = tokens;
+	while (temp != NULL)
+	{
+		printf("CMD : %s\n", temp->cmd);
+		printf("Token : %s\n", temp->value);
+		printf("Type : %d\n", temp->type);
+		if (temp->filename != NULL)
+		{
+			printf("Name of file: %s\n", temp->filename);
+		}
+		else
+			printf("no file\n");
+		temp = temp->next;
+	}
 
 	// SET ARGS
 	arg_count = count_arguments(tokens);
-	//printf("ARG COUNT : %d\n", arg_count);
-	head->args = malloc(sizeof(char *) * (arg_count + 1));
+	head->args = ft_calloc(arg_count + 1, sizeof(char *));
 	if (!head->args)
 	{
 		free(head->cmd);
@@ -234,7 +276,6 @@ void parse_tokens(t_token *tokens)
 		}
 		tokens = tokens->next;
 	}
-	head->args[arg_count] = NULL;  // Null-terminate the args array
 }
 
 // DEBUG
