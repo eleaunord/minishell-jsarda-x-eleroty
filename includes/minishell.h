@@ -67,6 +67,15 @@ typedef struct s_token
 	char				*key_expansion;
 }						t_token;
 
+//Structure pour exec
+typedef struct t_cmd
+{
+	char				*str;
+	char				*key;
+	char				*value;
+	struct s_env		*next;
+	struct s_env		*prev;
+}						t_env;
 
 // Env struct
 typedef struct s_env

@@ -177,41 +177,51 @@ void parse_tokens(t_token *tokens)
 	int arg_count;
 	int i;
 	t_token *head = tokens;  // Keep the reference to the head of the list
-
+	int flag = 0;
 	if (!tokens)
 	{
 		return;
 	}
 	init_parsing(&tokens);
 
-	// FIRST TOKEN
-	if (tokens->type >= APPEND_TOKEN && tokens->type <= REDIR_IN_TOKEN)
-	{
-		if (tokens->next && tokens->next->next)
-		{
-			tokens->cmd = ft_strdup(tokens->next->next->value);
-			if (!tokens->cmd)
-				return;
-			tokens->next->next->processed = 1;
-		}
-		else
-		{
-			tokens->cmd = NULL;
-		}
-	}
-	else if (tokens->type == TOKEN_WORD)
-	{
-		tokens->cmd = ft_strdup(tokens->value); // LEAK
-		tokens->processed = 1;
-		if (!tokens->cmd)
-			return;
-	}
-	else
-		tokens->cmd = NULL;
-
 	// SET FILENAME
 	tokens->filename = NULL;
 	set_filename(&tokens);
+	// FIRST TOKEN
+	t_token *tok = tokens;
+	if (tok->type >= APPEND_TOKEN && tok->type <= REDIR_IN_TOKEN)
+	{
+		t_token *next_token = tok->next; // filename
+		while (next_token->next != NULL)
+		{
+			printf("%s\n",next_token->next->value);
+			if (next_token->next == TOKEN_WORD && next_token->next != next_token->next->filename)
+			{
+				tok->cmd = ft_strdup(next_token->next->value);
+				if (!tokens->cmd)
+					return;
+				next_token->next->processed = 1;
+				flag++;
+				break ;
+			}
+			next_token = next_token->next;
+		}
+		if (flag == 0)
+		{
+			tok->cmd = NULL;
+		}
+	}
+	else if (tok->type == TOKEN_WORD) // first token is cmd
+	{
+		tok->cmd = ft_strdup(tok->value); // LEAK
+		tok->processed = 1;
+		if (!tok->cmd)
+			return;
+	}
+	else
+		tok->cmd = NULL;
+
+
 
 	// EXPAND
 	tokens->key_expansion = NULL;
@@ -219,6 +229,22 @@ void parse_tokens(t_token *tokens)
 
 	// UPDATE
 	update_tokens(&tokens);
+	// DEBUG
+	t_token *temp = tokens;
+	printf("CMD : %s\n", temp->cmd);
+	while (temp != NULL)
+	{
+
+		printf("Token : %s\n", temp->value);
+		printf("Type : %d\n", temp->type);
+		if (temp->filename != NULL)
+		{
+			printf("Name of file: %s\n", temp->filename);
+		}
+		else
+			printf("no file\n");
+		temp = temp->next;
+	}
 
 	// SET ARGS
 	arg_count = count_arguments(tokens);
