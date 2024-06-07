@@ -34,12 +34,7 @@ liste chainee de token pour chaque elements de la ligne de commande
 		| ) ; int = token aka type de token (CMD, PIPE)
 
 */
-// typedef struct s_cmd
-// {
-// 	char **av;
-// 	int argc;
-// 	t_redir redir;
-// } t_cmd;
+
 
 // MINISHELL STRUCT
 typedef enum e_token_type
@@ -58,24 +53,23 @@ typedef struct s_token
 	t_token_type		type;
 	char				*value;
 	struct s_token		*next;
-	char				*cmd;
+	char				*cmd; 
 	char				**args;
+
+	char				*filename_out; 
+	int					fd_out; 
+	char				*filename_in; 
+	int					fd_in;
+
+	bool				here_doc;
+	char				*limiter_hd;
 	// REDIRECTIONS
-	char				*filename;
+	char				*filename; 
 	int					processed;
 	// EXPANSIONS
 	char				*key_expansion;
 }						t_token;
 
-//Structure pour exec
-typedef struct t_cmd
-{
-	char				*str;
-	char				*key;
-	char				*value;
-	struct s_env		*next;
-	struct s_env		*prev;
-}						t_env;
 
 // Env struct
 typedef struct s_env
@@ -94,15 +88,30 @@ typedef struct s_list
 	void				*content;
 	struct s_token		*tokens_in_node;
 }						t_list;
+//Structure pour exec
+typedef struct t_redir
+{
+	char				*filename;
+	char				*eof;
+	char				**heredoc;
+	struct s_redir		*next;
+	struct s_redir		*prev;
+}						t_redir;
 
 // Struct qui centralise tout
 typedef struct s_minishell
 {
 	t_env				*env;
 	t_list				*nodes;
-	// a completer au fur et a mesure
+	// EXITS
 	int					exit;
 	int					exit_status;
+	// From parsing to exec
+	char				**args; //tableau
+	int argc;
+	t_redir redir;
+
+
 }						t_minishell;
 
 typedef struct s_exec
@@ -111,9 +120,17 @@ typedef struct s_exec
 	char				*path;
 }						t_exec;
 
+// typedef struct s_cmd
+// {
+// 	char **av;
+// 	int argc;
+// 	t_redir redir;
+// } t_cmd;
+
 typedef struct s_command
 {
 	char				*token;
+
 	int					length;
 	int					type;
 	struct s_command	*next;

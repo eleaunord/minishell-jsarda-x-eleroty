@@ -192,11 +192,13 @@ void parse_tokens(t_token *tokens)
 	if (tok->type >= APPEND_TOKEN && tok->type <= REDIR_IN_TOKEN)
 	{
 		t_token *next_token = tok->next; // filename
-		while (next_token->next != NULL)
+
+		while (next_token != NULL)
 		{
 			printf("%s\n",next_token->next->value);
-			if (next_token->next == TOKEN_WORD && next_token->next != next_token->next->filename)
+			if (next_token->next->type == TOKEN_WORD && next_token->filename == NULL)
 			{
+				printf("HEY!");
 				tok->cmd = ft_strdup(next_token->next->value);
 				if (!tokens->cmd)
 					return;
@@ -231,10 +233,9 @@ void parse_tokens(t_token *tokens)
 	update_tokens(&tokens);
 	// DEBUG
 	t_token *temp = tokens;
-	printf("CMD : %s\n", temp->cmd);
 	while (temp != NULL)
 	{
-
+		printf("CMD : %s\n", temp->cmd);
 		printf("Token : %s\n", temp->value);
 		printf("Type : %d\n", temp->type);
 		if (temp->filename != NULL)
