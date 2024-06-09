@@ -14,25 +14,8 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define INPUT 1   //"<"
-# define HEREDOC 2 //"<<"
-# define TRUNC 3   //">"
-# define APPEND 4  //">>"
-# define PIPE 5    //"|"
-# define CMD 6
-# define ARG 7
-# define SINGLE_QUOTE 39
+
 # define NUM_OF_BUILT_INS 7
-// TOKEN LINKED LIST
-
-/*
-
-liste chainee de token pour chaque elements de la ligne de commande
--> str et int pour chaque maillon
--> str = WORD aka ce qui est visuel (cat,
-		| ) ; int = token aka type de token (CMD, PIPE)
-
-*/
 
 // MINISHELL STRUCT
 typedef enum e_token_type
@@ -126,27 +109,6 @@ typedef struct s_exec
 	char				*path;
 }						t_exec;
 
-// typedef struct s_cmd
-// {
-// 	char **av;
-// 	int argc;
-// 	t_redir redir;
-// } t_cmd;
-
-typedef struct s_command
-{
-	char				*token;
-
-	int					length;
-	int					type;
-	struct s_command	*next;
-}						t_command;
-
-typedef struct s_position_tracker
-{
-	int					start;
-	int					i;
-}						t_position_tracker;
 
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
@@ -169,19 +131,11 @@ void					ft_env(t_node *data, char **args);
 void					ft_unset(t_node *data, char **args);
 void					ft_export(t_node *data, char **args);
 // PARSING FUNCTIONS
-
 int						open_quote_check(char *line);
 t_token					*tokenize_input(char *line);
 int						is_space(char *line);
-int						is_separator(char *c);
 char					*create_token(char *str, int start, int end);
-void					ft_split_operators(t_node *token_list);
-void					insert_node(t_node *elem, t_node *new_elem);
-t_node					*ft_split_node(char *line, t_node *minishell,
-							t_command **command);
 char					*create_token(char *str, int start, int end);
-char					*process_in_quotes(char *line, t_position_tracker *p,
-							t_command **cmd, t_node *mini);
 char					*ft_split_pipes_spaces(char *line,
 							t_node **tokens_list);
 char					*remove_quotes(char *line);
@@ -250,15 +204,5 @@ void					*ft_calloc(size_t count, size_t size);
 // USEFUL FUNCTIONS FOR DEBUG
 void					print_node(t_node *head);
 
-// DRAFT
-
-// typedef struct s_list
-// {
-// 	void				*content;
-// 	int					type;
-// 	struct s_list		*next;
-// 	struct s_list		*prev;
-// 	int					loop;
-// }						t_node;
 
 #endif
