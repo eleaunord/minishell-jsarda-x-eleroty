@@ -16,7 +16,7 @@ t_token	*new_token(t_token_type type, char *value)
 	}
 	token->cmd = NULL;
 	token->args = NULL;
-	token->filename = NULL;
+	//token->filename = NULL;
 	token->key_expansion = NULL;
 	token->type = type;
 	token->next = NULL;

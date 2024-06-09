@@ -33,114 +33,129 @@ int	check_env_var(char *token, int start, int *brace_end)
 		return (i - 1); // Return the last character index of the variable name
 	}
 }
-
-void	extract_substring(char *token, int start, int end, char **final_str)
+// ft_strsub definition
+char *ft_strsub(const char *s, unsigned int start, size_t len)
 {
-	char	*sub;
-	char	*temp;
+    char *sub;
+    size_t i;
 
-	if (start >= end || token[start] == '\0')
-	{
-		return ;
-	}
-	// Extract the substring from token
-	sub = ft_substr(token, start, (end - start));
-	if (!sub)
-		return ;
-	// Concatenate the current final_str with the new substring
-	temp = *final_str;
-	*final_str = ft_strjoin(*final_str, sub);
-	// Free the old final_str and the temporary substring
-	free(temp);
-	free(sub);
+    // Check for null pointer
+    if (!s)
+        return NULL;
+
+    // Allocate memory for the substring (+1 for null terminator)
+    sub = (char *)malloc(sizeof(char) * (len + 1));
+    if (!sub)
+        return NULL;
+
+    // Copy the substring
+    i = 0;
+    while (i < len)
+    {
+        sub[i] = s[start + i];
+        i++;
+    }
+
+    // Null-terminate the new string
+    sub[len] = '\0';
+
+    return sub;
 }
-/*
-	1. Check if the token is entirely enclosed in single quotes
-	2. Check if the character after $ is valid for variable expansion
-	3. Skip the '{' at start and '}' at end or Extract the variable name directly
-*/
 
-char	*expand_variables(char *token)
+char *expand_variables(char *token)
 {
-	int		i;
-	int		start;
-	char	*final_str;
-	int		end;
-	int		brace_end;
-	int		in_single_quotes;
-	char	temp[2];
-	char	*old_final_str;
+    int i;
+    int start;
+    char *final_str;
+    int end;
+    //int brace_end;
+    int in_single_quotes;
 
-	i = 0;
-	start = 0;
-	final_str = ft_strdup("");
-	if (!final_str)
-		return (NULL);
-	in_single_quotes = 0;
+    i = 0;
+    final_str = ft_strdup("");
+    if (!final_str)
+        return NULL;
+    in_single_quotes = 0;
 	if (token[0] == '\'' && token[ft_strlen(token) - 1] == '\'')
 	{
 		free(final_str);
 		return (NULL);
 	}
-	while (token[i])
-	{
-		if (token[i] == '\'')
-			in_single_quotes = !in_single_quotes;
-		else if (token[i] == '$' && !in_single_quotes)
-		{
-			start = i + 1;
-			if (token[start] == '{' || is_alpha_underscore(token[start])
-				|| token[start] == '?')
-			{
-				end = check_env_var(token, start, &brace_end);
-				if (end != 0)
-				{
-					if (brace_end)
-						extract_substring(token, start + 1, end, &final_str);
-					else
-						extract_substring(token, start, end + 1, &final_str);
-					i = end; // Move i to the end of the variable name
-				}
-			}
-			else
-			{
-				free(final_str);
-				return (NULL);
-			}
-		}
-		else
-		{
-			temp[0] = token[i];
-			temp[1] = '\0';
-			old_final_str = final_str;
-			final_str = ft_strjoin(final_str, temp);
-			if (!final_str)
-			{
-				free(old_final_str);
-				return (NULL);
-			}
-			free(old_final_str);
-		}
-		i++;
-	}
-	return (final_str);
+    while (token[i])
+    {
+        if (token[i] == '\'')
+            in_single_quotes = !in_single_quotes;
+        else if (token[i] == '$' && !in_single_quotes)
+        {
+            start = i;
+            if (token[start + 1] == '{')
+            {
+                // Find the closing brace
+                end = start + 2;
+                while (token[end] && token[end] != '}')
+                    end++;
+                if (token[end] == '}')
+                {
+                    // Include the closing brace
+                    end++;
+                    // Extract the variable including the $ and braces
+                    free(final_str);
+                    final_str = ft_strsub(token, start, end - start);
+                    if (!final_str)
+                        return NULL;
+                    return final_str; // Return immediately after extracting
+                }
+            }
+            else
+            {
+                // Handle variables without braces
+                end = start + 1;
+                while (token[end] && (is_alpha_underscore(token[end]) || token[end] == '?'))
+                    end++;
+                // Extract the variable including the $
+                free(final_str);
+                final_str = ft_strsub(token, start, end - start);
+                if (!final_str)
+                    return NULL;
+                return final_str; // Return immediately after extracting
+            }
+        }
+        i++;
+    }
+    // If no variable found, return the original string duplicated
+    free(final_str);
+    return ft_strdup(token);
 }
 
-void	process_expansions(t_token **tokens)
+void	process_expansions(t_token **tokens, t_node *node)
 {
 	t_token	*tok;
 
-	if (!tokens || !*tokens)
-		return ;
-	tok = *tokens;
-	while (tok)
+    if (!tokens || !node) // Check for null tokens and node
+        return;
+
+    tok = *tokens;
+	while (tok != NULL)
 	{
 		if (ft_strchr(tok->value, '$') != NULL)
 		{
-			tok->key_expansion = expand_variables(tok->value);
+			node->key_expansion = expand_variables(tok->value);
+			tok->key_expansion = node->key_expansion;
 		}
-		if (!tok->key_expansion)
+		if (!node->key_expansion)
+		{
+			node->key_expansion = NULL;
 			tok->key_expansion = NULL;
+		}
 		tok = tok->next;
 	}
+		t_node *head = node;
+	while (head)
+	{
+
+		printf("EXPANSION: %s\n", head->key_expansion);
+
+		head = head->next;
+	}
 }
+
