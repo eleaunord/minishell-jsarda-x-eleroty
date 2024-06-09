@@ -56,7 +56,7 @@ typedef struct s_env
 // NODES (from parsing to exec, with love)
 typedef struct s_node
 {
-	// Making the nodes
+	// Making the nodes (for parsing)
 	struct s_node		*next;
 	struct s_node		*prev;
 	void				*content;
@@ -65,16 +65,16 @@ typedef struct s_node
 	struct s_token		*tokens_in_node;
 
 	// From parsing to exec
-	char				*cmd;
+	char				*cmd; // in arg[0]
 	char				**args;
 	int					arg_count;
 	char *key_expansion; // in args
 
-	// Redirections
+	// Redirections, filenames not in args
 	char *filename_out; // >
 	char *filename_in;  // <
-	int					here_doc;
-	char				*limiter_hd;
+	int					here_doc; // is there a here doc ? 1 : yes, 0 : no
+	char				*limiter_hd; //eof
 	
 	// OTHER (?)
 	// int fd_in; // <
