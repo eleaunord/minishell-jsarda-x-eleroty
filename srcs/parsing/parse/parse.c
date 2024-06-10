@@ -1,13 +1,13 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
+
+int	tokenizer(char *line, t_node **nodes)
 {
-	t_list	*current;
+	t_node	*current;
 	t_token	*tokens;
 	char	*input;
 
 	input = NULL;
-	(void)mini;
 	if (open_quote_check(line))
 	{
 		free(line);
@@ -18,12 +18,10 @@ int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
-		parse_tokens(tokens);
-		current->tokens_in_node = tokens;
+		parse_tokens(tokens, current);
 		current = current->next;
 	}
 	line = input;
-
 	return (1);
 }
 
@@ -32,7 +30,6 @@ void	init_minishell(t_minishell *mini)
 	mini->env = NULL;
 	mini->nodes = NULL;
 	mini->exit = 0;
-	// a remplir au fur et a mesure
 }
 int	is_space(char *line)
 {
@@ -55,13 +52,13 @@ int	check_line(char **line)
 int	main(int argc, char *argv[], char *env[])
 {
 	char		*input_line;
-	t_list		*tokens_list;
+	t_node		*node_list;
 	t_minishell	data;
 	int			flag;
-	t_list		*current;
+
 
 	input_line = NULL;
-	tokens_list = NULL;
+	node_list = NULL;
 	flag = 1;
 	(void)argc;
 	(void)argv;
@@ -71,7 +68,7 @@ int	main(int argc, char *argv[], char *env[])
 	while (1)
 	{
 		input_line = readline("prompt > ");
-		if (!input_line) // ctrl d
+		if (!input_line)
 		{
 			rl_clear_history();
 			break ;
@@ -82,44 +79,38 @@ int	main(int argc, char *argv[], char *env[])
 			continue ;
 		}
 
-		if (!tokenizer(input_line, &tokens_list, &data))
+		if (!tokenizer(input_line, &node_list))
 		{
 			add_history(input_line);
 			free(input_line);
 			continue;
 		}
 		add_history(input_line);
-		current = tokens_list;
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", (char *)current->content);
-		// 	t_token *temp = current->tokens_in_node;
-		// 	printf("CMD : %s\n", temp->cmd);
-		// 	while (temp != NULL)
-		// 	{
-		// 		printf("TOKEN : %s\n", temp->value);
-		// 		printf("TYPE: %d\n", temp->type);
-		// 		printf("cmd : %s\n", temp->cmd);
-		// 		printf("file name : %s\n", temp->filename);
-		// 		printf("key expansion : %s\n", temp->key_expansion);
-		// 		int i = 0;
-		// 		while (temp->args && i < count_arguments(temp))
-		// 		{
-		// 			printf("ARGS : %s\n", temp->args[i++]);
-		// 		}
-		// 		temp = temp->next;
-		// 	}
-
-		// 	current = current->next;
-		// }
-		exec(current, &data);
+		t_node *head = node_list;
+		while (head)
+		{
+			printf("Node : %s\n", (char *)head->content);
+			printf("Cmd : %s\n", head->cmd);
+			printf("File name in: %s\n", head->filename_in);
+			printf("File name out: %s\n", head->filename_out);
+			printf("File name heredoc: %s\n", head->limiter_hd);
+			printf("Node expansion: %s\n", head->key_expansion);
+			printf("Arg cunt : %d\n", head->arg_count);
+			int x = 0;
+			while (x < head->arg_count)
+			{
+				printf("Arg[x] : %s\n", head->args[x++]);
+			}
+			head = head->next;
+		}
+		//exec(current, &data);
 		if (data.exit)
 		{
 			break ;
 		}
 		//free(input_line);
     	//free_nodes(tokens_list);
-		tokens_list = NULL;
+		node_list = NULL;
 	}
     free(input_line);
     free_minishell(&data);

@@ -12,7 +12,7 @@ void	free_tokens(t_token *tokens)
 		tokens = tokens->next;
 		free(temp->value);
 		free(temp->cmd);
-		free(temp->filename);
+		//free(temp->filename);
 		free(temp->key_expansion);
 		free(temp);
 	}
@@ -49,9 +49,9 @@ void free_env_list(t_env *list)
 
 */
 
-void	free_nodes(t_list *list)
+void	free_nodes(t_node *list)
 {
-	t_list	*temp;
+	t_node	*temp;
 
 	while (list)
 	{
@@ -68,6 +68,4 @@ void	free_minishell(t_minishell *mini)
 {
 	if (mini->env)
 		free_env_list(mini->env);
-	if (mini->nodes)
-		free_nodes(mini->nodes);
 }

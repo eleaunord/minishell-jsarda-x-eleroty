@@ -6,13 +6,13 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/07 16:38:47 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/10 09:21:59 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	is_built_in(t_list *list)
+int	is_built_in(t_node *list)
 {
 	int		i;
 	char	*built_in[NUM_OF_BUILT_INS];
@@ -36,7 +36,7 @@ int	is_built_in(t_list *list)
 	return (-1);
 }
 
-void	exec_built_in(t_minishell *data, t_list *list)
+void	exec_built_in(t_minishell *data, t_node *list)
 {
 	int		index;
 	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_minishell *, char **);
@@ -61,7 +61,7 @@ int	check_if_redir(t_token *token)
 	return (1);
 }
 
-void	exec_child_process(t_list *list, t_minishell *data, char *path,
+void	exec_child_process(t_node *list, t_minishell *data, char *path,
 		t_exec *exec)
 {
 	t_token	*current;
@@ -103,7 +103,7 @@ void	exec_parent_process(pid_t pid)
 		perror("waitpid");
 }
 
-void	exec_simple_cmd(t_exec *exec, t_list *list, t_minishell *data,
+void	exec_simple_cmd(t_exec *exec, t_node *list, t_minishell *data,
 		char *path)
 {
 	pid_t	pid;

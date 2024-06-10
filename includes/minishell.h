@@ -15,26 +15,7 @@
 # include <unistd.h>
 
 
-# define INPUT 1   //"<"
-# define HEREDOC 2 //"<<"
-# define TRUNC 3   //">"
-# define APPEND 4  //">>"
-# define PIPE 5    //"|"
-# define CMD 6
-# define ARG 7
-# define SINGLE_QUOTE 39
 # define NUM_OF_BUILT_INS 7
-// TOKEN LINKED LIST
-
-/*
-
-liste chainee de token pour chaque elements de la ligne de commande
--> str et int pour chaque maillon
--> str = WORD aka ce qui est visuel (cat,
-		| ) ; int = token aka type de token (CMD, PIPE)
-
-*/
-
 
 // MINISHELL STRUCT
 typedef enum e_token_type
@@ -47,29 +28,20 @@ typedef enum e_token_type
 	REDIR_IN_TOKEN,  // "<" ; = 4
 }						t_token_type;
 
-// TOKENS INSIDE NODES
+// TOKENS INSIDE NODES (only for parsing)
 typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
 	struct s_token		*next;
-	char				*cmd; 
+	char				*cmd;
 	char				**args;
-
-	char				*filename_out; 
-	int					fd_out; 
-	char				*filename_in; 
-	int					fd_in;
-
-	bool				here_doc;
-	char				*limiter_hd;
 	// REDIRECTIONS
-	char				*filename; 
+	// char				*filename;
 	int					processed;
 	// EXPANSIONS
 	char				*key_expansion;
 }						t_token;
-
 
 // Env struct
 typedef struct s_env
@@ -81,14 +53,35 @@ typedef struct s_env
 	struct s_env		*prev;
 }						t_env;
 
-typedef struct s_list
+// NODES (from parsing to exec, with love)
+typedef struct s_node
 {
-	struct s_list		*next;
-	struct s_list		*prev;
+	// Making the nodes (for parsing)
+	struct s_node		*next;
+	struct s_node		*prev;
 	void				*content;
+
+	// Dealing with tokens (for parsing)
 	struct s_token		*tokens_in_node;
-}						t_list;
-//Structure pour exec
+
+	// From parsing to exec
+	char				*cmd; // in arg[0]
+	char				**args;
+	int					arg_count;
+	char *key_expansion; // in args
+
+	// Redirections, filenames not in args
+	char *filename_out; // >
+	char *filename_in;  // <
+	int					here_doc; // is there a here doc ? 1 : yes, 0 : no
+	char				*limiter_hd; //eof
+	
+	// OTHER (?)
+	// int fd_in; // <
+	// int					fd_out;
+}						t_node;
+
+// Structure pour exec
 typedef struct t_redir
 {
 	char				*filename;
@@ -98,19 +91,15 @@ typedef struct t_redir
 	struct s_redir		*prev;
 }						t_redir;
 
-// Struct qui centralise tout
+// // Struct qui centralise tout
 typedef struct s_minishell
 {
 	t_env				*env;
-	t_list				*nodes;
+	t_node				*nodes;
 	// EXITS
 	int					exit;
 	int					exit_status;
-	// From parsing to exec
-	char				**args; //tableau
-	int argc;
-	t_redir redir;
-
+	t_redir				redir;
 
 }						t_minishell;
 
@@ -120,100 +109,71 @@ typedef struct s_exec
 	char				*path;
 }						t_exec;
 
-// typedef struct s_cmd
-// {
-// 	char **av;
-// 	int argc;
-// 	t_redir redir;
-// } t_cmd;
-
-typedef struct s_command
-{
-	char				*token;
-
-	int					length;
-	int					type;
-	struct s_command	*next;
-}						t_command;
-
-typedef struct s_position_tracker
-{
-	int					start;
-	int					i;
-}						t_position_tracker;
 
 // EXEC FUNCTIONS
 void					perror_handler(char *type);
-void					convert_to_exec_args(t_list *list, t_exec *exec_struct);
-void					exec(t_list *list, t_minishell *data);
-char					*get_cmd_path(char *cmd, t_minishell *data);
-char					*get_path_value(t_minishell *data, char *key);
+void					convert_to_exec_args(t_node *list, t_exec *exec_struct);
+void					exec(t_node *list, t_node *data);
+char					*get_cmd_path(char *cmd, t_node *data);
+char					*get_path_value(t_node *data, char *key);
 char					**create_char_env(t_env *env);
 void					exec_pipeline(char ***cmds, int num_cmds);
-void					exec_simple_cmd(t_exec *exec, t_list *list,
-							t_minishell *data, char *path);
-int						is_built_in(t_list *list);
+void					exec_simple_cmd(t_exec *exec, t_node *list,
+							t_node *data, char *path);
+int						is_built_in(t_node *list);
 void					handle_redir(t_token *redir);
 // BUILTINS
-void					ft_exit(t_minishell *data, char **args);
-void					ft_pwd(t_minishell *data, char **args);
-void					ft_echo(t_minishell *data, char **args);
-void					ft_cd(t_minishell *data, char **args);
-void					ft_env(t_minishell *data, char **args);
-void					ft_unset(t_minishell *data, char **args);
-void					ft_export(t_minishell *data, char **args);
+void					ft_exit(t_node *data, char **args);
+void					ft_pwd(t_node *data, char **args);
+void					ft_echo(t_node *data, char **args);
+void					ft_cd(t_node *data, char **args);
+void					ft_env(t_node *data, char **args);
+void					ft_unset(t_node *data, char **args);
+void					ft_export(t_node *data, char **args);
 // PARSING FUNCTIONS
-int						init_env(t_minishell *data, char **env);
 int						open_quote_check(char *line);
 t_token					*tokenize_input(char *line);
 int						is_space(char *line);
-int						is_separator(char *c);
 char					*create_token(char *str, int start, int end);
-void					ft_split_operators(t_list *token_list);
-void					insert_node(t_list *elem, t_list *new_elem);
-t_list					*ft_split_list(char *line, t_list *minishell,
-							t_command **command);
 char					*create_token(char *str, int start, int end);
-char					*process_in_quotes(char *line, t_position_tracker *p,
-							t_command **cmd, t_list *mini);
 char					*ft_split_pipes_spaces(char *line,
-							t_list **tokens_list);
+							t_node **tokens_list);
 char					*remove_quotes(char *line);
 int						ft_strcmp(char *s1, char *s2);
-int						tokenizer(char *line, t_list **nodes,
-							t_minishell *mini);
+int						tokenizer(char *line, t_node **nodes);
 void					free_env(char ***envp);
 void					free_minishell(t_minishell *mini);
 void					free_env_list(t_env *env_list);
-int						init_env(t_minishell *mini, char **env_array);
+int	init_env(t_minishell *data, char **env);
 void					print_env(t_env *list);
-void					expander(t_token *token, t_minishell *mini);
-void	free_tokens(t_token *tokens);
+void					expander(t_token *token, t_node *mini);
+void					free_tokens(t_token *tokens);
 void					extract_substring(char *token, int start, int end,
 							char **final_str);
 char					*is_envar_expansible(char *token, int *i,
-							char **final_str, t_minishell *mini);
+							char **final_str, t_node *mini);
 int						is_alpha_underscore(int c);
 void					*ft_memcpy(void *dest, const void *src, size_t n);
 char					*ft_itoa(int n);
 int						is_brace_expansion(char *token, int *i,
 							char **final_str);
 void					proceed_expansion(char *token, int *i, char **final_str,
-							t_minishell *mini);
+							t_node *mini);
 void					ft_putstr_fd(char *s, int fd);
 int						special_tokens(char *input, t_token **tokens,
 							int index);
 t_token					*new_token(t_token_type type, char *value);
 int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-void					parse_tokens(t_token *tokens);
-void					call_expander(t_list *list, t_minishell *data);
+void					parse_tokens(t_token *tokens, t_node *node);
+void					call_expander(t_node *list, t_node *data);
 char					*expand_variables(char *token);
-void					process_expansions(t_token **tokens);
+
 char					*ft_strcpy(char *dest, const char *src);
 void					close_quote_check(int *dq, int *sq, int *index, char c);
 int						count_arguments(t_token *tokens);
-void free_nodes(t_list *list);
+void					free_nodes(t_node *list);
+void					process_expansions(t_token **tokens, t_node *node);
 
 // LIBFT FUNCTIONS
 void					*ft_lstdelone(void *lst);
@@ -224,9 +184,9 @@ char					*ft_strndup(const char *s, size_t n);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 char					*ft_strjoin(char const *s1, char const *s2);
 void					ft_putendl_fd(char const *s, int fd);
-void					ft_lstclear(t_list **lst, void (*del)(void *));
-void					ft_lstadd_back(t_list **lst, t_list *new);
-t_list					*ft_lstnew(void *content);
+void					ft_lstclear(t_node **lst, void (*del)(void *));
+void					ft_lstadd_back(t_node **lst, t_node *new);
+t_node					*ft_lstnew(void *content);
 char					*ft_substr(char const *s, unsigned int start,
 							size_t len);
 size_t					ft_strlen(const char *s);
@@ -235,24 +195,14 @@ void					*ft_bzero(void *s, size_t bytes);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 void					*ft_bzero(void *s, size_t bytes);
 char					*ft_strdup(const char *s);
-int						ft_lstsize(t_list *lst);
+int						ft_lstsize(t_node *lst);
 size_t					count_args(char **args);
 char					*ft_strchr(const char *s, int c);
 int						ft_isdigit(char *c);
 void					*ft_calloc(size_t count, size_t size);
 
 // USEFUL FUNCTIONS FOR DEBUG
-void					print_list(t_list *head);
+void					print_node(t_node *head);
 
-// DRAFT
-
-// typedef struct s_list
-// {
-// 	void				*content;
-// 	int					type;
-// 	struct s_list		*next;
-// 	struct s_list		*prev;
-// 	int					loop;
-// }						t_list;
 
 #endif

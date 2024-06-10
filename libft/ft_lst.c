@@ -13,10 +13,10 @@ void	ft_putendl_fd(char const *s, int fd)
 	write(fd, "\n", 1);
 }
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+void	ft_lstclear(t_node **lst, void (*del)(void *))
 {
-	t_list *current;
-	t_list *tmp;
+	t_node *current;
+	t_node *tmp;
 
 	if (!lst || !del)
 		return ;
@@ -31,7 +31,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 	*lst = NULL;
 }
 
-t_list	*ft_lstlast(t_list *lst)
+t_node	*ft_lstlast(t_node *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -42,9 +42,9 @@ t_list	*ft_lstlast(t_list *lst)
 	return (lst);
 }
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+void	ft_lstadd_back(t_node **lst, t_node *new)
 {
-	t_list	*last;
+	t_node	*last;
 
 	if (NULL == lst)
 		return ;
@@ -57,11 +57,11 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	last->next = new;
 }
 
-t_list	*ft_lstnew(void *content)
+t_node	*ft_lstnew(void *content)
 {
-	t_list	*node;
+	t_node	*node;
 
-	node =(t_list *) ft_calloc(1, sizeof(t_list));
+	node =(t_node *) ft_calloc(1, sizeof(t_node));
 	if (node == NULL)
 		return (NULL);
 	node->content = content;

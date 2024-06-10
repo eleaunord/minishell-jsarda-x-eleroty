@@ -1,11 +1,11 @@
 #include "../../../includes/minishell.h"
 
 // Helper function to create a new list node
-t_list	*create_node(char *token)
+t_node	*create_node(char *token)
 {
-	t_list	*new_node;
+	t_node	*new_node;
 
-	new_node = (t_list *)malloc(sizeof(t_list)); // LEAK HERE
+	new_node = (t_node *)malloc(sizeof(t_node)); // LEAK HERE
 	if (!new_node)
 	{
 		exit(EXIT_FAILURE);
@@ -21,10 +21,10 @@ t_list	*create_node(char *token)
 }
 
 // Helper function to add a node to the end of the linked list
-void	append_node(t_list **tokens_list, char *token)
+void	append_node(t_node **tokens_list, char *token)
 {
-	t_list	*new_node;
-	t_list	*current;
+	t_node	*new_node;
+	t_node	*current;
 
 	new_node = create_node(token);
 	if (*tokens_list == NULL)
@@ -143,7 +143,7 @@ char	*collapse_spaces(char *str)
 
 // Main function to trim spaces and store tokens in the linked list,
 	//preserving spaces inside quotes
-char	*ft_split_pipes_spaces(char *line, t_list **tokens_list)
+char	*ft_split_pipes_spaces(char *line, t_node **tokens_list)
 {
 	char	*start;
 	char	*pipe_pos;
