@@ -48,63 +48,42 @@ int init_args(t_token *tokens, t_node *node)
     return 0;
 }
 
+// erase ?
 
-// void	set_filename(t_token **tokens)
+// void	set_filename(t_token **tokens, t_node *node)
 // {
 // 	t_token	*current;
 
-// 	if (!tokens || !*tokens)
+// 	if (!tokens || !*tokens || !node)
 // 		return ;
 // 	current = *tokens;
-// 	current->filename = NULL;
 // 	while (current)
 // 	{
 // 		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
 // 		{
 // 			if (current->next && current->next->type == TOKEN_WORD)
 // 			{
-// 				current->filename = current->next->value;
+// 				if (current->type == REDIR_IN_TOKEN)
+// 				{
+// 					node->filename_in = current->next->value;
+// 					current->next->processed = 1;
+// 				}
+// 				else if (current->type == REDIR_OUT_TOKEN)
+// 				{
+// 					node->filename_out = current->next->value;
+// 					current->next->processed = 1;
+// 				}
+// 				else if (current->type == HEREDOC_TOKEN)
+// 				{
+// 					node->here_doc = 1;
+// 					node->limiter_hd = current->next->value;
+// 				}
 // 				current->next->processed = 1;
 // 			}
 // 		}
 // 		current = current->next;
 // 	}
 // }
-
-void	set_filename(t_token **tokens, t_node *node)
-{
-	t_token	*current;
-
-	if (!tokens || !*tokens || !node)
-		return ;
-	current = *tokens;
-	while (current)
-	{
-		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
-		{
-			if (current->next && current->next->type == TOKEN_WORD)
-			{
-				if (current->type == REDIR_IN_TOKEN)
-				{
-					node->filename_in = current->next->value;
-					current->next->processed = 1;
-				}
-				else if (current->type == REDIR_OUT_TOKEN)
-				{
-					node->filename_out = current->next->value;
-					current->next->processed = 1;
-				}
-				else if (current->type == HEREDOC_TOKEN)
-				{
-					node->here_doc = 1;
-					node->limiter_hd = current->next->value;
-				}
-				current->next->processed = 1;
-			}
-		}
-		current = current->next;
-	}
-}
 
 char	*remove_dollar_sign(char *str)
 {
