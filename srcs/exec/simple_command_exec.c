@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 09:21:59 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/10 12:46:51 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	is_built_in(t_node *list)
 	int		i;
 	char	*built_in[NUM_OF_BUILT_INS];
 
-	if (!list->tokens_in_node->cmd)
+	if (!list->cmd)
 		return (-1);
 	built_in[0] = "pwd";
 	built_in[1] = "echo";
@@ -29,7 +29,7 @@ int	is_built_in(t_node *list)
 	i = 0;
 	while (i < NUM_OF_BUILT_INS)
 	{
-		if (ft_strcmp(list->tokens_in_node->cmd, built_in[i]) == 0)
+		if (ft_strcmp(list->cmd, built_in[i]) == 0)
 			return (i);
 		i++;
 	}
@@ -39,7 +39,7 @@ int	is_built_in(t_node *list)
 void	exec_built_in(t_minishell *data, t_node *list)
 {
 	int		index;
-	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_minishell *, char **);
+	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_minishell *, t_node *, char **);
 
 	built_in_funcs[0] = &ft_pwd;
 	built_in_funcs[1] = &ft_echo;
@@ -51,27 +51,27 @@ void	exec_built_in(t_minishell *data, t_node *list)
 	index = is_built_in(list);
 	if (index == -1)
 		return ;
-	built_in_funcs[index](data, list->tokens_in_node->args);
+	built_in_funcs[index](data, list, list->args);
 }
 
-int	check_if_redir(t_token *token)
+int	check_if_redir(t_node *node)
 {
-	if (token->type >= 1 && token->type <= 4)
+	if (node->tokens_in_node->type >= 1 && node->tokens_in_node->type <= 4)
 		return (0);
 	return (1);
 }
 
-void	exec_child_process(t_node *list, t_minishell *data, char *path,
-		t_exec *exec)
+void	exec_child_process(t_minishell *data, t_node *list, char *path)
 {
-	t_token	*current;
+	t_node	*current;
 	char	**env;
 
-	current = list->tokens_in_node;
-	if (check_if_redir(current) == 0)
+	current = list;
+	if (check_if_redir(current) == 0 || list->here_doc == 1)
 	{
 		while (current)
 		{
+			printf("in the exec : %s\n", list->limiter_hd);
 			handle_redir(current);
 			current = current->next;
 		}
@@ -82,9 +82,9 @@ void	exec_child_process(t_node *list, t_minishell *data, char *path,
 		free_minishell(data);
 		exit(EXIT_FAILURE);
 	}
-	if (list->tokens_in_node->cmd)
+	if (list->cmd)
 	{
-		if (execve(path, exec->av, env) == -1)
+		if (execve(path, list->args, env) == -1)
 		{
 			perror("execve");
 			fprintf(stderr, "minishell: %s: command not found\n",
@@ -103,7 +103,7 @@ void	exec_parent_process(pid_t pid)
 		perror("waitpid");
 }
 
-void	exec_simple_cmd(t_exec *exec, t_node *list, t_minishell *data,
+void	exec_simple_cmd(t_minishell *data, t_node *list,
 		char *path)
 {
 	pid_t	pid;
@@ -113,11 +113,12 @@ void	exec_simple_cmd(t_exec *exec, t_node *list, t_minishell *data,
 		exec_built_in(data, list);
 		return ;
 	}
+	//
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
 	else if (pid == 0)
-		exec_child_process(list, data, path, exec);
+		exec_child_process(data, list, path);
 	else
 		exec_parent_process(pid);
 }

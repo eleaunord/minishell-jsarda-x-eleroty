@@ -6,14 +6,15 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:22:18 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/06 10:01:07 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/10 11:34:42 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_unset(t_minishell *data, char **args)
+void	ft_unset(t_minishell *data, t_node *node, char **args)
 {
+	(void)node;
 	t_env	*current;
 	t_env	*prev;
 	int		i;

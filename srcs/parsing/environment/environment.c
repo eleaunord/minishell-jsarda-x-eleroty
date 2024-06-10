@@ -33,12 +33,13 @@ void	print_env(t_env *list)
 		printf("The environment list is empty.\n");
 		return ;
 	}
-	do
+	printf("%s=%s\n", list->key, list->value);
+	list = list->next;
+	while (list != start)
 	{
-		printf("Key: %s, Value: %s, Str: %s\n", list->key, list->value,
-			list->str);
+		printf("%s=%s\n", list->key, list->value);
 		list = list->next;
-	} while (list != start);
+	}
 }
 // Allocates memory for a new t_env element and initializes its fields with the provided elem.
 static int	list_new_elem_str(t_env **new, char *elem)

@@ -6,17 +6,17 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/07 17:01:35 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/10 12:31:24 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	redir_in(t_token *redir)
+void	redir_in(t_node *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_RDONLY);
+	fd = open(redir->filename_in, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening input file");
@@ -48,11 +48,11 @@ void	redir_in_heredoc(char *file)
 	close(fd);
 }
 
-void	redir_out(t_token *redir)
+void	redir_out(t_node *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(redir->filename_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -67,11 +67,11 @@ void	redir_out(t_token *redir)
 	close(fd);
 }
 
-void	appen_redir_out(t_token *redir)
+void	appen_redir_out(t_node *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open(redir->filename_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -115,7 +115,7 @@ char	*get_tmp_file(void)
 	return (strdup(template));
 }
 
-void	heredoc(char *eof, t_token *redir)
+void	heredoc(char *eof, t_node *redir)
 {
 	char	*buf;
 	int		fd;
@@ -152,18 +152,18 @@ void	heredoc(char *eof, t_token *redir)
 		}
 	}
 	close(fd);
-	redir->filename = strdup(file);
+	redir->filename_in = strdup(file);
 	unlink(file);
 }
 
-void	handle_redir(t_token *redir)
+void	handle_redir(t_node *redir)
 {
-	if (redir->type == REDIR_IN_TOKEN)
+	if (redir->here_doc == 1)
+		heredoc(redir->limiter_hd, redir);
+	else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
 		redir_in(redir);
-	else if (redir->type == REDIR_OUT_TOKEN)
+	else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)
 		redir_out(redir);
-	else if (redir->type == APPEND_TOKEN)
+	else if (redir->tokens_in_node->type == APPEND_TOKEN)
 		appen_redir_out(redir);
-	else if (redir->type == HEREDOC_TOKEN)
-		heredoc(redir->filename, redir);
 }

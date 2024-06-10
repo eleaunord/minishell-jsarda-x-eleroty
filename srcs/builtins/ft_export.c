@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/07 13:04:34 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/10 11:32:40 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	modify_value(t_env *current, const char *value)
 		return ;
 	}
 	free(current->str);
-	current->str = malloc(ft_strlen(current->key) + ft_strlen(current->value) + 2);
+	current->str = malloc(ft_strlen(current->key) + ft_strlen(current->value)
+			+ 2);
 	if (!current->str)
 	{
 		perror("malloc");
@@ -34,6 +35,7 @@ void	modify_value(t_env *current, const char *value)
 void	create_var(t_minishell *data, const char *key, const char *value)
 {
 	t_env	*new_var;
+	t_env	*current;
 
 	new_var = malloc(sizeof(t_env));
 	if (!new_var)
@@ -60,11 +62,20 @@ void	create_var(t_minishell *data, const char *key, const char *value)
 		free(new_var);
 		return ;
 	}
-	new_var->next = data->env;
+	if (data->env == NULL)
+		new_var->next = new_var;
+	else
+	{
+		current = data->env;
+		while (current->next != data->env)
+			current = current->next;
+		current->next = new_var;
+		new_var->next = data->env;
+	}
 	data->env = new_var;
 }
 
-void	ft_export(t_minishell *data, char **args)
+void	ft_export(t_minishell *data, t_node *node, char **args)
 {
 	int		i;
 	t_env	*current;
@@ -73,10 +84,10 @@ void	ft_export(t_minishell *data, char **args)
 
 	if (!args || !data)
 		return ;
-	i = 0;
-	if (!args[i])
+	i = 1;
+	if (!args[1])
 	{
-		ft_env(data, args); // function print and ascci sorted
+		ft_env(data, node, args); // function print and ascci sorted
 		return ;
 	}
 	while (args[i])

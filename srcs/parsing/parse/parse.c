@@ -87,23 +87,23 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		t_node *head = node_list;
-		while (head)
-		{
-			printf("Node : %s\n", (char *)head->content);
-			printf("Cmd : %s\n", head->cmd);
-			printf("File name in: %s\n", head->filename_in);
-			printf("File name out: %s\n", head->filename_out);
-			printf("File name heredoc: %s\n", head->limiter_hd);
-			printf("Node expansion: %s\n", head->key_expansion);
-			printf("Arg cunt : %d\n", head->arg_count);
-			int x = 0;
-			while (x < head->arg_count)
-			{
-				printf("Arg[x] : %s\n", head->args[x++]);
-			}
-			head = head->next;
-		}
-		//exec(current, &data);
+		// while (head)
+		// {
+		// 	printf("Node : %s\n", (char *)head->content);
+		// 	printf("Cmd : %s\n", head->cmd);
+		// 	printf("File name in: %s\n", head->filename_in);
+		// 	printf("File name out: %s\n", head->filename_out);
+		// 	printf("File name heredoc: %s\n", head->limiter_hd);
+		// 	printf("Node expansion: %s\n", head->key_expansion);
+		// 	printf("Arg cunt : %d\n", head->arg_count);
+		// 	int x = 0;
+		// 	while (x < head->arg_count)
+		// 	{
+		// 		printf("Arg[x] : %s\n", head->args[x++]);
+		// 	}
+		// 	head = head->next;
+		// }
+		exec(head, &data);
 		if (data.exit)
 		{
 			break ;
