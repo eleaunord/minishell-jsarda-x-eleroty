@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/07 16:50:57 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/07 17:01:35 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void	heredoc(char *eof, t_token *redir)
 
 	i = 0;
 	(void)redir;
-	buf = NULL;
 	file = get_tmp_file();
 	if (!eof)
 	{
@@ -141,16 +140,20 @@ void	heredoc(char *eof, t_token *redir)
 	while (1)
 	{
 		buf = readline("> ");
-		printf("here\n");
-		if (!ft_strncmp(eof, buf, INT_MAX))
+		if (buf && !ft_strncmp(eof, buf, INT_MAX))
+		{
+			free(buf);
 			break ;
-		ft_putendl_fd(buf, fd);
-		free(buf);
+		}
+		if (buf)
+		{
+			ft_putendl_fd(buf, fd);
+			free(buf);
+		}
 	}
 	close(fd);
-	redir_in_heredoc(file);
+	redir->filename = strdup(file);
 	unlink(file);
-	free(buf);
 }
 
 void	handle_redir(t_token *redir)
