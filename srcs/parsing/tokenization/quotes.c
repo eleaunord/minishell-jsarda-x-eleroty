@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-void close_quote_check(int *dq, int *sq, int *index, char c)
+void	close_quote_check(int *dq, int *sq, int *index, char c)
 {
 	if ((c == '\'' || c == '"') && !*sq && !*dq)
 	{
@@ -22,11 +22,11 @@ void close_quote_check(int *dq, int *sq, int *index, char c)
 	}
 }
 
-int open_quote_check(char *line)
+int	open_quote_check(char *line)
 {
-	int double_quote;
-	int single_quote;
-	int i;
+	int	double_quote;
+	int	single_quote;
+	int	i;
 
 	i = 0;
 	double_quote = 0;
@@ -45,41 +45,48 @@ int open_quote_check(char *line)
 	return (0);
 }
 
-char *remove_quotes(char *line)
+void toggle_quote_status(char c, char *quote)
 {
-	int len;
-	char *temp_line;
+    if (c == '"' || c == '\'')
+    {
+        if (*quote == 0)
+            *quote = c;
+        else if (*quote == c)
+            *quote = 0;
+    }
+}
 
-	len = strlen(line);
-	temp_line = (char *)malloc(len + 1);
-	if (!temp_line)
-	{
-		fprintf(stderr, "Memory allocation error\n");
-		return (NULL);
-	}
-	int i, j = 0;
-	char quote = 0; // To keep track of the current quote character
-	for (i = 0; i < len; i++)
-	{
-		if (line[i] == '"' || line[i] == '\'')
-		{
-			if (quote == 0)
-			{
-				// Starting a new quote block
-				quote = line[i];
-			}
-			else if (quote == line[i])
-			{
-				// Ending the current quote block
-				quote = 0;
-			}
-		}
-		else
-		{
-			// Normal character, just copy it
-			temp_line[j++] = line[i];
-		}
-	}
-	temp_line[j] = '\0';
-	return (temp_line);
+void copy_without_quotes(const char *line, char *temp_line)
+{
+    int i = 0;
+    int j = 0;
+    char quote = 0;
+    int len = strlen(line);
+
+    while (i < len)
+    {
+        toggle_quote_status(line[i], &quote);
+        if (quote == 0 || (line[i] != '"' && line[i] != '\''))
+            temp_line[j++] = line[i];
+        i++;
+    }
+    temp_line[j] = '\0';
+}
+
+char *remove_quotes(const char *line)
+{
+    int len;
+    char *temp_line;
+
+    if (!line)
+        return NULL;
+
+    len = strlen(line);
+    temp_line = (char *)malloc(len + 1);
+    if (!temp_line)
+        return NULL;
+
+    copy_without_quotes(line, temp_line);
+
+    return temp_line;
 }

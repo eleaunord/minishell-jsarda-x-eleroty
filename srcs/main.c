@@ -1,0 +1,1 @@
+//valgrind --suppressions=valgrind_readline_leaks_ignore.supp ./minishell

@@ -132,11 +132,12 @@ int					is_space(char *line);
 char				*create_token(char *str, int start, int end);
 char				*create_token(char *str, int start, int end);
 char				*ft_split_pipes_spaces(char *line, t_node **tokens_list);
-char				*remove_quotes(char *line);
+
+char *remove_quotes(const char *line);
 int					ft_strcmp(char *s1, char *s2);
 int					tokenizer(char *line, t_node **nodes);
 void				free_env(char ***envp);
-void				free_minishell(t_minishell *mini);
+void				free_minishell(t_minishell *mini,  t_node *list);
 void				free_env_list(t_env *env_list);
 int					init_env(t_minishell *data, char **env);
 void				print_env(t_env *list);
@@ -167,6 +168,17 @@ int					count_arguments(t_token *tokens);
 void				free_nodes(t_node *list);
 void				process_expansions(t_token **tokens, t_node *node);
 char	*get_tmp_file(void);
+void	free_nodes(t_node *list);
+int	check_line(char **line);
+int	is_space(char *line);
+bool	is_quote(char c);
+char	*collapse_spaces(char *str);
+void init_parsing(t_node *node);
+void set_cmd(t_token *tokens, t_node *node);
+int init_args(t_token *tokens, t_node *node);
+void	update_tokens(t_token **tokens, t_node *node);
+char	*remove_quotes_from_word(char *word);
+void	set_cmd(t_token *tokens, t_node *node);
 // LIBFT FUNCTIONS
 void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
@@ -191,6 +203,8 @@ size_t				count_args(char **args);
 char				*ft_strchr(const char *s, int c);
 int					ft_isdigit(char *c);
 void				*ft_calloc(size_t count, size_t size);
+char	*trim_whitespace(char *str);
+char	*ft_strtrim(char const *s1, char const *set);
 
 // USEFUL FUNCTIONS FOR DEBUG
 void				print_node(t_node *head);
