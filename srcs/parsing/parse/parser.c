@@ -48,42 +48,87 @@ int init_args(t_token *tokens, t_node *node)
     return 0;
 }
 
-// erase ?
 
-// void	set_filename(t_token **tokens, t_node *node)
-// {
-// 	t_token	*current;
+void	count_heredocs(t_token **tokens, t_node *node)
+{
+	t_token	*current;
 
-// 	if (!tokens || !*tokens || !node)
-// 		return ;
-// 	current = *tokens;
-// 	while (current)
-// 	{
-// 		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
-// 		{
-// 			if (current->next && current->next->type == TOKEN_WORD)
-// 			{
-// 				if (current->type == REDIR_IN_TOKEN)
-// 				{
-// 					node->filename_in = current->next->value;
-// 					current->next->processed = 1;
-// 				}
-// 				else if (current->type == REDIR_OUT_TOKEN)
-// 				{
-// 					node->filename_out = current->next->value;
-// 					current->next->processed = 1;
-// 				}
-// 				else if (current->type == HEREDOC_TOKEN)
-// 				{
-// 					node->here_doc = 1;
-// 					node->limiter_hd = current->next->value;
-// 				}
-// 				current->next->processed = 1;
-// 			}
-// 		}
-// 		current = current->next;
-// 	}
-// }
+	if (!tokens || !*tokens)
+		return ;
+	current = *tokens;
+	int i = 0;
+	while (current)
+	{
+		printf("Token : %s\n", current->value);
+		if (current->type == HEREDOC_TOKEN)
+		{
+			if (current->next && current->next->type == TOKEN_WORD)
+			{
+				i++;
+			}
+		}
+		current = current->next;
+	}
+	node->limiter_hd_count = i;
+		
+}
+
+void	set_filename(t_token **tokens, t_node *node)
+{
+	t_token	*current;
+	// char	**new_limiter_hd;
+
+	if (!tokens || !*tokens || !node)
+		return ;
+
+	t_token *tok = *tokens;
+	count_heredocs(&tok, node);
+	int i = 0;
+	node->limiter_hd = (char **)calloc(node->limiter_hd_count + 1, sizeof(char *));
+    if (!node->limiter_hd)
+	{
+        return;
+    }
+	current = *tokens;
+	while (current)
+	{
+		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
+		{
+			if (current->next && current->next->type == TOKEN_WORD)
+			{
+				if (current->type == REDIR_IN_TOKEN)
+				{
+					node->filename_in = current->next->value;
+					current->next->processed = 1;
+				}
+				else if (current->type == REDIR_OUT_TOKEN)
+				{
+					node->filename_out = current->next->value;
+					current->next->processed = 1;
+				}
+				else if (current->type == HEREDOC_TOKEN)
+				{
+					if (i < node->limiter_hd_count) {
+                        node->limiter_hd[i] = current->next->value;
+                        i++;
+                    }
+                    node->here_doc = 1;
+					printf("number of time i enter : %d\n", i);
+                    if (i == node->limiter_hd_count)
+					{
+						printf("number of time enter");
+                        node->filename_in = get_tmp_file();
+                    }
+                    current->next->processed = 1;
+				}
+			}
+		}
+		current = current->next;
+	}
+	node->limiter_hd[node->limiter_hd_count] = NULL;
+}
+
+
 
 char	*remove_dollar_sign(char *str)
 {
@@ -160,6 +205,7 @@ void init_parsing(t_node *node)
 	node->filename_in = NULL;
 	node->here_doc = 0;
 	node->limiter_hd = NULL;
+	node->limiter_hd_count = 0;
 	node->key_expansion = NULL;
 }
 void	update_tokens(t_token **tokens, t_node *node)
@@ -297,20 +343,26 @@ void parse_tokens(t_token *tokens, t_node *node)
 	fill_args(tokens, node);
 	
 	t_node *head = node;
+	int i = 0;
 	while (head)
 	{
-		 printf("Node : %s\n", (char *)head->content);
-		printf("Cmd : %s\n", head->cmd);
-		printf("File name in: %s\n", head->filename_in);
-		printf("File name out: %s\n", head->filename_out);
-		printf("File name heredoc: %s\n", head->limiter_hd);
-		printf("Node expansion: %s\n", head->key_expansion);
-		printf("Arg cunt : %d\n", head->arg_count);
-		int x = 0;
-		while (x < head->arg_count)
+		printf("Node : %s\n", (char *)head->content);
+		// printf("Cmd : %s\n", head->cmd);
+		
+		// printf("File name out: %s\n", head->filename_out);
+		while ( i < node->limiter_hd_count)
 		{
-			printf("Arg[x] : %s\n", head->args[x++]);
+			if (head->filename_in)
+			printf("File name in: %s : %s\n", head->limiter_hd[i], head->filename_in);
+			printf("File name heredoc: %s\n", head->limiter_hd[i++]);
 		}
+		// printf("Node expansion: %s\n", head->key_expansion);
+		// printf("Arg cunt : %d\n", head->arg_count);
+		// int x = 0;
+		// while (x < head->arg_count)
+		// {
+		// 	printf("Arg[x] : %s\n", head->args[x++]);
+		// }
 		head = head->next;
 	}
 }

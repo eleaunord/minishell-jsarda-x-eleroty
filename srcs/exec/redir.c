@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 12:31:24 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/10 16:55:59 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	*get_tmp_file(void)
 			close(random_fd);
 			exit(EXIT_FAILURE);
 		}
-		template[i] = 'a' + (rand_char % 26);
+		template[i] = 'a' + (rand_char % 20);
 		i++;
 	}
 	template[i] = '\0';
@@ -115,7 +115,7 @@ char	*get_tmp_file(void)
 	return (strdup(template));
 }
 
-void	heredoc(char *eof, t_node *redir)
+void	heredoc(char **eof, t_node *redir)
 {
 	char	*buf;
 	int		fd;
@@ -124,7 +124,8 @@ void	heredoc(char *eof, t_node *redir)
 
 	i = 0;
 	(void)redir;
-	file = get_tmp_file();
+	// if (its the last eof)
+	// 	redir->filename_in = get_tmp_file();
 	if (!eof)
 	{
 		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
@@ -140,7 +141,7 @@ void	heredoc(char *eof, t_node *redir)
 	while (1)
 	{
 		buf = readline("> ");
-		if (buf && !ft_strncmp(eof, buf, INT_MAX))
+		if (buf && !ft_strncmp(*eof, buf, INT_MAX))
 		{
 			free(buf);
 			break ;
@@ -152,8 +153,8 @@ void	heredoc(char *eof, t_node *redir)
 		}
 	}
 	close(fd);
-	redir->filename_in = strdup(file);
-	unlink(file);
+	redir_in_heredoc(redir->filename_in);
+	unlink(redir->filename_in);
 }
 
 void	handle_redir(t_node *redir)

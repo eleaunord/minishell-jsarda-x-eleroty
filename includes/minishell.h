@@ -40,6 +40,8 @@ typedef struct s_token
 	int				processed;
 	// EXPANSIONS
 	char			*key_expansion;
+	
+	int limiter_hd_count;
 }					t_token;
 
 // Env struct
@@ -68,12 +70,14 @@ typedef struct s_node
 	char			**args;
 	int				arg_count;
 	char *key_expansion; // in args
-
+	
 	// Redirections, filenames not in args
 	char *filename_out; // >
 	char *filename_in;  // <
 	int here_doc;       // is there a here doc ? 1 : yes, 0 : no
-	char *limiter_hd;   // eof
+	char **limiter_hd;   // eof
+	int limiter_hd_count;
+	char *last_heredoc;
 
 	// OTHER (?)
 	// int fd_in; // <
@@ -162,7 +166,7 @@ void				close_quote_check(int *dq, int *sq, int *index, char c);
 int					count_arguments(t_token *tokens);
 void				free_nodes(t_node *list);
 void				process_expansions(t_token **tokens, t_node *node);
-
+char	*get_tmp_file(void);
 // LIBFT FUNCTIONS
 void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
