@@ -5,12 +5,10 @@ int word_token(char *input, t_token **tokens, int index)
 {
     //char    *word;
     int     in_quotes;
-    char    quote_char;
     int     word_start;
     int     word_end;
 
     in_quotes = 0;
-    quote_char = '\0';
     word_start = index;
 
     while (input[index] != '\0')

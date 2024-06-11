@@ -54,12 +54,10 @@ int	main(int argc, char *argv[], char *env[])
 	char		*input_line;
 	t_node		*node_list;
 	t_minishell	data;
-	int			flag;
 
 
 	input_line = NULL;
 	node_list = NULL;
-	flag = 1;
 	(void)argc;
 	(void)argv;
 	init_minishell(&data);

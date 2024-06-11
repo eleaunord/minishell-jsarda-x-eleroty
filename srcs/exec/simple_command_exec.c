@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 16:11:07 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/06/11 14:26:40 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,7 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 
 	current = list;
 	if (check_if_redir(current) == 0 || list->here_doc == 1)
-	{
-		while (current)
-		{
-			//printf("in the exec : %s\n", list->limiter_hd);
-			handle_redir(current);
-			current = current->next;
-		}
-	}
+		handle_redir(current);
 	env = create_char_env(data->env);
 	if (!env)
 	{

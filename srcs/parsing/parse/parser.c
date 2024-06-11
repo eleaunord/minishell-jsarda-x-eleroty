@@ -113,10 +113,11 @@ void	set_filename(t_token **tokens, t_node *node)
                         i++;
                     }
                     node->here_doc = 1;
-					printf("number of time i enter : %d\n", i);
+					printf("node->limiter_hd_count : %d\n", node->limiter_hd_count);
+					printf("i : %d\n", i);
                     if (i == node->limiter_hd_count)
 					{
-						printf("number of time enter");
+						printf("creating file\n");
                         node->filename_in = get_tmp_file();
                     }
                     current->next->processed = 1;
