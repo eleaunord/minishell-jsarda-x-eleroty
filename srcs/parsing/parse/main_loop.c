@@ -37,8 +37,6 @@ int	main(int argc, char *argv[], char *env[])
 	t_node		*node_list;
 	t_minishell	data;
 	t_node *head_nodes;
-	int			flag;
-
 
 	input_line = NULL;
 	node_list = NULL;

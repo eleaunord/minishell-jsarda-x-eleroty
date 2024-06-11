@@ -63,7 +63,6 @@ void	set_cmd(t_token *tokens, t_node *node)
 
 void	init_parsing(t_node *node)
 {
-	// From parsing to exec
 	node->args = NULL;
 	node->arg_count = 0;
 	node->cmd = NULL;

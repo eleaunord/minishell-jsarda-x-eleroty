@@ -10,20 +10,25 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_split.c \
 					libft/ft_putstr_fd.c \
 					libft/ft_lstdelone.c \
-					libft/ft_memcpy.c \
+					libft/ft_alloc.c \
 					libft/ft_itoa.c \
 					libft/ft_strtrim.c \
-					srcs/parsing/tokenization/tokens.c \
-					srcs/parsing/parse/parse.c \
+					libft/ft_copy.c \
+					srcs/parsing/tokenization/word_tokens.c \
+					srcs/parsing/tokenization/special_tokens.c \
+					srcs/parsing/parse/main_loop.c \
 					srcs/parsing/parse/parser.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
 					srcs/parsing/tokenization/tokenizer.c \
-					srcs/parsing/environment/environment.c \
-					srcs/parsing/environment/free.c \
+					srcs/parsing/environment/env.c \
+					srcs/parsing/environment/key_value.c \
+					srcs/parsing/parse/free.c \
+					srcs/parsing/environment/alloc_env.c \
 					srcs/parsing/parse/expansion.c \
-					srcs/parsing/parse/check_parsing.c \
+					srcs/parsing/parse/checkers.c \
 					srcs/parsing/parse/init_parsing.c \
+					srcs/parsing/parse/filename.c \
 					srcs/parsing/parse/remove_quotes.c \
 					srcs/parsing/parse/update_tokens.c \
 					srcs/parsing/tokenization/collapse_spaces.c \

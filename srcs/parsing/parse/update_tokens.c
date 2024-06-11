@@ -1,6 +1,5 @@
 #include "../../../includes/minishell.h"
 
-
 char	*remove_dollar_sign(char *str)
 {
 	char	*new_str;
@@ -19,6 +18,7 @@ void	handle_key_expansion_trimming(t_token *token, t_node *node)
 {
 	char	*new_value;
 
+	new_value = NULL;
 	if (token->key_expansion != NULL && token->key_expansion[0] == '"'
 		&& token->key_expansion[strlen(token->key_expansion) - 1] == '"')
 	{
@@ -26,6 +26,19 @@ void	handle_key_expansion_trimming(t_token *token, t_node *node)
 		free(token->key_expansion);
 		token->key_expansion = new_value;
 		node->key_expansion = new_value;
+	}
+	else if (token->key_expansion != NULL && ft_strchr(token->key_expansion,
+			'$'))
+	{
+		new_value = ft_strtrim(token->key_expansion, "$");
+		free(token->key_expansion);
+		token->key_expansion = new_value;
+		node->key_expansion = new_value;
+	}
+	if (new_value != NULL && *new_value == '\0')
+	{
+		free(new_value);
+		node->key_expansion = NULL;
 	}
 }
 
