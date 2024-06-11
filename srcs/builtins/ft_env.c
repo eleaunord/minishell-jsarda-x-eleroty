@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 10:56:05 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 10:57:21 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/03 10:00:11 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/11 13:13:47 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	ft_strcmp(char *s1, char *s2)
+void	ft_env(t_minishell *data, t_node *node, char **args)
 {
-	int	i;
-
-	i = 0;
-	while ((s1[i] == s2[i]) && s1[i] && s2[i])
-		i++;
-	return (s1[i] - s2[i]);
+	(void)args;
+	(void)node;
+	if (!data->env)
+		return ; // need to add pwd , shlvl , _
+	print_env(data->env);
 }

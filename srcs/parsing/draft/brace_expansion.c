@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	brace_expansion(char *token, int start, int *i, char **final_str)
 {
@@ -12,12 +12,12 @@ void	brace_expansion(char *token, int start, int *i, char **final_str)
 		end = *i;
 		sub = ft_substr(token, start, (end - start));
 		expanded_var = getenv(sub);
-		free(sub);
+		// free(sub);
 		if (expanded_var == NULL)
 			expanded_var = "";
 		temp = *final_str;
 		*final_str = ft_strjoin(*final_str, expanded_var);
-		free(temp);
+		// free(temp);
 		return ;
 	}
 	else

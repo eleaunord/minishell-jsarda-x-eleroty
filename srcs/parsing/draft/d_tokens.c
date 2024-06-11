@@ -109,7 +109,7 @@ t_list	*ft_split_tokens(char *line, t_list *minishell, t_command **command)
 int	tokenizer(char *input, t_list *minishell, t_command **command)
 {
 	//check syntax
-	minishell 
+	minishell
 	token_list = ft_split_tokens(input, minishell, command);
 	ft_split_operators(token_list);
 	if (token_list != NULL)

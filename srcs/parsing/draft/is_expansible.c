@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 
 int	ft_strchr_index(const char *s, int c)
@@ -169,6 +169,8 @@ char	*is_envar_expansible(char *token, int *i, char **final_str, t_minishell *mi
 	int		end;
 	char	*sub;
 
+	(void)final_str;
+	(void)mini;
 	if (is_btwn_single_quotes(*final_str) == 0)
 	{
 		if (is_brace_expansion(token, i, final_str) == 1)

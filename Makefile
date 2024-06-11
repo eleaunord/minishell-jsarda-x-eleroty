@@ -9,6 +9,7 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_strcmp.c \
 					libft/ft_split.c \
 					libft/ft_putstr_fd.c \
+					libft/ft_lstdelone.c \
 					libft/ft_memcpy.c \
 					libft/ft_itoa.c \
 					srcs/parsing/tokenization/tokens.c \
@@ -17,23 +18,31 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
 					srcs/parsing/tokenization/tokenizer.c \
+					srcs/parsing/environment/environment.c \
+					srcs/parsing/environment/free.c \
+					srcs/parsing/parse/expansion.c \
 					srcs/exec/simple_command_exec.c \
+					srcs/exec/env_utils.c \
+					srcs/exec/redir.c \
+					srcs/exec/pipe_exec.c \
+					srcs/exec/exec.c \
 					srcs/exec/get_env_path.c \
 					utils/perror.c \
 					utils/ft_free.c \
-					utils/convert_to_execve_args.c \
 					utils/count_args.c \
 					srcs/builtins/ft_echo.c \
+					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \
-					srcs/parsing/environment/environment.c \
-					srcs/parsing/environment/free.c \
-					srcs/exec/env_utils.c \
-					# parsing/tokenization/operators.c \
+					srcs/builtins/ft_export.c \
+					srcs/builtins/ft_cd.c \
+					srcs/builtins/ft_exit.c \
+					srcs/builtins/ft_unset.c \
+
 
 OBJS        := $(SRCS:.c=.o)
 
 .c.o:
-	${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+	@${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 
 CLR_RMV		:= \033[0m
@@ -46,7 +55,7 @@ RM		    := rm -f
 
 ${NAME}:	${OBJS}
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
-			${CC} ${CFLAGS} -o ${NAME} ${OBJS} $(LIBS)
+			@${CC} ${CFLAGS} -o ${NAME} ${OBJS} $(LIBS)
 			@echo "$(GREEN)$(NAME) created[0m ✔️"
 
 all:		${NAME}
@@ -54,10 +63,12 @@ all:		${NAME}
 bonus:		all
 
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
+	@echo "$(RED)Cleaned object files${CLR_RMV}"
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@echo "$(RED)Cleaned all build files${CLR_RMV}"
 
 re: fclean all
 

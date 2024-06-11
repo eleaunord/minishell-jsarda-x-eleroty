@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 10:56:05 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 10:57:21 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/03 10:01:41 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/10 10:26:11 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	ft_strcmp(char *s1, char *s2)
+void	ft_cd(t_minishell *data, t_node *node, char **args)
 {
-	int	i;
+	(void)node;
+	int	cd_ret;
 
-	i = 0;
-	while ((s1[i] == s2[i]) && s1[i] && s2[i])
-		i++;
-	return (s1[i] - s2[i]);
+	if (!args[1])
+		cd_ret = chdir(get_path_value(data, "HOME"));
+	else
+	{
+		cd_ret = chdir(args[1]);
+		if (cd_ret < 0)
+			cd_ret *= -1;
+		if (cd_ret != 0)
+			perror("minishell: cd:");
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 15:27:07 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:52:43 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/07 09:14:04 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 	struct stat	statbuf;
 	char		*path;
 	char		*cmd_path;
-
 
 	if (!cmd || !data)
 		return (NULL);
@@ -40,7 +39,7 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 		free(cmd_path);
 		if (!path)
 			return (free_split(paths), NULL);
-	if (stat(path, &statbuf) == 0 && (statbuf.st_mode & S_IXUSR))
+		if (stat(path, &statbuf) == 0 && (statbuf.st_mode & S_IXUSR))
 			return (free_split(paths), path);
 		free(path);
 		i++;

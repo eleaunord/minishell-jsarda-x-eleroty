@@ -5,19 +5,22 @@ t_token	*new_token(t_token_type type, char *value)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = malloc(sizeof(t_token)); // LEAK
 	if (!token)
 		return (NULL);
-	token->type = type;
-	token->value = ft_strdup(value);
-	token->cmd = NULL;
-	token->args = NULL;
+	token->value = ft_strdup(value); // LEAK
 	if (!token->value)
 	{
 		free(token);
 		return (NULL);
 	}
+	token->cmd = NULL;
+	token->args = NULL;
+	//token->filename = NULL;
+	token->key_expansion = NULL;
+	token->type = type;
 	token->next = NULL;
+	token->processed = 0;
 	return (token);
 }
 
@@ -36,24 +39,38 @@ void	add_token_to_list(t_token **tokens, t_token *new_token)
 		last->next = new_token;
 	}
 }
+
 t_token	*tokenize_input(char *node)
 {
 	t_token	*tokens;
-	int		start;
 	int		length;
 	int		i;
+	// t_token	*temp;
 
 	tokens = NULL;
 	i = 0;
-	start = 0;
+
 	length = ft_strlen(node);
-	while (i <= length)
+	while (i < length)
 	{
+
 		if (node[i] == '>' || node[i] == '<')
-			special_tokens(&node, &tokens);
+		{
+			i = special_tokens(node + i, &tokens, i);
+		}
 		else
-			word_token(&node, &tokens, &start, &i);
-		i++;
+		{
+			i = word_token(node, &tokens, i);
+		}
 	}
+
 	return (tokens);
 }
+	//DEBUG
+	// temp = tokens;
+	// while (temp != NULL)
+	// {
+	// 	printf("TOKEN VALUE: %s\n", (char *)temp->value);
+	// 	printf("TYPE : %d\n", temp->type);
+	// 	temp = temp->next;
+	// }

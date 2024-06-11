@@ -1,38 +1,27 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_list **nodes, t_minishell *mini)
+
+int	tokenizer(char *line, t_node **nodes)
 {
-	t_list	*current;
+	t_node	*current;
 	t_token	*tokens;
 	char	*input;
 
 	input = NULL;
-	(void)mini;
 	if (open_quote_check(line))
 	{
 		free(line);
 		return (0);
 	}
-	input = remove_quotes(line);
-	ft_split_pipes_spaces(input, nodes);
+	input = ft_split_pipes_spaces(line, nodes);
 	current = *nodes;
 	while (current != NULL)
 	{
-		printf("NODE : %s\n", (char *)current->content);
-		tokens = tokenize_input((char *)current->content);
-		t_token *titi = tokens;
-		while (titi)
-    	{
-        	printf("Token: %s\n", titi->value);
-        	titi = titi->next;
-    	}
-		parse_tokens(tokens);
-		// attach tokens to the current list node
-		current->tokens_in_node = tokens;
+		tokens = tokenize_input(current->content);
+		parse_tokens(tokens, current);
 		current = current->next;
 	}
 	line = input;
-	free(input);
 	return (1);
 }
 
@@ -40,7 +29,7 @@ void	init_minishell(t_minishell *mini)
 {
 	mini->env = NULL;
 	mini->nodes = NULL;
-	// a remplir au fur et a mesure
+	mini->exit = 0;
 }
 int	is_space(char *line)
 {
@@ -59,78 +48,102 @@ int	check_line(char **line)
 		return (1);
 	return (0);
 }
-// Segfault on free functions
 
 int	main(int argc, char *argv[], char *env[])
 {
 	char		*input_line;
-	t_list		*tokens_list;
+	t_node		*node_list;
 	t_minishell	data;
-	int			flag;
-	t_list		*current;
-	t_token		*token;
-	int			i;
+
 
 	input_line = NULL;
-	tokens_list = NULL;
-	flag = 1;
+	node_list = NULL;
 	(void)argc;
 	(void)argv;
 	init_minishell(&data);
 	if (!init_env(&data, env))
-	{
 		return (1);
-	}
-	// PRINT ENV
-	// print_env(data.env);
-	// Main shell execution Loop
 	while (1)
 	{
-		input_line = readline("prompt> ");
+		input_line = readline("prompt > ");
 		if (!input_line)
 		{
-			rl_clear_history(); // ?
-			continue ;
+			rl_clear_history();
+			break ;
 		}
 		if (check_line(&input_line))
+		{
+			free(input_line);
 			continue ;
-		if (!tokenizer(input_line, &tokens_list, &data))
+		}
+
+		if (!tokenizer(input_line, &node_list))
 		{
 			add_history(input_line);
 			free(input_line);
-			return (0);
+			continue;
 		}
 		add_history(input_line);
-		current = tokens_list;
-		// exec(current, &data);
-		// DEBUG
-		while (current != NULL)
+		t_node *head = node_list;
+		// while (head)
+		// {
+		// 	printf("Node : %s\n", (char *)head->content);
+		// 	printf("Cmd : %s\n", head->cmd);
+		// 	printf("File name in: %s\n", head->filename_in);
+		// 	printf("File name out: %s\n", head->filename_out);
+		// 	printf("File name heredoc: %s\n", head->limiter_hd);
+		// 	printf("Node expansion: %s\n", head->key_expansion);
+		// 	printf("Arg cunt : %d\n", head->arg_count);
+		// 	int x = 0;
+		// 	while (x < head->arg_count)
+		// 	{
+		// 		printf("Arg[x] : %s\n", head->args[x++]);
+		// 	}
+		// 	head = head->next;
+		// }
+		exec(head, &data);
+		if (data.exit)
 		{
-			printf("NODE : %s\n", (char *)current->content);
-			token = current->tokens_in_node;
-			while (token != NULL)
-			{
-				printf("TOKEN VALUE : %s\n", token->value);
-				printf("TOKEN TYPE : %d\n", token->type);
-					// Assuming you want to print the integer value of the enum
-				// Print the command if it exists
-				if (token->cmd)
-					printf("CMD : %s\n", token->cmd);
-				// Print the arguments if they exist
-				i = 0;
-				while (token->args && token->args[i] != NULL)
-				{
-					printf("ARGS : %s\n", token->args[i]);
-					i++;
-				}
-				// Move to the next token in the linked list
-				token = token->next;
-			}
-			// Move to the next node in the linked list
-			current = current->next;
+			break ;
 		}
-		ft_lstclear(&tokens_list, free); // Clear the list after processing
-		free(input_line);
+		//free(input_line);
+    	//free_nodes(tokens_list);
+		node_list = NULL;
 	}
+    free(input_line);
+    free_minishell(&data);
 	return (0);
 }
+
+
+// DEBUG
+
+	// PRINT ENV
+	// print_env(data.env);
+	// Main shell execution Loop
+
+
+// DEBUG
+
+		// while (current != NULL)
+		// {
+		// 	printf("NODE : %s\n", (char *)current->content);
+		// 	t_token *temp = current->tokens_in_node;
+		// 	printf("CMD : %s\n", temp->cmd);
+		// 	while (temp != NULL)
+		// 	{
+		// 		printf("TOKEN : %s\n", temp->value);
+		// 		printf("TYPE: %d\n", temp->type);
+		// 		printf("cmd : %s\n", temp->cmd);
+		// 		printf("file name : %s\n", temp->filename);
+		// 		printf("key expansion : %s\n", temp->key_expansion);
+		// 		int i = 0;
+		// 		while (temp->args && i < count_arguments(temp))
+		// 		{
+		// 			printf("ARGS : %s\n", temp->args[i++]);
+		// 		}
+		// 		temp = temp->next;
+		// 	}
+
+		// 	current = current->next;
+		// }

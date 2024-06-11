@@ -1,82 +1,372 @@
 #include "../../../includes/minishell.h"
+#include <stdbool.h>
 
-/*
-echo "'hey tu vas chew moi' 'non'" =>
-
-	ARG[0]: 'hey
-	ARG[1]: tu
-	ARG[2]: vas
-	ARG[3]: chez
-	ARG[4]: moi'
-	ARG[5]: 'non'
-*/
-
-
-int	count_arguments(t_token *current)
+char	*ft_strtrim(char const *s1, char const *set)
 {
-	int	arg_count;
+	char	*start;
+	char	*end;
 
-	arg_count = 0;
-	while (current && current->type == WORD_TOKEN)
+	if (!s1 || !set)
+		return (NULL);
+	start = (char *)s1;
+	while (*start && ft_strchr(set, *start))
+		start++;
+	end = (char *)(s1 + ft_strlen(s1) - 1);
+	while (end > start && ft_strchr(set, *end))
+		end--;
+	return (ft_substr(start, 0, end - start + 1));
+}
+
+int	count_arguments(t_token *tokens)
+{
+	int		count;
+	t_token	*current;
+
+	count = 0;
+	current = tokens;
+	while (current)
 	{
-		arg_count++;
+		if (current->type == TOKEN_WORD && !current->processed)
+		{
+			count++;
+		}
 		current = current->next;
 	}
-	return (arg_count);
+	return (count);
 }
 
-void	parse_tokens(t_token *tokens)
+int init_args(t_token *tokens, t_node *node)
 {
-	int		arg_count;
-	int		i;
-	t_token	*tmp;
-	t_token	*next;
+    int arg_count = count_arguments(tokens);
+    node->args = (char **)ft_calloc(arg_count + 1, sizeof(char *));
+	node->arg_count = arg_count;
+    if (!node->args)
+    {
+        free(node->cmd);
+        return -1;
+    }
+    return 0;
+}
+
+
+void	count_heredocs(t_token **tokens, t_node *node)
+{
+	t_token	*current;
+
+	if (!tokens || !*tokens)
+		return ;
+	current = *tokens;
+	int i = 0;
+	while (current)
+	{
+		printf("Token : %s\n", current->value);
+		if (current->type == HEREDOC_TOKEN)
+		{
+			if (current->next && current->next->type == TOKEN_WORD)
+			{
+				i++;
+			}
+		}
+		current = current->next;
+	}
+	node->limiter_hd_count = i;
+		
+}
+
+void	set_filename(t_token **tokens, t_node *node)
+{
+	t_token	*current;
+	// char	**new_limiter_hd;
+
+	if (!tokens || !*tokens || !node)
+		return ;
+
+	t_token *tok = *tokens;
+	count_heredocs(&tok, node);
+	int i = 0;
+	node->limiter_hd = (char **)calloc(node->limiter_hd_count + 1, sizeof(char *));
+    if (!node->limiter_hd)
+	{
+        return;
+    }
+	current = *tokens;
+	while (current)
+	{
+		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
+		{
+			if (current->next && current->next->type == TOKEN_WORD)
+			{
+				if (current->type == REDIR_IN_TOKEN)
+				{
+					node->filename_in = current->next->value;
+					current->next->processed = 1;
+				}
+				else if (current->type == REDIR_OUT_TOKEN)
+				{
+					node->filename_out = current->next->value;
+					current->next->processed = 1;
+				}
+				else if (current->type == HEREDOC_TOKEN)
+				{
+					if (i < node->limiter_hd_count) {
+                        node->limiter_hd[i] = current->next->value;
+                        i++;
+                    }
+                    node->here_doc = 1;
+					printf("node->limiter_hd_count : %d\n", node->limiter_hd_count);
+					printf("i : %d\n", i);
+                    if (i == node->limiter_hd_count)
+					{
+						printf("creating file\n");
+                        node->filename_in = get_tmp_file();
+                    }
+                    current->next->processed = 1;
+				}
+			}
+		}
+		current = current->next;
+	}
+	node->limiter_hd[node->limiter_hd_count] = NULL;
+}
+
+
+
+char	*remove_dollar_sign(char *str)
+{
+	char	*new_str;
+	char	*ptr;
+
+	new_str = ft_strdup(str);
+	ptr = ft_strchr(new_str, '$');
+	if (ptr != NULL)
+	{
+		ft_strcpy(ptr, ptr + 1);
+	}
+	return (new_str);
+}
+
+char	*remove_quotes_from_word(char *word)
+{
+	int		len;
+	char	*result;
+
+	if (!word)
+		return (NULL);
+	len = strlen(word);
+	result = (char *)malloc(len + 1);
+	if (!result)
+	{
+		fprintf(stderr, "Memory allocation error\n");
+		return (NULL);
+	}
+	int i, j = 0;
+	char quote = 0; // To keep track of the current quote character
+	for (i = 0; i < len; i++)
+	{
+		if (word[i] == '\'' && quote == 0)
+		{
+			// Starting or ending a single quote block
+			while (word[++i] != '\'' && i < len)
+			{
+				result[j++] = word[i];
+			}
+		}
+		else if (word[i] == '"' && quote == 0)
+		{
+			// Starting a double quote block
+			quote = '"';
+		}
+		else if (word[i] == '"' && quote == '"')
+		{
+			// Ending a double quote block
+			quote = 0;
+		}
+		else if (quote == '"' && (word[i] == '\\' || word[i] == '$'
+				|| word[i] == '`'))
+		{
+			// Inside double quotes, special handling for \, $, and `
+			result[j++] = word[i];
+		}
+		else
+		{
+			// Normal character, just copy it
+			result[j++] = word[i];
+		}
+	}
+	result[j] = '\0';
+	return (result);
+}
+void init_parsing(t_node *node)
+{
+	// From parsing to exec
+	node->args = NULL;
+	node->arg_count = 0;
+	node->cmd = NULL;
+	node->filename_out = NULL;
+	node->filename_in = NULL;
+	node->here_doc = 0;
+	node->limiter_hd = NULL;
+	node->limiter_hd_count = 0;
+	node->key_expansion = NULL;
+}
+void	update_tokens(t_token **tokens, t_node *node)
+{
+	t_token	*current;
+	char	*dollar_sign_pos;
+	char	*new_value;
+
+	if (!tokens || !*tokens || !node)
+		return ;
+	current = *tokens;
+	while (current)
+	{
+		// Check if the dollar sign is directly followed by a quote
+		dollar_sign_pos = ft_strchr(current->value, '$');
+		if (dollar_sign_pos != NULL && (*(dollar_sign_pos + 1) == '\''
+				|| *(dollar_sign_pos + 1) == '"'))
+		{
+			current->value = remove_dollar_sign(current->value);
+		}
+		if (ft_strchr(current->value, '\'') != NULL || ft_strchr(current->value,
+				'"') != NULL)
+		{
+			new_value = remove_quotes_from_word(current->value);
+			free(current->value);
+			current->value = new_value;
+		}
+		// New condition: Check if key_expansion is not NULL and is surrounded by double quotes
+		if (current->key_expansion != NULL &&
+			current->key_expansion[0] == '"' &&
+			current->key_expansion[strlen(current->key_expansion) - 1] == '"')
+		{
+			// Trim the double quotes from key_expansion
+			new_value = ft_strtrim(current->key_expansion, "\"");
+			free(current->key_expansion);
+			current->key_expansion = new_value;
+			node->key_expansion = new_value;
+		}
+		current = current->next;
+	}
+
+    // Update the tokens in the linked list of nodes
+    while (node)
+    {
+        node->tokens_in_node = *tokens;
+        node = node->next;
+    }
+}
+// Modify so that command cannot be file name
+
+void set_cmd(t_token *tokens, t_node *node)
+{
+	t_token *tok = tokens;
+
+
+	if (!tokens || !node)
+		return;
+
+	while (tok != NULL)
+	{
+		if (tok->type == TOKEN_WORD)
+		{
+			// Check if it's the first TOKEN_WORD after a redirection
+			if (!tok->processed)
+			{
+				node->cmd = ft_strdup(tok->value);
+				node->args[0] = ft_strdup(tok->value);
+				if (!node->cmd)
+					return;
+				
+				return;
+			}
+		}
+		else if (tok->type >= APPEND_TOKEN && tok->type <= REDIR_IN_TOKEN)
+		{
+			// Mark that we've encountered a redirection
+			tok->processed = 1;
+		}
+		tok = tok->next;
+	}
+
+	// If no command was found
+	node->cmd = NULL;
+	node->args[0] = NULL;
+}
+
+void fill_args(t_token *tokens, t_node *node)
+{
+
+	t_token *tok = tokens;
+
+	if (!tokens || !node)
+		return;
+
+	int i = 0;
+	while (tok)
+	{
+		if (tok->type == TOKEN_WORD && !tok->processed)
+		{
+			node->args[i] = ft_strdup(tok->value);
+
+			if (!node->args[i])
+			{
+				while (i > 0)
+				{
+					free(node->args[--i]);
+				}
+				free(node->args);
+				free(node->cmd);
+				return;
+			}
+			i++;
+		}
+		tok = tok->next;
+	}
+}
+// enlver filename des args
+void parse_tokens(t_token *tokens, t_node *node)
+{
 
 	if (!tokens)
-		return ;
-	// Set the first token's value to cmd
-	tokens->cmd = ft_strdup(tokens->value);
-	if (!tokens->cmd)
-		return ;
-	// Move to the next token for counting arguments
-	tmp = tokens->next;
-	arg_count = count_arguments(tmp);
-	// printf("ARG COUNT %d\n", arg_count);
-	tokens->args = malloc(sizeof(char *) * (arg_count + 1));
-	if (!tokens->args)
 	{
-		free(tokens->cmd);
-		return ;
+		return;
 	}
-	i = 0;
-	while (tmp && i < arg_count)
+	init_parsing(node);
+	set_filename(&tokens, node);
+	// SET ARGS and command
+	init_args(tokens, node);
+	set_cmd(tokens, node);
+	// SET EXPANSION
+	process_expansions(&tokens, node);
+	// UPDATE NODE
+	update_tokens(&tokens, node);
+	// SET ARGS
+	fill_args(tokens, node);
+	
+	t_node *head = node;
+	int i = 0;
+	while (head)
 	{
-		tokens->args[i] = ft_strdup(tmp->value);
-		if (!tokens->args[i])
+		printf("Node : %s\n", (char *)head->content);
+		// printf("Cmd : %s\n", head->cmd);
+		
+		// printf("File name out: %s\n", head->filename_out);
+		while ( i < node->limiter_hd_count)
 		{
-			// Handle strdup failure, free allocated memory
-			while (i > 0)
-			{
-				free(tokens->args[--i]);
-			}
-			free(tokens->args);
-			free(tokens->cmd);
-			return ;
+			if (head->filename_in)
+			printf("File name in: %s : %s\n", head->limiter_hd[i], head->filename_in);
+			printf("File name heredoc: %s\n", head->limiter_hd[i++]);
 		}
-		tmp = tmp->next;
-		i++;
-
+		// printf("Node expansion: %s\n", head->key_expansion);
+		// printf("Arg cunt : %d\n", head->arg_count);
+		// int x = 0;
+		// while (x < head->arg_count)
+		// {
+		// 	printf("Arg[x] : %s\n", head->args[x++]);
+		// }
+		head = head->next;
 	}
-	tokens->args[arg_count] = NULL;
-	// Free the original list except the first token since we need to preserve tokens->cmd
-	tmp = tokens->next;
-	while (tmp)
-	{
-		next = tmp->next;
-		free(tmp->value);
-		free(tmp);
-		tmp = next;
-	}
-	tokens->next = NULL;
-
 }
+
+
+

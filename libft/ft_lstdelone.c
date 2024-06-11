@@ -1,15 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 11:55:30 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 11:56:43 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/04 16:24:22 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/05 09:34:11 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-
+void	*ft_lstdelone(void *lst)
+{
+	if (lst)
+	{
+		free(lst);
+		lst = NULL;
+	}
+	return (NULL);
+}
