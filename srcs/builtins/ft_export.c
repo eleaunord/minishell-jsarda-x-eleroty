@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 11:32:40 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/11 13:14:14 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 {
 	int		i;
 	t_env	*current;
-	t_env	*prev;
 	char	**var;
 
 	if (!args || !data)
@@ -100,7 +99,6 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 			continue ;
 		}
 		current = data->env;
-		prev = NULL;
 		while (current)
 		{
 			if (ft_strcmp(current->key, var[0]) == 0)
@@ -108,7 +106,6 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 				modify_value(current, var[1]);
 				break ;
 			}
-			prev = current;
 			current = current->next;
 			if (current == data->env)
 			{

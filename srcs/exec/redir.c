@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 16:55:59 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/06/11 14:57:44 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	*get_tmp_file(void)
 			close(random_fd);
 			exit(EXIT_FAILURE);
 		}
-		template[i] = 'a' + (rand_char % 20);
+		template[i] = 'a' + (rand_char % 26);
 		i++;
 	}
 	template[i] = '\0';
@@ -115,24 +115,18 @@ char	*get_tmp_file(void)
 	return (strdup(template));
 }
 
-void	heredoc(char **eof, t_node *redir)
+void	heredoc(char *eof, t_node *redir)
 {
 	char	*buf;
 	int		fd;
-	char	*file;
-	int		i;
 
-	i = 0;
-	(void)redir;
-	// if (its the last eof)
-	// 	redir->filename_in = get_tmp_file();
 	if (!eof)
 	{
 		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
 			2);
 		return ;
 	}
-	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(redir->filename_in, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -141,7 +135,7 @@ void	heredoc(char **eof, t_node *redir)
 	while (1)
 	{
 		buf = readline("> ");
-		if (buf && !ft_strncmp(*eof, buf, INT_MAX))
+		if (buf && !ft_strncmp(eof, buf, INT_MAX) && eof)
 		{
 			free(buf);
 			break ;
@@ -153,14 +147,23 @@ void	heredoc(char **eof, t_node *redir)
 		}
 	}
 	close(fd);
-	redir_in_heredoc(redir->filename_in);
-	unlink(redir->filename_in);
 }
 
 void	handle_redir(t_node *redir)
 {
+	int i;
+
+	i = 0;
 	if (redir->here_doc == 1)
-		heredoc(redir->limiter_hd, redir);
+	{
+		while (redir->limiter_hd[i])
+		{
+			heredoc(redir->limiter_hd[i], redir);
+			i++;
+		}
+	redir_in(redir);
+	unlink(redir->filename_in);
+	}
 	else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
 		redir_in(redir);
 	else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)

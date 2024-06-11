@@ -63,11 +63,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	i;
 	size_t	j;
 	char	*new_s;
-	size_t	s2_length;
 
 	if (!s1 || !s2)
 		return (NULL);
-	s2_length = ft_strlen(s2);
 	total_length = ft_strlen(s1) + ft_strlen(s2);
 	new_s = (char *)malloc(sizeof(char) * (total_length + 1));
 	if (!new_s)

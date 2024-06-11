@@ -44,13 +44,11 @@ t_token	*tokenize_input(char *node)
 {
 	t_token	*tokens;
 	int		length;
-	int		start;
 	int		i;
 	// t_token	*temp;
 
 	tokens = NULL;
 	i = 0;
-	start = 0;
 
 	length = ft_strlen(node);
 	while (i < length)

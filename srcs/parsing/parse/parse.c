@@ -42,7 +42,6 @@ int	main(int argc, char *argv[], char *env[])
 
 	input_line = NULL;
 	node_list = NULL;
-	flag = 1;
 	(void)argc;
 	(void)argv;
 	init_minishell(&data);

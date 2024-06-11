@@ -60,17 +60,19 @@ void	set_filename(t_token **tokens, t_node *node)
 				}
 				else if (current->type == HEREDOC_TOKEN)
 				{
-					if (i < node->limiter_hd_count)
+					if (i < node->limiter_hd_count) {
+                        node->limiter_hd[i] = current->next->value;
+                        i++;
+                    }
+                    node->here_doc = 1;
+					printf("node->limiter_hd_count : %d\n", node->limiter_hd_count);
+					printf("i : %d\n", i);
+                    if (i == node->limiter_hd_count)
 					{
-						node->limiter_hd[i] = current->next->value;
-						i++;
-					}
-					node->here_doc = 1;
-					if (i == node->limiter_hd_count)
-					{
-						node->filename_in = get_tmp_file();
-					}
-					current->next->processed = 1;
+						printf("creating file\n");
+                        node->filename_in = get_tmp_file();
+                    }
+                    current->next->processed = 1;
 				}
 			}
 		}
