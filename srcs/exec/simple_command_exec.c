@@ -72,7 +72,7 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 	env = create_char_env(data->env);
 	if (!env)
 	{
-		free_minishell(data);
+		free_minishell(data, list);
 		exit(EXIT_FAILURE);
 	}
 	if (list->cmd)
@@ -84,7 +84,7 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 				list->tokens_in_node->cmd);
 		}
 	}
-	free_minishell(data);
+	free_minishell(data, list);
 	exit(0);
 }
 

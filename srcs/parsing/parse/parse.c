@@ -1,6 +1,5 @@
 #include "../../../includes/minishell.h"
 
-
 int	tokenizer(char *line, t_node **nodes)
 {
 	t_node	*current;
@@ -31,29 +30,14 @@ void	init_minishell(t_minishell *mini)
 	mini->nodes = NULL;
 	mini->exit = 0;
 }
-int	is_space(char *line)
-{
-	int	a;
-
-	a = 0;
-	while (line[a] == ' ' || line[a] == '\t' || line[a] == '\n')
-		a += 1;
-	if (line[a] == '\0')
-		return (1);
-	return (0);
-}
-int	check_line(char **line)
-{
-	if (*line[0] == '\0' || is_space(*line) || ft_strncmp(*line, "\n", 0))
-		return (1);
-	return (0);
-}
 
 int	main(int argc, char *argv[], char *env[])
 {
 	char		*input_line;
 	t_node		*node_list;
 	t_minishell	data;
+	t_node *head_nodes;
+	int			flag;
 
 
 	input_line = NULL;
@@ -84,6 +68,7 @@ int	main(int argc, char *argv[], char *env[])
 			continue;
 		}
 		add_history(input_line);
+		head_nodes = node_list;
 		t_node *head = node_list;
 		// while (head)
 		// {
@@ -106,12 +91,10 @@ int	main(int argc, char *argv[], char *env[])
 		{
 			break ;
 		}
-		//free(input_line);
-    	//free_nodes(tokens_list);
-		node_list = NULL;
+		head_nodes = NULL;
 	}
     free(input_line);
-    free_minishell(&data);
+    free_minishell(&data, head_nodes);
 	return (0);
 }
 

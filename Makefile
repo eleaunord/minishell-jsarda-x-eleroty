@@ -12,6 +12,7 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_lstdelone.c \
 					libft/ft_memcpy.c \
 					libft/ft_itoa.c \
+					libft/ft_strtrim.c \
 					srcs/parsing/tokenization/tokens.c \
 					srcs/parsing/parse/parse.c \
 					srcs/parsing/parse/parser.c \
@@ -21,6 +22,12 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/environment/environment.c \
 					srcs/parsing/environment/free.c \
 					srcs/parsing/parse/expansion.c \
+					srcs/parsing/parse/check_parsing.c \
+					srcs/parsing/parse/init_parsing.c \
+					srcs/parsing/parse/remove_quotes.c \
+					srcs/parsing/parse/update_tokens.c \
+					srcs/parsing/tokenization/collapse_spaces.c \
+					srcs/parsing/tokenization/whitespaces.c \
 					srcs/exec/simple_command_exec.c \
 					srcs/exec/env_utils.c \
 					srcs/exec/redir.c \
