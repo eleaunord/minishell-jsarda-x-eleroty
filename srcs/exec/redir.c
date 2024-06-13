@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
 /*   Updated: 2024/06/12 11:17:08 by jsarda           ###   ########.fr       */
+=======
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/11 14:57:44 by juliensarda      ###   ########.fr       */
+>>>>>>> parsing
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +74,7 @@ void	appen_redir_out(t_node *redir)
 	close(fd);
 }
 
-char	*get_tmp_file(void)
+char	**get_tmp_file(void)
 {
 	char	template[] = "minishell-XXXXXX";
 	int		random_fd;

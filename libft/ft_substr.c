@@ -26,3 +26,24 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	new_s[i] = '\0';
 	return (new_s);
 }
+
+char *ft_strsub(const char *s, unsigned int start, size_t len)
+{
+    char *sub;
+    size_t i;
+
+    if (!s)
+        return NULL;
+    sub = (char *)malloc(sizeof(char) * (len + 1));
+    if (!sub)
+        return NULL;
+
+    i = 0;
+    while (i < len)
+    {
+        sub[i] = s[start + i];
+        i++;
+    }
+    sub[len] = '\0';
+    return sub;
+}
