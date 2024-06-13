@@ -162,7 +162,11 @@ void	handle_redir(t_node *redir)
 			i++;
 		}
 	redir_in(redir);
+<<<<<<< HEAD
 	//unlink(redir->filename_in);
+=======
+	unlink(redir->filename_in);
+>>>>>>> origin/exec
 	}
 	else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
 		redir_in(redir);
