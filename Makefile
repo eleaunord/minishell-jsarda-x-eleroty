@@ -1,5 +1,5 @@
 NAME        := minishell
-CC        := clang
+CC        := gcc
 CFLAGS    := -Wall -Wextra -Werror -g3
 LIBS = -lreadline
 SRCS        :=   libft/ft_lst.c \
@@ -28,17 +28,19 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/parse/expansion.c \
 					srcs/parsing/parse/checkers.c \
 					srcs/parsing/parse/init_parsing.c \
-					srcs/parsing/parse/filename.c \
+					srcs/parsing/parse/file_in.c \
+					srcs/parsing/parse/file_out.c \
+					srcs/parsing/parse/heredoc.c \
 					srcs/parsing/parse/remove_quotes.c \
 					srcs/parsing/parse/update_tokens.c \
 					srcs/parsing/tokenization/collapse_spaces.c \
 					srcs/parsing/tokenization/whitespaces.c \
-					srcs/exec/simple_command_exec.c \
-					srcs/exec/env_utils.c \
-					srcs/exec/redir.c \
-					srcs/exec/pipe_exec.c \
-					srcs/exec/exec.c \
-					srcs/exec/get_env_path.c \
+					# srcs/exec/simple_command_exec.c \
+					# srcs/exec/env_utils.c \
+					# srcs/exec/redir.c \
+					# srcs/exec/pipe_exec.c \
+					# srcs/exec/exec.c \
+					# srcs/exec/get_env_path.c \
 					utils/perror.c \
 					utils/ft_free.c \
 					utils/count_args.c \

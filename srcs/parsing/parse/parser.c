@@ -29,6 +29,35 @@ void	fill_args(t_token *tokens, t_node *node)
 	}
 }
 
+// Fonction principale filename
+void	set_filename(t_token **tokens, t_node *node)
+{
+	t_token	*tok;
+
+	if (!tokens || !*tokens || !node)
+		return ;
+	tok = *tokens;
+	count_heredocs(&tok, node);
+	// Allocation de mémoire pour limiter_hd
+	allocate_memory_for_limiter_hd(node);
+	// other redirections : in and out
+	count_redir_in(&tok, node);
+	allocate_memory_for_filename_in(node);
+	count_redir_out(&tok, node);
+	allocate_memory_for_filename_out(node);
+	// Traitement des tokens pour les noms de fichiers
+	// process_tokens_for_filenames(*tokens, node);
+	// Traitement des tokens HEREDOC_TOKEN
+	process_heredoc_tokens(*tokens, node);
+	node->limiter_hd[node->limiter_hd_count] = NULL;
+	// Traitement des tokens REDIR_IN
+	process_filename_in(*tokens, node);
+	node->filename_in[node->file_in_count] = NULL;
+	// Traitement des tokens REDIR_OUT
+	process_filename_out(*tokens, node);
+	node->filename_out[node->file_out_count] = NULL;
+}
+
 void	parse_tokens(t_token *tokens, t_node *node)
 {
 	if (!tokens)
@@ -46,6 +75,39 @@ void	parse_tokens(t_token *tokens, t_node *node)
 	update_tokens(&tokens, node);
 	// SET ARGS
 	fill_args(tokens, node);
+		t_node	*head;
+	int		i;
+
+	head = node;
+	i = 0;
+	while (head)
+	{
+		printf("Node : %s\n", (char *)head->content);
+		printf("Cmd : %s\n", head->cmd);
+		while (i < node->file_in_count)
+		{
+			if (head->filename_in)
+				printf("File name in: %s\n", head->filename_in[i++]);
+		}
+		i = 0;
+		while (i < node->file_out_count)
+		{
+			if (head->filename_out)
+				printf("File name out: %s\n", head->filename_out[i++]);
+		}
+		i = 0;
+		while (i < node->limiter_hd_count)
+		{
+			if (head->limiter_hd)
+				printf("Here doc file: %s\n", head->limiter_hd[i++]);
+		}
+		int x = 0;
+		while (x < head->arg_count)
+		{
+			printf("Arg[x] : %s\n", head->args[x++]);
+		}
+		head = head->next;
+	}
 }
 	
 	// DEBUG

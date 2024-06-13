@@ -85,7 +85,7 @@ void	appen_redir_out(t_node *redir)
 	close(fd);
 }
 
-char	*get_tmp_file(void)
+char	**get_tmp_file(void)
 {
 	char	template[] = "minishell-XXXXXX";
 	int		random_fd;
@@ -162,7 +162,7 @@ void	handle_redir(t_node *redir)
 			i++;
 		}
 	redir_in(redir);
-	unlink(redir->filename_in);
+	//unlink(redir->filename_in);
 	}
 	else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
 		redir_in(redir);

@@ -32,6 +32,7 @@ int	init_args(t_token *tokens, t_node *node)
 	return (0);
 }
 
+
 void	set_cmd(t_token *tokens, t_node *node)
 {
 	t_token	*tok;
@@ -68,8 +69,13 @@ void	init_parsing(t_node *node)
 	node->cmd = NULL;
 	node->filename_out = NULL;
 	node->filename_in = NULL;
+	node->file_in_count = 0;
+	node->file_out_count = 0;
+	node->redir_in = 0;
+	node->redir_out = 0;
 	node->here_doc = 0;
 	node->limiter_hd = NULL;
 	node->limiter_hd_count = 0;
 	node->key_expansion = NULL;
 }
+
