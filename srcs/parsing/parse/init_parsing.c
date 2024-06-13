@@ -44,7 +44,6 @@ void	set_cmd(t_token *tokens, t_node *node)
 	{
 		if (tok->type == TOKEN_WORD)
 		{
-			// Check if it's the first TOKEN_WORD after a redirection
 			if (!tok->processed)
 			{
 				node->cmd = ft_strdup(tok->value);

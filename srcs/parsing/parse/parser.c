@@ -1,88 +1,4 @@
 #include "../../../includes/minishell.h"
-<<<<<<< HEAD
-=======
-#include <stdbool.h>
-
-void	count_heredocs(t_token **tokens, t_node *node)
-{
-	t_token	*current;
-	int		i;
-
-	if (!tokens || !*tokens)
-		return ;
-	current = *tokens;
-	i = 0;
-	while (current)
-	{
-		if (current->type == HEREDOC_TOKEN)
-		{
-			if (current->next && current->next->type == TOKEN_WORD)
-			{
-				i++;
-			}
-		}
-		current = current->next;
-	}
-	node->limiter_hd_count = i;
-}
-// A reduire apres merge exec
-void	set_filename(t_token **tokens, t_node *node)
-{
-	t_token	*current;
-	t_token	*tok;
-	int		i;
-
-	if (!tokens || !*tokens || !node)
-		return ;
-	tok = *tokens;
-	count_heredocs(&tok, node);
-	i = 0;
-	node->limiter_hd = (char **)calloc(node->limiter_hd_count + 1,
-			sizeof(char *));
-	if (!node->limiter_hd)
-	{
-		return ;
-	}
-	current = *tokens;
-	while (current)
-	{
-		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN)
-		{
-			if (current->next && current->next->type == TOKEN_WORD)
-			{
-				if (current->type == REDIR_IN_TOKEN)
-				{
-					node->filename_in = current->next->value;
-					current->next->processed = 1;
-				}
-				else if (current->type == REDIR_OUT_TOKEN)
-				{
-					node->filename_out = current->next->value;
-					current->next->processed = 1;
-				}
-				else if (current->type == HEREDOC_TOKEN)
-				{
-					if (i < node->limiter_hd_count) {
-                        node->limiter_hd[i] = current->next->value;
-                        i++;
-                    }
-                    node->here_doc = 1;
-					printf("node->limiter_hd_count : %d\n", node->limiter_hd_count);
-					printf("i : %d\n", i);
-                    if (i == node->limiter_hd_count)
-					{
-						printf("creating file\n");
-                        node->filename_in = get_tmp_file();
-                    }
-                    current->next->processed = 1;
-				}
-			}
-		}
-		current = current->next;
-	}
-	node->limiter_hd[node->limiter_hd_count] = NULL;
-}
->>>>>>> origin/exec
 
 void	fill_args(t_token *tokens, t_node *node)
 {
@@ -193,7 +109,7 @@ void	parse_tokens(t_token *tokens, t_node *node)
 	// 	head = head->next;
 	// }
 }
-
+	
 	// DEBUG
 
 	// t_node	*head;
