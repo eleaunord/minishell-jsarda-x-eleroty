@@ -144,14 +144,6 @@ void	handle_redir(t_node *redir)
 			redir_in(redir->filename_in[i]);
 			unlink(redir->filename_in[i]);
 		}
-<<<<<<< HEAD
-	redir_in(redir);
-<<<<<<< HEAD
-	//unlink(redir->filename_in);
-=======
-	unlink(redir->filename_in);
->>>>>>> origin/exec
-=======
 		else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
 			redir_in(redir->filename_in[i]);
 		else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)
@@ -159,6 +151,5 @@ void	handle_redir(t_node *redir)
 		else if (redir->tokens_in_node->type == APPEND_TOKEN)
 			appen_redir_out(redir->filename_out[i]);
 		i++;
->>>>>>> 7c750e1ec1da38200b7de8a1cebed45aa09e3d57
 	}
 }
