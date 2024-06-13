@@ -51,6 +51,7 @@ void	set_cmd(t_token *tokens, t_node *node)
 				node->args[0] = node->cmd;
 				if (!node->cmd)
 					return ;
+				node->cmd_count++;
 				return ;
 			}
 		}
@@ -67,6 +68,7 @@ void	init_parsing(t_node *node)
 	node->args = NULL;
 	node->arg_count = 0;
 	node->cmd = NULL;
+	node->cmd_count = 0;
 	node->filename_out = NULL;
 	node->filename_in = NULL;
 	node->file_in_count = 0;
