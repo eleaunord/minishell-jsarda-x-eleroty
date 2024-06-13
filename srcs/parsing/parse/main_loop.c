@@ -67,7 +67,7 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		head_nodes = node_list;
-		//t_node *head = node_list;
+		t_node *head = node_list;
 		// while (head)
 		// {
 		// 	printf("Node : %s\n", (char *)head->content);
@@ -84,7 +84,7 @@ int	main(int argc, char *argv[], char *env[])
 		// 	}
 		// 	head = head->next;
 		// }
-		//exec(head, &data);
+		exec(head, &data);
 		if (data.exit)
 		{
 			break ;

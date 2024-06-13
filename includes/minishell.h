@@ -4,10 +4,10 @@
 // Librairies
 # include <fcntl.h>
 # include <limits.h>
-# include <stdio.h>
-# include <readline/readline.h>
 # include <readline/history.h>
+# include <readline/readline.h>
 # include <stdbool.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -72,22 +72,22 @@ typedef struct s_node
 	char *key_expansion; // in args
 
 	// Redirections, filenames not in args
-	//char *filename_out; // >
-	//char *filename_in;  // <
-	char **filename_in;
-	char **filename_out;
-	int file_in_count;
-	int file_out_count;
-	int redir_in;  // is there a redir in ? 1 : yes, 0 : no
-	int redir_out;  // is there a redir out ? 1 : yes, 0 : no
-	int here_doc;       // is there a here doc ? 1 : yes, 0 : no
-	char **limiter_hd;  // eof
+	// char *filename_out; // >
+	// char *filename_in;  // <
+	char			**filename_in;
+	char			**filename_out;
+	int				file_in_count;
+	int				file_out_count;
+	int redir_in;      // is there a redir in ? 1 : yes, 0 : no
+	int redir_out;     // is there a redir out ? 1 : yes, 0 : no
+	int here_doc;      // is there a here doc ? 1 : yes, 0 : no
+	char **limiter_hd; // eof
 	int				limiter_hd_count;
 	char			*last_heredoc;
 
 	// OTHER (?)
 	int fd_in; // <
-	int					fd_out;
+	int				fd_out;
 }					t_node;
 
 // Structure pour exec
@@ -118,8 +118,8 @@ void				exec(t_node *list, t_minishell *data);
 char				*get_cmd_path(char *cmd, t_minishell *data);
 char				*get_path_value(t_minishell *data, char *key);
 char				**create_char_env(t_env *env);
-void	exec_pipeline(t_node *nodes, t_minishell *data);
-void	heredoc(char *eof, t_node *redir);
+void				exec_pipeline(t_node *nodes, t_minishell *data);
+void	heredoc(char *eof, char *file_name_in);
 void				exec_simple_cmd(t_minishell *data, t_node *list,
 						char *path);
 int					is_built_in(t_node *list);
@@ -165,7 +165,7 @@ void				close_quote_check(int *dq, int *sq, int *index, char c);
 int					count_arguments(t_token *tokens);
 void				free_nodes(t_node *list);
 void				process_expansions(t_token **tokens, t_node *node);
-// char				*get_tmp_file(void);
+char				*get_tmp_file(void);
 void				free_nodes(t_node *list);
 int					check_line(char **line);
 int					is_space(char *line);
@@ -183,16 +183,15 @@ void				free_t_env(t_env *env);
 int					parse_key_value(t_env **new, char *elem);
 char				*duplicate_string(const char *src);
 int					special_tokens(char *input, t_token **tokens, int index);
-void	count_heredocs(t_token **tokens, t_node *node);
-void	count_redir_in(t_token **tokens, t_node *node);
-void	count_redir_out(t_token **tokens, t_node *node);
-void	allocate_memory_for_filename_out(t_node *node);
-void	allocate_memory_for_filename_in(t_node *node);
-void	allocate_memory_for_limiter_hd(t_node *node);
-void	process_heredoc_tokens(t_token *tokens, t_node *node);
-void	process_filename_out(t_token *tokens, t_node *node);
-void	process_filename_in(t_token *tokens, t_node *node);
-char	**get_tmp_file(void);
+void				count_heredocs(t_token **tokens, t_node *node);
+void				count_redir_in(t_token **tokens, t_node *node);
+void				count_redir_out(t_token **tokens, t_node *node);
+void				allocate_memory_for_filename_out(t_node *node);
+void				allocate_memory_for_filename_in(t_node *node);
+void				allocate_memory_for_limiter_hd(t_node *node);
+void				process_heredoc_tokens(t_token *tokens, t_node *node);
+void				process_filename_out(t_token *tokens, t_node *node);
+void				process_filename_in(t_token *tokens, t_node *node);
 // LIBFT FUNCTIONS
 void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);

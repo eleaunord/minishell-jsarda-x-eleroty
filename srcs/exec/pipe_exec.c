@@ -6,13 +6,13 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 11:36:00 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/13 13:05:47 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	count_commands(t_node *nodes)
+int	count_cmds(t_node *nodes)
 {
 	int		count;
 	t_node	*current;
@@ -68,7 +68,7 @@ void	exec_pipeline(t_node *nodes, t_minishell *data)
 	t_node	*current_node;
 	int		i;
 
-	num_commands = count_commands(nodes);
+	num_commands = count_cmds(nodes);
 	int		pipes[num_commands - 1][2];
 	create_pipes(num_commands, pipes);
 	current_node = nodes;
