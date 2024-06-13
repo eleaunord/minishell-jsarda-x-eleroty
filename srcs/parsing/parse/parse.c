@@ -37,7 +37,6 @@ int	main(int argc, char *argv[], char *env[])
 	t_node		*node_list;
 	t_minishell	data;
 	t_node *head_nodes;
-	int			flag;
 
 
 	input_line = NULL;
@@ -76,7 +75,7 @@ int	main(int argc, char *argv[], char *env[])
 		// 	printf("Cmd : %s\n", head->cmd);
 		// 	printf("File name in: %s\n", head->filename_in);
 		// 	printf("File name out: %s\n", head->filename_out);
-		// 	printf("File name heredoc: %s\n", head->limiter_hd);
+		// 	//printf("File name heredoc: %s\n", head->limiter_hd);
 		// 	printf("Node expansion: %s\n", head->key_expansion);
 		// 	printf("Arg cunt : %d\n", head->arg_count);
 		// 	int x = 0;

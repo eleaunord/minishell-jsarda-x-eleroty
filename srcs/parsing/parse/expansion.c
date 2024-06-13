@@ -149,13 +149,13 @@ void	process_expansions(t_token **tokens, t_node *node)
 		}
 		tok = tok->next;
 	}
-		t_node *head = node;
-	while (head)
-	{
+		// t_node *head = node;
+	// while (head)
+	// {
 
-		printf("EXPANSION: %s\n", head->key_expansion);
+	// 	printf("EXPANSION: %s\n", head->key_expansion);
 
-		head = head->next;
-	}
+	// 	head = head->next;
+	// }
 }
 

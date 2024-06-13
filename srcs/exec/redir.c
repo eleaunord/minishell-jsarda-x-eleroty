@@ -3,38 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 14:57:44 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/12 11:17:08 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	redir_in(t_node *redir)
+void	redir_in(char *file_name_in)
 {
 	int	fd;
 
-	fd = open(redir->filename_in, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Error opening input file");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("Error redirecting stdin");
-		exit(EXIT_FAILURE);
-	}
-	close(fd);
-}
-
-void	redir_in_heredoc(char *file)
-{
-	int	fd;
-
-	fd = open(file, O_RDONLY);
+	fd = open(file_name_in, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening input file");
@@ -151,21 +133,13 @@ void	heredoc(char *eof, t_node *redir)
 
 void	handle_redir(t_node *redir)
 {
-	int i;
-
-	i = 0;
-	if (redir->here_doc == 1)
+	if (redir->tokens_in_node->type == HEREDOC_TOKEN)
 	{
-		while (redir->limiter_hd[i])
-		{
-			heredoc(redir->limiter_hd[i], redir);
-			i++;
-		}
-	redir_in(redir);
-	unlink(redir->filename_in);
+		redir_in(redir->filename_in);
+		unlink(redir->filename_in);
 	}
 	else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
-		redir_in(redir);
+		redir_in(redir->filename_in);
 	else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)
 		redir_out(redir);
 	else if (redir->tokens_in_node->type == APPEND_TOKEN)

@@ -6,81 +6,92 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/03 12:06:24 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/13 11:36:00 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	child_process(char ***cmds, int i, int num_cmds, int *pipefd)
+int	count_commands(t_node *nodes)
 {
-	int	j;
+	int		count;
+	t_node	*current;
 
-	if (i != 0)
+	count = 0;
+	current = nodes;
+	while (current)
 	{
-		if (dup2(pipefd[(i - 1) * 2], STDIN_FILENO) == -1)
-			perror_handler("dup2");
+		count++;
+		current = current->next;
 	}
-	if (i != num_cmds - 1)
-	{
-		if (dup2(pipefd[i * 2 + 1], STDOUT_FILENO) == -1)
-			perror_handler("dup2");
-	}
-	j = 0;
-	while (j < 2 * (num_cmds - 1))
-	{
-		close(pipefd[j]);
-		j++;
-	}
-	if (execve(cmds[i][0], cmds[i], NULL) == -1)
-	{
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
+	return (count);
 }
 
-void	parent_process(int num_cmds, int *pipefd)
+void	create_pipes(int num_commands, int pipes[][2])
 {
 	int	i;
-	int	status;
 
 	i = 0;
-	while (i < 2 * (num_cmds - 1))
+	while (i < num_commands - 1)
 	{
-		close(pipefd[i]);
-		i++;
-	}
-	i = 0;
-	while (i < num_cmds)
-	{
-		if (wait(&status) == -1)
-			perror_handler("wait");
+		if (pipe(pipes[i]) == -1)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
 		i++;
 	}
 }
 
-void	exec_pipeline(char ***cmds, int num_cmds)
+void	close_pipes_and_wait(int num_commands, int pipes[][2])
 {
-	int		i;
-	int		pipefd[2 * (num_cmds - 1)];
-	pid_t	pid;
+	int	i;
 
 	i = 0;
-	while (i < num_cmds - 1)
+	while (i < num_commands - 1)
 	{
-		if (pipe(pipefd + 2 * i) == -1)
-			perror_handler("pipe");
+		close(pipes[i][0]);
+		close(pipes[i][1]);
 		i++;
 	}
 	i = 0;
-	while (i < num_cmds)
+	while (i < num_commands)
 	{
-		pid = fork();
-		if (pid == 0)
-			child_process(cmds, i, num_cmds, pipefd);
-		else if (pid < 0)
-			perror_handler("fork");
+		wait(NULL);
 		i++;
 	}
-	parent_process(num_cmds, pipefd);
+}
+
+void	exec_pipeline(t_node *nodes, t_minishell *data)
+{
+	int		num_commands;
+	t_node	*current_node;
+	int		i;
+
+	num_commands = count_commands(nodes);
+	int		pipes[num_commands - 1][2];
+	create_pipes(num_commands, pipes);
+	current_node = nodes;
+	i = 0;
+
+	while (i < num_commands)
+	{
+		if (i == 0)
+			current_node->fd_in = STDIN_FILENO;
+		else
+			current_node->fd_in = pipes[i - 1][0];
+		if (i == num_commands - 1)
+			current_node->fd_out = STDOUT_FILENO;
+		else
+			current_node->fd_out = pipes[i][1];
+		exec_simple_cmd(data, current_node, get_cmd_path(current_node->cmd,
+				data));
+		if (current_node->fd_in != STDIN_FILENO)
+			close(current_node->fd_in);
+		if (current_node->fd_out != STDOUT_FILENO)
+			close(current_node->fd_out);
+		current_node = current_node->next;
+		i++;
+	}
+	close_pipes_and_wait(num_commands, pipes);
 }

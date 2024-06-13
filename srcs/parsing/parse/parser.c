@@ -132,25 +132,25 @@ void	parse_tokens(t_token *tokens, t_node *node)
 	fill_args(tokens, node);
 	head = node;
 	i = 0;
-	while (head)
-	{
-		printf("Node : %s\n", (char *)head->content);
-		// printf("Cmd : %s\n", head->cmd);
-		// printf("File name out: %s\n", head->filename_out);
-		while (i < node->limiter_hd_count)
-		{
-			if (head->filename_in)
-				printf("File name in: %s : %s\n", head->limiter_hd[i],
-					head->filename_in);
-			printf("File name heredoc: %s\n", head->limiter_hd[i++]);
-		}
-		// printf("Node expansion: %s\n", head->key_expansion);
-		// printf("Arg cunt : %d\n", head->arg_count);
-		// int x = 0;
-		// while (x < head->arg_count)
-		// {
-		// 	printf("Arg[x] : %s\n", head->args[x++]);
-		// }
-		head = head->next;
-	}
+	// while (head)
+	// {
+	// 	printf("Node : %s\n", (char *)head->content);
+	// 	// printf("Cmd : %s\n", head->cmd);
+	// 	// printf("File name out: %s\n", head->filename_out);
+	// 	// while (i < node->limiter_hd_count)
+	// 	// {
+	// 	// 	if (head->filename_in)
+	// 	// 		printf("File name in: %s : %s\n", head->limiter_hd[i],
+	// 	// 			head->filename_in);
+	// 	// 	printf("File name heredoc: %s\n", head->limiter_hd[i++]);
+	// 	// }
+	// 	// printf("Node expansion: %s\n", head->key_expansion);
+	// 	// printf("Arg cunt : %d\n", head->arg_count);
+	// 	// int x = 0;
+	// 	// while (x < head->arg_count)
+	// 	// {
+	// 	// 	printf("Arg[x] : %s\n", head->args[x++]);
+	// 	// }
+	// 	head = head->next;
+	// }
 }

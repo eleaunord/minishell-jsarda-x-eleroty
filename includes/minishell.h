@@ -40,7 +40,7 @@ typedef struct s_token
 	int				processed;
 	// EXPANSIONS
 	char			*key_expansion;
-	
+
 	int limiter_hd_count;
 }					t_token;
 
@@ -70,7 +70,7 @@ typedef struct s_node
 	char			**args;
 	int				arg_count;
 	char *key_expansion; // in args
-	
+
 	// Redirections, filenames not in args
 	char *filename_out; // >
 	char *filename_in;  // <
@@ -80,8 +80,8 @@ typedef struct s_node
 	char *last_heredoc;
 
 	// OTHER (?)
-	// int fd_in; // <
-	// int					fd_out;
+	int fd_in; // <
+	int					fd_out;
 }					t_node;
 
 // Structure pour exec
@@ -112,7 +112,8 @@ void				exec(t_node *list, t_minishell *data);
 char				*get_cmd_path(char *cmd, t_minishell *data);
 char				*get_path_value(t_minishell *data, char *key);
 char				**create_char_env(t_env *env);
-void				exec_pipeline(char ***cmds, int num_cmds);
+void	exec_pipeline(t_node *nodes, t_minishell *data);
+void	heredoc(char *eof, t_node *redir);
 void				exec_simple_cmd(t_minishell *data, t_node *list,
 						char *path);
 int					is_built_in(t_node *list);
