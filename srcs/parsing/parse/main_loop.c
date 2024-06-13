@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_node **nodes)
+int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 {
 	t_node	*current;
 	t_token	*tokens;
@@ -14,10 +14,13 @@ int	tokenizer(char *line, t_node **nodes)
 	}
 	input = ft_split_pipes_spaces(line, nodes);
 	current = *nodes;
+	mini->nb_cmd = 0;
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens, current);
+		if (current->cmd_count != 0)
+			mini->nb_cmd++; 
 		current = current->next;
 	}
 	line = input;
@@ -59,7 +62,7 @@ int	main(int argc, char *argv[], char *env[])
 			continue ;
 		}
 
-		if (!tokenizer(input_line, &node_list))
+		if (!tokenizer(input_line, &node_list, &data))
 		{
 			add_history(input_line);
 			free(input_line);
@@ -68,22 +71,6 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		head_nodes = node_list;
 		t_node *head = node_list;
-		// while (head)
-		// {
-		// 	printf("Node : %s\n", (char *)head->content);
-		// 	printf("Cmd : %s\n", head->cmd);
-		// 	printf("File name in: %s\n", head->filename_in);
-		// 	printf("File name out: %s\n", head->filename_out);
-		// 	//printf("File name heredoc: %s\n", head->limiter_hd);
-		// 	printf("Node expansion: %s\n", head->key_expansion);
-		// 	printf("Arg cunt : %d\n", head->arg_count);
-		// 	int x = 0;
-		// 	while (x < head->arg_count)
-		// 	{
-		// 		printf("Arg[x] : %s\n", head->args[x++]);
-		// 	}
-		// 	head = head->next;
-		// }
 		exec(head, &data);
 		if (data.exit)
 		{
