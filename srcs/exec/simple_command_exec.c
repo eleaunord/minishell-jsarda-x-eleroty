@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 14:26:40 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/13 12:39:19 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	is_built_in(t_node *list)
 void	exec_built_in(t_minishell *data, t_node *list)
 {
 	int		index;
-	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_minishell *, t_node *, char **);
+	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_minishell *, t_node *,
+			char **);
 
 	built_in_funcs[0] = &ft_pwd;
 	built_in_funcs[1] = &ft_echo;
@@ -67,8 +68,22 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 	char	**env;
 
 	current = list;
+	if (current->fd_in != STDIN_FILENO)
+	{
+		dup2(current->fd_in, STDIN_FILENO);
+		close(current->fd_in);
+	}
+	if (current->fd_out != STDOUT_FILENO)
+	{
+		dup2(current->fd_out, STDOUT_FILENO);
+		close(current->fd_out);
+	}
 	if (check_if_redir(current) == 0 || list->here_doc == 1)
-		handle_redir(current);
+		while (current)
+		{
+			handle_redir(current);
+			current = current->next;
+		}
 	env = create_char_env(data->env);
 	if (!env)
 	{
@@ -96,8 +111,7 @@ void	exec_parent_process(pid_t pid)
 		perror("waitpid");
 }
 
-void	exec_simple_cmd(t_minishell *data, t_node *list,
-		char *path)
+void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
 {
 	pid_t	pid;
 
@@ -106,7 +120,6 @@ void	exec_simple_cmd(t_minishell *data, t_node *list,
 		exec_built_in(data, list);
 		return ;
 	}
-	//
 	pid = fork();
 	if (pid < 0)
 		perror("fork");

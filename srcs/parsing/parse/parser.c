@@ -109,7 +109,7 @@ void	parse_tokens(t_token *tokens, t_node *node)
 	// 	head = head->next;
 	// }
 }
-	
+
 	// DEBUG
 
 	// t_node	*head;

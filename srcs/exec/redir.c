@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 14:57:44 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/13 13:16:14 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	redir_in(t_node *redir)
+void	redir_in(char *file_name_in)
 {
 	int	fd;
 
-	fd = open(redir->filename_in, O_RDONLY);
+	fd = open(file_name_in, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening input file");
@@ -30,29 +30,11 @@ void	redir_in(t_node *redir)
 	close(fd);
 }
 
-void	redir_in_heredoc(char *file)
+void	redir_out(char *file_name_out)
 {
 	int	fd;
 
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Error opening input file");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("Error redirecting stdin");
-		exit(EXIT_FAILURE);
-	}
-	close(fd);
-}
-
-void	redir_out(t_node *redir)
-{
-	int	fd;
-
-	fd = open(redir->filename_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(file_name_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -67,11 +49,11 @@ void	redir_out(t_node *redir)
 	close(fd);
 }
 
-void	appen_redir_out(t_node *redir)
+void	appen_redir_out(char *file_name_out)
 {
 	int	fd;
 
-	fd = open(redir->filename_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open(file_name_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -85,7 +67,7 @@ void	appen_redir_out(t_node *redir)
 	close(fd);
 }
 
-char	**get_tmp_file(void)
+char	*get_tmp_file(void)
 {
 	char	template[] = "minishell-XXXXXX";
 	int		random_fd;
@@ -115,7 +97,7 @@ char	**get_tmp_file(void)
 	return (strdup(template));
 }
 
-void	heredoc(char *eof, t_node *redir)
+void	heredoc(char *eof, char *file_name_in)
 {
 	char	*buf;
 	int		fd;
@@ -126,7 +108,8 @@ void	heredoc(char *eof, t_node *redir)
 			2);
 		return ;
 	}
-	fd = open(redir->filename_in, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	printf("%s\n", file_name_in);
+	fd = open(file_name_in, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -151,23 +134,22 @@ void	heredoc(char *eof, t_node *redir)
 
 void	handle_redir(t_node *redir)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if (redir->here_doc == 1)
+	while (redir->filename_in[i] || redir->filename_out[i])
 	{
-		while (redir->limiter_hd[i])
+		if (redir->tokens_in_node->type == HEREDOC_TOKEN)
 		{
-			heredoc(redir->limiter_hd[i], redir);
-			i++;
+			redir_in(redir->filename_in[i]);
+			unlink(redir->filename_in[i]);
 		}
-	redir_in(redir);
-	//unlink(redir->filename_in);
+		else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
+			redir_in(redir->filename_in[i]);
+		else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)
+			redir_out(redir->filename_out[i]);
+		else if (redir->tokens_in_node->type == APPEND_TOKEN)
+			appen_redir_out(redir->filename_out[i]);
+		i++;
 	}
-	else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
-		redir_in(redir);
-	else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)
-		redir_out(redir);
-	else if (redir->tokens_in_node->type == APPEND_TOKEN)
-		appen_redir_out(redir);
 }
