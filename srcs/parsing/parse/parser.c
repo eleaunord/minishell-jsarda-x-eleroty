@@ -75,39 +75,39 @@ void	parse_tokens(t_token *tokens, t_node *node)
 	update_tokens(&tokens, node);
 	// SET ARGS
 	fill_args(tokens, node);
-		t_node	*head;
-	int		i;
+		//t_node	*head;
+	// int		i;
 
-	head = node;
-	i = 0;
-	while (head)
-	{
-		printf("Node : %s\n", (char *)head->content);
-		printf("Cmd : %s\n", head->cmd);
-		while (i < node->file_in_count)
-		{
-			if (head->filename_in)
-				printf("File name in: %s\n", head->filename_in[i++]);
-		}
-		i = 0;
-		while (i < node->file_out_count)
-		{
-			if (head->filename_out)
-				printf("File name out: %s\n", head->filename_out[i++]);
-		}
-		i = 0;
-		while (i < node->limiter_hd_count)
-		{
-			if (head->limiter_hd)
-				printf("Here doc file: %s\n", head->limiter_hd[i++]);
-		}
-		int x = 0;
-		while (x < head->arg_count)
-		{
-			printf("Arg[x] : %s\n", head->args[x++]);
-		}
-		head = head->next;
-	}
+	// head = node;
+	// i = 0;
+	// while (head)
+	// {
+	// 	printf("Node : %s\n", (char *)head->content);
+	// 	printf("Cmd : %s\n", head->cmd);
+	// 	while (i < node->file_in_count)
+	// 	{
+	// 		if (head->filename_in)
+	// 			printf("File name in: %s\n", head->filename_in[i++]);
+	// 	}
+	// 	i = 0;
+	// 	while (i < node->file_out_count)
+	// 	{
+	// 		if (head->filename_out)
+	// 			printf("File name out: %s\n", head->filename_out[i++]);
+	// 	}
+	// 	i = 0;
+	// 	while (i < node->limiter_hd_count)
+	// 	{
+	// 		if (head->limiter_hd)
+	// 			printf("Here doc file: %s\n", head->limiter_hd[i++]);
+	// 	}
+	// 	int x = 0;
+	// 	while (x < head->arg_count)
+	// 	{
+	// 		printf("Arg[x] : %s\n", head->args[x++]);
+	// 	}
+	// 	head = head->next;
+	// }
 }
 
 	// DEBUG

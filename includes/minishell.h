@@ -67,6 +67,7 @@ typedef struct s_node
 
 	// From parsing to exec
 	char *cmd; // in arg[0]
+	int cmd_count;
 	char			**args;
 	int				arg_count;
 	char *key_expansion; // in args
@@ -85,6 +86,8 @@ typedef struct s_node
 	int				limiter_hd_count;
 	char			*last_heredoc;
 
+	int node_index;
+	int file_index;
 	// OTHER (?)
 	int fd_in; // <
 	int				fd_out;
@@ -105,6 +108,7 @@ typedef struct s_minishell
 {
 	t_env			*env;
 	t_node			*nodes;
+	int nb_cmd;
 	// EXITS
 	int				command_count;
 	int 			**pipes;
@@ -145,7 +149,7 @@ char				*create_token(char *str, int start, int end);
 char				*ft_split_pipes_spaces(char *line, t_node **tokens_list);
 char				*remove_quotes(const char *line);
 int					ft_strcmp(char *s1, char *s2);
-int					tokenizer(char *line, t_node **nodes);
+int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
 void				free_minishell(t_minishell *mini, t_node *list);
 void				free_env_list(t_env *env_list);
 int					init_env(t_minishell *data, char **env);

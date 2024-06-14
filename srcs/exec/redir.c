@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 13:16:14 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 12:03:48 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*get_tmp_file(void)
 	}
 	template[i] = '\0';
 	close(random_fd);
-	return (strdup(template));
+	return (ft_strdup(template));
 }
 
 void	heredoc(char *eof, char *file_name_in)

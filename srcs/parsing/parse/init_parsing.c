@@ -44,13 +44,13 @@ void	set_cmd(t_token *tokens, t_node *node)
 	{
 		if (tok->type == TOKEN_WORD)
 		{
-			// Check if it's the first TOKEN_WORD after a redirection
 			if (!tok->processed)
 			{
 				node->cmd = ft_strdup(tok->value);
 				node->args[0] = node->cmd;
 				if (!node->cmd)
 					return ;
+				node->cmd_count++;
 				return ;
 			}
 		}
@@ -67,6 +67,7 @@ void	init_parsing(t_node *node)
 	node->args = NULL;
 	node->arg_count = 0;
 	node->cmd = NULL;
+	node->cmd_count = 0;
 	node->filename_out = NULL;
 	node->filename_in = NULL;
 	node->file_in_count = 0;
@@ -77,5 +78,6 @@ void	init_parsing(t_node *node)
 	node->limiter_hd = NULL;
 	node->limiter_hd_count = 0;
 	node->key_expansion = NULL;
+
 }
 
