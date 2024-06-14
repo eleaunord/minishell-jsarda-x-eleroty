@@ -51,10 +51,10 @@ void	process_filename_out(t_token *tokens, t_node *node)
 				node->filename_out[i++] = current->next->value;
 			}
 			node->here_doc = 1;
-			// if (i == node->file_out_count)
-			// {
-			// 	node->filename_out = get_tmp_file();
-			// }
+			if (i == node->file_out_count)
+			{
+				node->filename_out[i] = get_tmp_file();
+			}
 			current->next->processed = 1;
 		}
 		current = current->next;

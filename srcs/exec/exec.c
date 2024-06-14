@@ -29,7 +29,7 @@ void	exec(t_node *list, t_minishell *data)
 	if (list->here_doc)
 		while (list->limiter_hd[i])
 		{
-			printf("file name in exec for heredoc : %s\n", list->filename_out[i]);
+			//printf("file name in exec for heredoc : %s\n", list->filename_out[i]);
 			heredoc(list->limiter_hd[i], list->filename_in[i]);
 			i++;
 		}

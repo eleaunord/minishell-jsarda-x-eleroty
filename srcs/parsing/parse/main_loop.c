@@ -5,27 +5,28 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	t_node	*current;
 	t_token	*tokens;
 	char	*input;
+	int		node_index;
 
-	input = NULL;
 	if (open_quote_check(line))
-	{
-		free(line);
-		return (0);
-	}
+		return (free(line), 0);
 	input = ft_split_pipes_spaces(line, nodes);
 	current = *nodes;
 	mini->nb_cmd = 0;
+	node_index = 0;
 	while (current != NULL)
 	{
+		current->node_index = node_index;
 		tokens = tokenize_input(current->content);
 		parse_tokens(tokens, current);
 		if (current->cmd_count != 0)
-			mini->nb_cmd++; 
+			mini->nb_cmd++;
+		node_index++;
 		current = current->next;
 	}
 	line = input;
 	return (1);
 }
+
 
 void	init_minishell(t_minishell *mini)
 {
@@ -71,7 +72,24 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		head_nodes = node_list;
 		t_node *head = node_list;
-		exec(head, &data);
+		// DEBUG
+		while (head != NULL)
+		{
+			printf("NODE : %s\n", (char *)head->content);
+			printf("Node index : %d\n", head->node_index);
+			int i = 0;
+			while (i < head->file_in_count)
+				printf("file name IN : %s\n", head->filename_in[i++]);
+			i = 0;
+			while (i < head->file_out_count)
+				printf("file name OUT : %s\n", head->filename_out[i++]);
+			i = 0;
+			while (i < head->limiter_hd_count)
+				printf("name EOF : %s\n", head->limiter_hd[i++]);
+			head = head->next;
+		}
+		//
+		//exec(head, &data);
 		if (data.exit)
 		{
 			break ;

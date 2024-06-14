@@ -12,7 +12,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <unistd.h>
+# include <unistd.h> 
 
 # define NUM_OF_BUILT_INS 7
 
@@ -86,6 +86,8 @@ typedef struct s_node
 	int				limiter_hd_count;
 	char			*last_heredoc;
 
+	int node_index;
+	int file_index;
 	// OTHER (?)
 	int fd_in; // <
 	int				fd_out;

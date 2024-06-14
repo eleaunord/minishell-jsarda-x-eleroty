@@ -94,7 +94,7 @@ char	*get_tmp_file(void)
 	}
 	template[i] = '\0';
 	close(random_fd);
-	return (strdup(template));
+	return (ft_strdup(template));
 }
 
 void	heredoc(char *eof, char *file_name_in)
