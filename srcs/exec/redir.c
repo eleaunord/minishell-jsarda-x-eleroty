@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 12:28:52 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:33:17 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	heredoc(char *eof, char *file_name_in)
 			2);
 		return ;
 	}
-	printf("%s\n", file_name_in);
+	file_name_in = "testheredoc";
 	fd = open(file_name_in, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
