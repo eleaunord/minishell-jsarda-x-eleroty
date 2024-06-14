@@ -4,10 +4,10 @@
 // Librairies
 # include <fcntl.h>
 # include <limits.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdbool.h>
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -40,7 +40,6 @@ typedef struct s_token
 	int				processed;
 	// EXPANSIONS
 	char			*key_expansion;
-
 	int				limiter_hd_count;
 }					t_token;
 
@@ -93,16 +92,6 @@ typedef struct s_node
 	int				fd_out;
 }					t_node;
 
-// Structure pour exec
-typedef struct t_redir
-{
-	char			*filename;
-	char			*eof;
-	char			**heredoc;
-	struct s_redir	*next;
-	struct s_redir	*prev;
-}					t_redir;
-
 // // Struct qui centralise tout
 typedef struct s_minishell
 {
@@ -110,12 +99,8 @@ typedef struct s_minishell
 	t_node			*nodes;
 	int nb_cmd;
 	// EXITS
-	int				command_count;
-	int 			**pipes;
 	int				exit;
 	int				exit_status;
-	t_redir			redir;
-
 }					t_minishell;
 
 // EXEC FUNCTIONS
@@ -125,11 +110,8 @@ char				*get_cmd_path(char *cmd, t_minishell *data);
 char				*get_path_value(t_minishell *data, char *key);
 char				**create_char_env(t_env *env);
 void				exec_pipeline(t_node *nodes, t_minishell *data);
-void				heredoc(char *eof, char *file_name_in);
-void				exec_simple_cmd(t_minishell *data, t_node *list,
-						char *path);
-void				exec_child_process(t_minishell *data, t_node *list,
-						char *path);
+void	heredoc(char *eof, char *file_name_in);
+void				exec_simple_cmd(t_minishell *data, t_node *list);
 int					is_built_in(t_node *list);
 void				handle_redir(t_node *redir);
 // BUILTINS
@@ -220,6 +202,7 @@ int					ft_strncmp(const char *s1, const char *s2, size_t n);
 void				*ft_bzero(void *s, size_t bytes);
 char				*ft_strdup(const char *s);
 int					ft_lstsize(t_node *lst);
+size_t				count_args(char **args);
 char				*ft_strchr(const char *s, int c);
 int					ft_isdigit(char *c);
 void				*ft_calloc(size_t count, size_t size);
@@ -231,7 +214,5 @@ size_t				ft_strlcpy(char *dst, const char *src, size_t size);
 // USEFUL FUNCTIONS FOR DEBUG
 void				print_node(t_node *head);
 int					is_alpha_underscore(int c);
-// utils
-size_t				count_args(char **args);
-int					count_cmds(t_node *nodes);
+
 #endif

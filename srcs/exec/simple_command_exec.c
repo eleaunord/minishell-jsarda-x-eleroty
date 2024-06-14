@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 15:33:47 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 16:42:50 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,47 +62,13 @@ int	check_if_redir(t_node *node)
 	return (1);
 }
 
-void	exec_child_process(t_minishell *data, t_node *list, char *path)
+void	exec_child_process(t_minishell *data, t_node *list)
 {
 	t_node	*current;
 	char	**env;
+	char	*path;
 
-	// int		i;
-	// int		j;
 	current = list;
-	// i = data->command_count;
-	// j = 0;
-	// while (j < data->command_count - 1)
-	// {
-	// 	if (j != i - 1)
-	// 	{
-	// 		close(data->pipes[j][0]);
-	// 	}
-	// 	if (j != i)
-	// 	{
-	// 		close(data->pipes[j][1]);
-	// 	}
-	// 	j++;
-	// 	i--;
-	// }
-	if (current->fd_in != STDIN_FILENO)
-	{
-		if (dup2(current->fd_in, STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			exit(EXIT_FAILURE);
-		}
-		close(current->fd_in);
-	}
-	if (current->fd_out != STDOUT_FILENO)
-	{
-		if (dup2(current->fd_out, STDOUT_FILENO) == -1)
-		{
-			perror("dup2");
-			exit(EXIT_FAILURE);
-		}
-		close(current->fd_out);
-	}
 	if (check_if_redir(current) == 0 || list->here_doc == 1)
 	{
 		while (current)
@@ -120,6 +86,7 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 	}
 	if (list->cmd)
 	{
+		path = get_cmd_path(list->cmd, data);
 		if (execve(path, list->args, env) == -1)
 		{
 			perror("execve");
@@ -139,13 +106,12 @@ void	exec_parent_process(pid_t pid)
 		perror("waitpid");
 }
 
-void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
+void	exec_simple_cmd(t_minishell *data, t_node *list)
 {
 	pid_t	pid;
 
 	if (is_built_in(list) != -1)
 	{
-		path = get_cmd_path(list->cmd, data);
 		exec_built_in(data, list);
 		return ;
 	}
@@ -153,9 +119,7 @@ void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
 	if (pid < 0)
 		perror("fork");
 	else if (pid == 0)
-		exec_child_process(data, list, path);
+		exec_child_process(data, list);
 	else
-	{
 		exec_parent_process(pid);
-	}
 }

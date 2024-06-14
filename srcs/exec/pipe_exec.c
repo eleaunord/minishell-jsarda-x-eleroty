@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 15:33:06 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 16:32:01 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	exec_pipeline(t_node *nodes, t_minishell *data)
 			current_node->fd_out = STDOUT_FILENO;
 		else
 			current_node->fd_out = data->pipes[i][1];
-		 exec_simple_cmd(data, current_node, get_cmd_path(current_node->cmd, data));
+		 exec_simple_cmd(data, current_node);
 		if (current_node->fd_in != STDIN_FILENO)
 			close(current_node->fd_in);
 		if (current_node->fd_out != STDOUT_FILENO)
