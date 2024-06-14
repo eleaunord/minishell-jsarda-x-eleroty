@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 12:03:33 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 12:18:35 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	init_pipes(t_minishell *data, t_node *nodes)
 	i = 0;
 	data->command_count = count_cmds(nodes);
 	data->pipes = malloc(sizeof(int *) * data->command_count - 1);
+	if (!data->pipes)
+		return ;
 	while (i < data->command_count - 1)
 	{
 		data->pipes[i] = malloc(sizeof(int) * 2);
@@ -82,6 +84,5 @@ void	exec_pipeline(t_node *nodes, t_minishell *data)
 		current_node = current_node->next;
 		i++;
 	}
-	exec_parent_process(pid);
 	close_pipes_and_wait(data->command_count, data->pipes);
 }

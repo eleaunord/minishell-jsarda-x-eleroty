@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 12:04:07 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 12:20:37 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 {
 	t_node	*current;
 	char	**env;
+
 	// int		i;
 	// int		j;
-
 	current = list;
 	// i = data->command_count;
 	// j = 0;
@@ -132,17 +132,12 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 void	exec_parent_process(pid_t pid)
 {
 	int	status;
-	int i;
 
-	i = 0;
-	while (i < data->)
-	// {
-		if (waitpid(pid, &status, 0) == -1)
-			perror("waitpid");
-	// }
+	if (waitpid(pid, &status, 0) == -1)
+		perror("waitpid");
 }
 
-void	exec_cmd(t_minishell *data, t_node *list, char *path)
+void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
 {
 	pid_t	pid;
 
@@ -156,6 +151,6 @@ void	exec_cmd(t_minishell *data, t_node *list, char *path)
 		perror("fork");
 	else if (pid == 0)
 		exec_child_process(data, list, path);
-	if (!data->pipes)
+	else
 		exec_parent_process(pid);
 }

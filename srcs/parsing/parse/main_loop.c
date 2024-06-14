@@ -73,23 +73,23 @@ int	main(int argc, char *argv[], char *env[])
 		head_nodes = node_list;
 		t_node *head = node_list;
 		// DEBUG
-		while (head != NULL)
-		{
-			printf("NODE : %s\n", (char *)head->content);
-			printf("Node index : %d\n", head->node_index);
-			int i = 0;
-			while (i < head->file_in_count)
-				printf("file name IN : %s\n", head->filename_in[i++]);
-			i = 0;
-			while (i < head->file_out_count)
-				printf("file name OUT : %s\n", head->filename_out[i++]);
-			i = 0;
-			while (i < head->limiter_hd_count)
-				printf("name EOF : %s\n", head->limiter_hd[i++]);
-			head = head->next;
-		}
+		// while (head != NULL)
+		// {
+		// 	printf("NODE : %s\n", (char *)head->content);
+		// 	printf("Node index : %d\n", head->node_index);
+		// 	int i = 0;
+		// 	while (i < head->file_in_count)
+		// 		printf("file name IN : %s\n", head->filename_in[i++]);
+		// 	i = 0;
+		// 	while (i < head->file_out_count)
+		// 		printf("file name OUT : %s\n", head->filename_out[i++]);
+		// 	i = 0;
+		// 	while (i < head->limiter_hd_count)
+		// 		printf("name EOF : %s\n", head->limiter_hd[i++]);
+		// 	head = head->next;
+		// }
 		//
-		//exec(head, &data);
+		exec(head, &data);
 		if (data.exit)
 		{
 			break ;

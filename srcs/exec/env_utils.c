@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 17:35:09 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/06/14 12:07:43 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// VARIABLE EXPANSION
-
-// char	*get_env_value(const char *name, t_minishell *mini)
-// {
-// 	t_env	*current;
-
-// 	current = mini->env;
-// 	while (current)
-// 	{
-// 		if (ft_strcmp(current->key, name) == 0)
-// 		{
-// 			return (current->value);
-// 		}
-// 		current = current->next;
-// 	}
-// 	return (NULL); // Variable not found
-// }
 
 int	get_key(t_env *env, char *key)
 {
@@ -77,7 +59,6 @@ int	get_env_list_size(t_env *list)
 	return (count);
 }
 
-// Creates a char ** array from the linked list env
 char	**create_char_env(t_env *env)
 {
 	t_env	*temp_env;
@@ -109,7 +90,6 @@ char	**create_char_env(t_env *env)
 	return (dest);
 }
 
-// Function to free the allocated char ** array
 void	free_char_env(char **env)
 {
 	int	i;
