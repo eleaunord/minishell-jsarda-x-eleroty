@@ -43,7 +43,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/exec/get_env_path.c \
 					utils/perror.c \
 					utils/ft_free.c \
-					utils/count_args.c \
+					utils/count.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \

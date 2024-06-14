@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 13:16:45 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 11:04:33 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	exec(t_node *list, t_minishell *data)
 	if (list->here_doc)
 		while (list->limiter_hd[i])
 		{
-			printf("file name in exec for heredoc : %s\n", list->filename_out[i]);
 			heredoc(list->limiter_hd[i], list->filename_in[i]);
 			i++;
 		}
