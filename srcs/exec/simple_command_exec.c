@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 12:39:19 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:11:49 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,26 @@ void	exec_child_process(t_minishell *data, t_node *list, char *path)
 	char	**env;
 
 	current = list;
-	if (current->fd_in != STDIN_FILENO)
-	{
-		dup2(current->fd_in, STDIN_FILENO);
-		close(current->fd_in);
-	}
-	if (current->fd_out != STDOUT_FILENO)
-	{
-		dup2(current->fd_out, STDOUT_FILENO);
-		close(current->fd_out);
-	}
+	// if (current->fd_in != STDIN_FILENO)
+	// {
+	// 	dup2(current->fd_in, STDIN_FILENO);
+	// 	if (current->fd_out != 1)
+	// 		close(current->fd_out);
+	// }
+	// if (current->fd_out != STDOUT_FILENO)
+	// {
+	// 	dup2(current->fd_out, STDOUT_FILENO);
+	// 	if (list->fd_in != 0)
+	// 		close(current->fd_in);
+	// }
 	if (check_if_redir(current) == 0 || list->here_doc == 1)
+	{
 		while (current)
 		{
 			handle_redir(current);
 			current = current->next;
 		}
+	}
 	env = create_char_env(data->env);
 	if (!env)
 	{
@@ -117,6 +121,7 @@ void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
 
 	if (is_built_in(list) != -1)
 	{
+		path = get_cmd_path(list->cmd, data);
 		exec_built_in(data, list);
 		return ;
 	}
@@ -126,5 +131,7 @@ void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
 	else if (pid == 0)
 		exec_child_process(data, list, path);
 	else
+	{
 		exec_parent_process(pid);
+	}
 }

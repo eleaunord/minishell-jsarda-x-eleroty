@@ -12,7 +12,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <unistd.h> 
+# include <unistd.h>
 
 # define NUM_OF_BUILT_INS 7
 
