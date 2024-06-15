@@ -78,6 +78,7 @@ void	init_parsing(t_node *node)
 	node->limiter_hd = NULL;
 	node->limiter_hd_count = 0;
 	node->key_expansion = NULL;
-
+	node->filenames = NULL;
+	node->file_count = 0;
 }
 
