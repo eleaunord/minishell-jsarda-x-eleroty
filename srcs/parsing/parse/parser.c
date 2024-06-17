@@ -39,8 +39,10 @@ void	set_filename(t_token **tokens, t_node *node)
 	tok = *tokens;
 	count_redirections(&tok, node);
 	allocate_memory_for_filenames(node);
+	allocate_memory_for_limiter_hd(node);
 	process_filenames(*tokens, node);
 	node->filenames[node->file_count] = NULL;
+	node->limiter_hd[node->limiter_hd_count] = NULL;
 	// OLD STRUCTURE WITH DIFF REDIR
 	// count_heredocs(&tok, node);
 	// // Allocation de mémoire pour limiter_hd
