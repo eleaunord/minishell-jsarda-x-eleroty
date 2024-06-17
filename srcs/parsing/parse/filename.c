@@ -49,13 +49,10 @@ void	process_filenames(t_token *tokens, t_node *node)
 			if (i < node->file_count)
 			{
 				node->filenames[i++] = current->next->value;
+				if (current->type == HEREDOC_TOKEN)
+					node->filenames[i] = get_tmp_file();
 			}
 			node->redir = 1; 
-			if (i == node->file_count)
-			{
-				node->filenames[i] = get_tmp_file();
-				// printf("file name out : %s", node->filenames[i]);
-			}
 			current->next->processed = 1;
 		}
 		current = current->next;
