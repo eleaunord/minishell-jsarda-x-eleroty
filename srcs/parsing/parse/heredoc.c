@@ -81,6 +81,7 @@ void	process_heredoc_tokens(t_token *tokens, t_node *node)
 			if (i == node->limiter_hd_count)
 			{
 				node->filename_in[i] = get_tmp_file();
+				printf("file name in for heredoc : %s", node->filename_in[i]);
 			}
 			current->next->processed = 1;
 		}

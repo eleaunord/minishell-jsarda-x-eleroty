@@ -27,10 +27,8 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/environment/alloc_env.c \
 					srcs/parsing/parse/expansion.c \
 					srcs/parsing/parse/checkers.c \
+					srcs/parsing/parse/filename.c \
 					srcs/parsing/parse/init_parsing.c \
-					srcs/parsing/parse/file_in.c \
-					srcs/parsing/parse/file_out.c \
-					srcs/parsing/parse/heredoc.c \
 					srcs/parsing/parse/remove_quotes.c \
 					srcs/parsing/parse/update_tokens.c \
 					srcs/parsing/tokenization/collapse_spaces.c \

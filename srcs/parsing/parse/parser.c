@@ -37,25 +37,30 @@ void	set_filename(t_token **tokens, t_node *node)
 	if (!tokens || !*tokens || !node)
 		return ;
 	tok = *tokens;
-	count_heredocs(&tok, node);
-	// Allocation de mémoire pour limiter_hd
-	allocate_memory_for_limiter_hd(node);
-	// other redirections : in and out
-	count_redir_in(&tok, node);
-	allocate_memory_for_filename_in(node);
-	count_redir_out(&tok, node);
-	allocate_memory_for_filename_out(node);
+	count_redirections(&tok, node);
+	allocate_memory_for_filenames(node);
+	process_filenames(*tokens, node);
+	node->filenames[node->file_count] = NULL;
+	// OLD STRUCTURE WITH DIFF REDIR
+	// count_heredocs(&tok, node);
+	// // Allocation de mémoire pour limiter_hd
+	// allocate_memory_for_limiter_hd(node);
+	// // other redirections : in and out
+	// count_redir_in(&tok, node);
+	// allocate_memory_for_filename_in(node);
+	// count_redir_out(&tok, node);
+	// allocate_memory_for_filename_out(node);
 	// Traitement des tokens pour les noms de fichiers
 	// process_tokens_for_filenames(*tokens, node);
 	// Traitement des tokens HEREDOC_TOKEN
-	process_heredoc_tokens(*tokens, node);
-	node->limiter_hd[node->limiter_hd_count] = NULL;
-	// Traitement des tokens REDIR_IN
-	process_filename_in(*tokens, node);
-	node->filename_in[node->file_in_count] = NULL;
-	// Traitement des tokens REDIR_OUT
-	process_filename_out(*tokens, node);
-	node->filename_out[node->file_out_count] = NULL;
+	// process_heredoc_tokens(*tokens, node);
+	// node->limiter_hd[node->limiter_hd_count] = NULL;
+	// // Traitement des tokens REDIR_IN
+	// process_filename_in(*tokens, node);
+	// node->filename_in[node->file_in_count] = NULL;
+	// // Traitement des tokens REDIR_OUT
+	// process_filename_out(*tokens, node);
+	// node->filename_out[node->file_out_count] = NULL;
 }
 
 void	parse_tokens(t_token *tokens, t_node *node)

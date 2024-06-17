@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 15:33:17 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/17 08:51:27 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,30 +70,30 @@ void	appen_redir_out(char *file_name_out)
 char	*get_tmp_file(void)
 {
 	char	template[] = "minishell-XXXXXX";
-	int		random_fd;
-	size_t	i;
-	char	rand_char;
+	// int		random_fd;
+	// size_t	i;
+	// char	rand_char;
 
-	i = 11;
-	random_fd = open("/dev/urandom", O_RDONLY);
-	if (random_fd == -1)
-	{
-		perror("Error opening /dev/urandom");
-		exit(EXIT_FAILURE);
-	}
-	while (i < 22)
-	{
-		if (read(random_fd, &rand_char, 1) != 1)
-		{
-			perror("Error reading /dev/urandom");
-			close(random_fd);
-			exit(EXIT_FAILURE);
-		}
-		template[i] = 'a' + (rand_char % 26);
-		i++;
-	}
-	template[i] = '\0';
-	close(random_fd);
+	// i = 11;
+	// random_fd = open("/dev/urandom", O_RDONLY);
+	// if (random_fd == -1)
+	// {
+	// 	perror("Error opening /dev/urandom");
+	// 	exit(EXIT_FAILURE);
+	// }
+	// while (i < 22)
+	// {
+	// 	if (read(random_fd, &rand_char, 1) != 1)
+	// 	{
+	// 		perror("Error reading /dev/urandom");
+	// 		close(random_fd);
+	// 		exit(EXIT_FAILURE);
+	// 	}
+	// 	template[i] = 'a' + (rand_char % 26);
+	// 	i++;
+	// }
+	// template[i] = '\0';
+	// close(random_fd);
 	return (ft_strdup(template));
 }
 

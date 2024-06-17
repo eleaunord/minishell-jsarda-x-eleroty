@@ -72,6 +72,12 @@ typedef struct s_node
 	char *key_expansion; // in args
 
 	// Redirections, filenames not in args
+	// NEW STRUCTURE FOR FILENAMES :
+	int file_count;
+	char			**filenames;
+	int redir; // is there a redir ? 1 : yes, 0 : no
+
+	// OLD STRUCTURE FOR FILENAMES :
 	// char *filename_out; // >
 	// char *filename_in;  // <
 	char			**filename_in;
@@ -84,7 +90,7 @@ typedef struct s_node
 	char **limiter_hd; // eof
 	int				limiter_hd_count;
 	char			*last_heredoc;
-
+	int pipes[2];
 	int node_index;
 	int file_index;
 	// OTHER (?)
@@ -182,6 +188,9 @@ void				allocate_memory_for_limiter_hd(t_node *node);
 void				process_heredoc_tokens(t_token *tokens, t_node *node);
 void				process_filename_out(t_token *tokens, t_node *node);
 void				process_filename_in(t_token *tokens, t_node *node);
+void	count_redirections(t_token **tokens, t_node *node);
+void	process_filenames(t_token *tokens, t_node *node);
+void	allocate_memory_for_filenames(t_node *node);
 // LIBFT FUNCTIONS
 void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);

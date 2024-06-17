@@ -3,108 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 16:32:01 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/17 12:09:45 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	count_cmds(t_node *nodes)
+void	exec_mid(t_node *cmd, t_minishell *data)
 {
-	int		count;
-	t_node	*current;
+	t_node *mid_cmd;
+	int pid;
+	char *env;
+	char path;
+	
+	path = NULL;
+	env = NULL;
+	mid_cmd = cmd;
+	pipe(mid_cmd->pipes);
+	pid = fork();
+	if (pid == 0)
+	{
+		manage_mid_fd();
+		if (mid_cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(mid_cmd->cmd, data);
+			dup2(mid_cmd->pipes[0], mid_cmd->pipes[1]);
+			if (execve(path, mid_cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					mid_cmd->tokens_in_node->cmd);
+			}
+		}
+		// exit child 
+	}
+	close(mid_cmd->pipes[1]);
+	// close tmp fd
+	// close fd in and out
+}
+void	exec_first(t_node *cmd)
+{
+	
+}
+void exec_last(t_node *cmd, t_minishell *data)
+{
+	t_node *last_cmd;
+	char *path;
+	int pid;
+	char *env;
 
-	count = 0;
+	path = NULL;
+	last_cmd = cmd;
+	env = NULL;
+	pid = fork();
+	if (pid == 0)
+	{
+		if (last_cmd->fd_in == 0)
+			last_cmd->fd_in = last_cmd->pipes[0];
+		if (last_cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(last_cmd->cmd, data);
+			dup2(last_cmd->pipes[0], last_cmd->pipes[1]);
+			if (execve(path, last_cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					last_cmd->tokens_in_node->cmd);
+			}
+		}
+		// exit child
+	}
+	close(last_cmd->pipes[0]);
+	// close fdin and out
+}
+void	exec_pipe(t_node *nodes, t_minishell *data)
+{
+	t_node *current;
+
 	current = nodes;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	return (count);
+	if (current)
+		exec_first(current);
+	while (current->next)
+		exec_mid(current, data);
+	if (current->next == NULL)
+		exec_last(current, data);
 }
-
-void	create_pipes(int pipes[2])
-{
-	if (pipe(pipes) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	close_pipes_and_wait(int num_commands, int **pipes)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_commands - 1)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		i++;
-	}
-}
-
-void	init_pipes(t_minishell *data, t_node *nodes)
-{
-	int i;
-
-	i = 0;
-	data->command_count = count_cmds(nodes);
-	data->pipes = malloc(sizeof(int *) * data->command_count - 1);
-	if (!data->pipes)
-		return ;
-	while (i < data->command_count - 1)
-	{
-		data->pipes[i] = malloc(sizeof(int) * 2);
-		i++;
-	}
-	create_pipes(data->command_count, data->pipes);
-}
-
-void	exec_pipeline(t_node *nodes, t_minishell *data)
-{
-	t_node	*current_node;
-	int		i;
-	int		pipes[2];
-
-	init_pipes(data, nodes);
-	current_node = nodes;
-	i = 0;
-	while (i < data->command_count)
-	{
-		if (i == 0)
-			current_node->fd_in = STDIN_FILENO;
-		else
-			current_node->fd_in = data->pipes[i - 1][0];
-		if (i == data->command_count - 1)
-			current_node->fd_out = STDOUT_FILENO;
-		else
-			current_node->fd_out = data->pipes[i][1];
-		 exec_simple_cmd(data, current_node);
-		if (current_node->fd_in != STDIN_FILENO)
-			close(current_node->fd_in);
-		if (current_node->fd_out != STDOUT_FILENO)
-			close(current_node->fd_out);
-		current_node = current_node->next;
-		i++;
-	}
-	close_pipes_and_wait(data->command_count, data->pipes);
-}
-
-// void	exec_first()
-// void	exec_mid()
-// void exec_last()
-// void	exec_pipe()
-// {
-// 	if (le prenmier)
-// 		exec_first
-// 	while (its not the last)
-// 		exec_mid
-// 	if (le dernier)
-// 		exec_last
-// }
