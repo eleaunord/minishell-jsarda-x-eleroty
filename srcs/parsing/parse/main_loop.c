@@ -17,7 +17,7 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	{
 		current->node_index = node_index;
 		tokens = tokenize_input(current->content);
-		parse_tokens(tokens, current);
+		parse_tokens(tokens, current, mini);
 		if (current->cmd_count != 0)
 			mini->nb_cmd++;
 		node_index++;
@@ -55,7 +55,6 @@ int	main(int argc, char *argv[], char *env[])
 	t_node		*node_list;
 	t_minishell	data;
 	t_node		*head_nodes;
-	t_node		*head;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -85,32 +84,17 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		head_nodes = node_list;
-		head = node_list;
-		//print_cmd(head);
-		// // DEBUG
+		t_node *head = node_list;
+		// DEBUG
 		// while (head != NULL)
 		// {
 		// 	printf("NODE : %s\n", (char *)head->content);
 		// 	printf("CMD : %s\n", (char *)head->cmd);
 		// 	int i = 0;
-		// 	printf("type : %d\n", head->tokens_in_node->type);
-		// 	while (i < head->file_count)
+		// 	while (head->args && i < head->arg_count)
 		// 	{
-		// 		printf("file name in order : %s at index : %d\n", head->filenames[i], i);
-		// 		i++;
+		// 		printf("ARGS : %s\n", head->args[i++]);
 		// 	}
-		// 	i = 0;
-		// 	while (i < head->limiter_hd_count)
-		// 	{
-		// 		printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
-		// 		i++;
-		// 	}
-		// 	i = 0;
-		// 	while (i < head->file_out_count)
-		// 		printf("file name OUT : %s\n", head->filename_out[i++]);
-		// 	i = 0;
-		// 	while (i < head->limiter_hd_count)
-		// 		printf("name EOF : %s\n", head->limiter_hd[i++]);
 		// 	head = head->next;
 		// }
 		exec(head, &data);
@@ -153,5 +137,47 @@ int	main(int argc, char *argv[], char *env[])
 // 		temp = temp->next;
 // 	}
 
-// 	current = current->next;
-// }
+
+// DEBUG
+
+		// while (current != NULL)
+		// {
+		// 	printf("NODE : %s\n", (char *)current->content);
+		// 	t_token *temp = current->tokens_in_node;
+		// 	printf("CMD : %s\n", temp->cmd);
+		// 	while (temp != NULL)
+		// 	{
+		// 		printf("TOKEN : %s\n", temp->value);
+		// 		printf("TYPE: %d\n", temp->type);
+		// 		printf("cmd : %s\n", temp->cmd);
+		// 		printf("file name : %s\n", temp->filename);
+		// 		printf("key expansion : %s\n", temp->key_expansion);
+		// 		int i = 0;
+		// 		while (temp->args && i < count_arguments(temp))
+		// 		{
+		// 			printf("ARGS : %s\n", temp->args[i++]);
+		// 		}
+		// 		temp = temp->next;
+		// 	}
+
+		// 	current = current->next;
+		// }
+
+			// int i = 0;
+			// while (i < head->file_count)
+			// {
+			// 	printf("file name in order : %s at index : %d\n", head->filenames[i], i);
+			// 	i++;
+			// }
+			// i = 0;
+			// while (i < head->limiter_hd_count)
+			// {
+			// 	printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
+			// 	i++;
+			// }
+			// i = 0;
+			// while (i < head->file_out_count)
+			// 	printf("file name OUT : %s\n", head->filename_out[i++]);
+			// i = 0;
+			// while (i < head->limiter_hd_count)
+			// 	printf("name EOF : %s\n", head->limiter_hd[i++]);

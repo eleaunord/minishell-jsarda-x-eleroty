@@ -14,7 +14,7 @@ char	*remove_dollar_sign(char *str)
 	return (new_str);
 }
 
-void	handle_key_expansion_trimming(t_token *token, t_node *node)
+void	handle_key_expansion_trimming(t_token *token)
 {
 	char	*new_value;
 
@@ -25,7 +25,6 @@ void	handle_key_expansion_trimming(t_token *token, t_node *node)
 		new_value = ft_strtrim(token->key_expansion, "\"");
 		free(token->key_expansion);
 		token->key_expansion = new_value;
-		node->key_expansion = new_value;
 	}
 	else if (token->key_expansion != NULL && ft_strchr(token->key_expansion,
 			'$'))
@@ -33,12 +32,10 @@ void	handle_key_expansion_trimming(t_token *token, t_node *node)
 		new_value = ft_strtrim(token->key_expansion, "$");
 		free(token->key_expansion);
 		token->key_expansion = new_value;
-		node->key_expansion = new_value;
 	}
 	if (new_value != NULL && *new_value == '\0')
 	{
 		free(new_value);
-		node->key_expansion = NULL;
 	}
 }
 
@@ -81,7 +78,7 @@ void	update_tokens(t_token **tokens, t_node *node)
 	{
 		handle_dollar_sign_removal(current);
 		handle_quotes_removal(current);
-		handle_key_expansion_trimming(current, node);
+		handle_key_expansion_trimming(current);
 		current = current->next;
 	}
 	// Update the tokens in the linked list of nodes

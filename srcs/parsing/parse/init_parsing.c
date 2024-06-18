@@ -33,6 +33,7 @@ int	init_args(t_token *tokens, t_node *node)
 }
 
 
+
 void	set_cmd(t_token *tokens, t_node *node)
 {
 	t_token	*tok;
@@ -80,5 +81,6 @@ void	init_parsing(t_node *node)
 	node->key_expansion = NULL;
 	node->filenames = NULL;
 	node->file_count = 0;
+	node->expansion_count = 0;
 }
 

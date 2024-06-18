@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/18 16:25:45 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/18 16:47:24 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@ void	exec(t_node *list, t_minishell *data)
 	// if (list->next != NULL)
 	// 	exec_pipe(list);
 	// else
-		exec_simple_cmd(data, list);
+	exec_simple_cmd(data, list);
 }

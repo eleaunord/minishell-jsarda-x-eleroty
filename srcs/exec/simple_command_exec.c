@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/18 10:28:01 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/18 16:52:17 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,15 @@ void	exec_built_in(t_minishell *data, t_node *list)
 
 int	check_if_redir(t_node *node)
 {
-	if (node->tokens_in_node->type >= 1 && node->tokens_in_node->type <= 4)
-		return (0);
+	t_token	*token;
+
+	token = node->tokens_in_node;
+	while (token)
+	{
+		if (token->type >= 1 && token->type <= 4)
+			return (0);
+		token = token->next;
+	}
 	return (1);
 }
 
