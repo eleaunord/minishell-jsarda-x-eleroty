@@ -17,7 +17,7 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	{
 		current->node_index = node_index;
 		tokens = tokenize_input(current->content);
-		parse_tokens(tokens, current);
+		parse_tokens(tokens, current, mini);
 		if (current->cmd_count != 0)
 			mini->nb_cmd++;
 		node_index++;
@@ -73,32 +73,18 @@ int	main(int argc, char *argv[], char *env[])
 		head_nodes = node_list;
 		t_node *head = node_list;
 		// DEBUG
-		// while (head != NULL)s
+		// while (head != NULL)
 		// {
 		// 	printf("NODE : %s\n", (char *)head->content);
 		// 	printf("CMD : %s\n", (char *)head->cmd);
 		// 	int i = 0;
-		// 	while (i < head->file_count)
+		// 	while (head->args && i < head->arg_count)
 		// 	{
-		// 		printf("file name in order : %s at index : %d\n", head->filenames[i], i);
-		// 		i++;
+		// 		printf("ARGS : %s\n", head->args[i++]);
 		// 	}
-		// 	i = 0;
-		// 	while (i < head->limiter_hd_count)
-		// 	{
-		// 		printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
-		// 		i++;
-		// 	}
-			// i = 0;
-			// while (i < head->file_out_count)
-			// 	printf("file name OUT : %s\n", head->filename_out[i++]);
-			// i = 0;
-			// while (i < head->limiter_hd_count)
-			// 	printf("name EOF : %s\n", head->limiter_hd[i++]);
-		// 	head = head->next;
+		// 	head = head->next; 
 		// }
-		//
-		//exec(head, &data);
+		exec(head, &data);
 		if (data.exit)
 		{
 			break ;
@@ -142,3 +128,22 @@ int	main(int argc, char *argv[], char *env[])
 
 		// 	current = current->next;
 		// }
+
+			// int i = 0;
+			// while (i < head->file_count)
+			// {
+			// 	printf("file name in order : %s at index : %d\n", head->filenames[i], i);
+			// 	i++;
+			// }
+			// i = 0;
+			// while (i < head->limiter_hd_count)
+			// {
+			// 	printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
+			// 	i++;
+			// }
+			// i = 0;
+			// while (i < head->file_out_count)
+			// 	printf("file name OUT : %s\n", head->filename_out[i++]);
+			// i = 0;
+			// while (i < head->limiter_hd_count)
+			// 	printf("name EOF : %s\n", head->limiter_hd[i++]);

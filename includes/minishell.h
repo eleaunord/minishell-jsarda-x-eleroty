@@ -70,7 +70,8 @@ typedef struct s_node
 	int cmd_count;
 	char			**args;
 	int				arg_count;
-	char *key_expansion; // in args
+	char **key_expansion; // in args
+	int expansion_count;
 
 	// Redirections, filenames not in args
 	// NEW STRUCTURE FOR FILENAMES :
@@ -168,13 +169,11 @@ int					special_tokens(char *input, t_token **tokens, int index);
 t_token				*new_token(t_token_type type, char *value);
 int					word_token(char *input, t_token **tokens, int index);
 void				add_token_to_list(t_token **tokens, t_token *new_token);
-void				parse_tokens(t_token *tokens, t_node *node);
 char				*expand_variables(char *token);
 char				*ft_strcpy(char *dest, const char *src);
 void				close_quote_check(int *dq, int *sq, int *index, char c);
 int					count_arguments(t_token *tokens);
 void				free_nodes(t_node *list);
-void				process_expansions(t_token **tokens, t_node *node);
 char				*get_tmp_file(void);
 void				free_nodes(t_node *list);
 int					check_line(char **line);
@@ -205,6 +204,14 @@ void				process_filename_in(t_token *tokens, t_node *node);
 void	count_redirections(t_token **tokens, t_node *node);
 void	process_filenames(t_token *tokens, t_node *node);
 void	allocate_memory_for_filenames(t_node *node);
+void	set_expansions(t_token *tokens, t_node *node);
+void	fill_expansions(t_token *tokens, t_node *node);
+int	count_expansions(t_token *tokens);
+void	process_expansions(t_token **tokens);
+int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
+void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
+char *get_expansion(t_minishell *data, char *key_expansion);
+
 // LIBFT FUNCTIONS
 void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);

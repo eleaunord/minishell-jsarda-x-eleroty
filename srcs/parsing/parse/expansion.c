@@ -92,28 +92,47 @@ char	*expand_variables(char *token)
 	return (extract_variables_from_single_quotes(token));
 }
 
-void	process_expansions(t_token **tokens, t_node *node)
+void	process_expansions(t_token **tokens)
 {
 	t_token	*tok;
+	int i;
 
-	if (!tokens || !node)
+	if (!tokens)
 		return ;
 	tok = *tokens;
 	while (tok != NULL)
 	{
 		if (ft_strchr(tok->value, '$') != NULL)
 		{
-			node->key_expansion = expand_variables(tok->value);
-			tok->key_expansion = node->key_expansion;
+			tok->key_expansion = expand_variables(tok->value);
+			//printf("tok key expansion : %s\n", tok->key_expansion);
 		}
-		if (!node->key_expansion)
+		else
 		{
-			node->key_expansion = NULL;
 			tok->key_expansion = NULL;
+			//printf("tok key expansion : %s\n", tok->key_expansion);
 		}
+		i++;
 		tok = tok->next;
 	}
 }
+
+
+// void	set_expansions(t_token **tokens, t_node *node)
+// {
+// 	t_token	*tok;
+// 	int i;
+
+// 	if (!tokens || !node)
+// 		return ;
+// 	tok = *tokens;
+// 	i = 0;
+// 	while (tok != NULL)
+// 	{
+// 		node->key_expansion[i++] = tok->key_expansion;
+// 		tok = tok->next;
+// 	}
+// }
 // char	*expand_variables(char *token)
 // {
 // 	int		i;

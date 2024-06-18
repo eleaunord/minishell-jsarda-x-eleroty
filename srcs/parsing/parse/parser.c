@@ -1,41 +1,44 @@
 #include "../../../includes/minishell.h"
 
-void	fill_args(t_token *tokens, t_node *node)
+void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 {
-	t_token	*tok;
-	int		i;
+	t_token *tok;
+	int i;
 
 	tok = tokens;
 	if (!tokens || !node)
-		return ;
-	i = -1;
+		return;
+	i = 0;
 	while (tok)
 	{
 		if (tok->type == TOKEN_WORD && !tok->processed)
 		{
-			node->args[++i] = ft_strdup(tok->value);
+			if (tok->key_expansion != NULL)
+				node->args[i] = get_expansion(mini, tok->key_expansion);
+			else
+				node->args[i] = ft_strdup(tok->value);
 			if (!node->args[i])
 			{
 				while (i > 0)
-				{
 					free(node->args[--i]);
-				}
 				free(node->args);
 				free(node->cmd);
-				return ;
+				return;
 			}
+			i++;
 		}
 		tok = tok->next;
 	}
+	node->args[i] = NULL;
 }
 
 // Fonction principale filename
-void	set_filename(t_token **tokens, t_node *node)
+void set_filename(t_token **tokens, t_node *node)
 {
-	t_token	*tok;
+	t_token *tok;
 
 	if (!tokens || !*tokens || !node)
-		return ;
+		return;
 	tok = *tokens;
 	count_redirections(&tok, node);
 	allocate_memory_for_filenames(node);
@@ -65,11 +68,11 @@ void	set_filename(t_token **tokens, t_node *node)
 	// node->filename_out[node->file_out_count] = NULL;
 }
 
-void	parse_tokens(t_token *tokens, t_node *node)
+void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 {
 	if (!tokens)
 	{
-		return ;
+		return;
 	}
 	init_parsing(node);
 	set_filename(&tokens, node);
@@ -77,71 +80,40 @@ void	parse_tokens(t_token *tokens, t_node *node)
 	init_args(tokens, node);
 	set_cmd(tokens, node);
 	// SET EXPANSION
-	process_expansions(&tokens, node);
+	process_expansions(&tokens);
 	// UPDATE NODE
 	update_tokens(&tokens, node);
+	// GET EXPANSION from tokens
+	set_expansions(tokens, node);
 	// SET ARGS
-	fill_args(tokens, node);
-		//t_node	*head;
-	// int		i;
-
-	// head = node;
-	// i = 0;
-	// while (head)
-	// {
-	// 	printf("Node : %s\n", (char *)head->content);
-	// 	printf("Cmd : %s\n", head->cmd);
-	// 	while (i < node->file_in_count)
-	// 	{
-	// 		if (head->filename_in)
-	// 			printf("File name in: %s\n", head->filename_in[i++]);
-	// 	}
-	// 	i = 0;
-	// 	while (i < node->file_out_count)
-	// 	{
-	// 		if (head->filename_out)
-	// 			printf("File name out: %s\n", head->filename_out[i++]);
-	// 	}
-	// 	i = 0;
-	// 	while (i < node->limiter_hd_count)
-	// 	{
-	// 		if (head->limiter_hd)
-	// 			printf("Here doc file: %s\n", head->limiter_hd[i++]);
-	// 	}
-	// 	int x = 0;
-	// 	while (x < head->arg_count)
-	// 	{
-	// 		printf("Arg[x] : %s\n", head->args[x++]);
-	// 	}
-	// 	head = head->next;
-	// }
+	fill_args(tokens, node, mini);
 }
-	
-	// DEBUG
 
-	// t_node	*head;
-	// int		i;
+// DEBUG
 
-	// head = node;
-	// i = 0;
-	// while (head)
-	// {
-	// 	printf("Node : %s\n", (char *)head->content);
-	// 	// printf("Cmd : %s\n", head->cmd);
-	// 	// printf("File name out: %s\n", head->filename_out);
-	// 	while (i < node->limiter_hd_count)
-	// 	{
-	// 		if (head->filename_in)
-	// 			printf("File name in: %s : %s\n", head->limiter_hd[i],
-	// 				head->filename_in);
-	// 		printf("File name heredoc: %s\n", head->limiter_hd[i++]);
-	// 	}
-	// 	// printf("Node expansion: %s\n", head->key_expansion);
-	// 	// printf("Arg cunt : %d\n", head->arg_count);
-	// 	// int x = 0;
-	// 	// while (x < head->arg_count)
-	// 	// {
-	// 	// 	printf("Arg[x] : %s\n", head->args[x++]);
-	// 	// }
-	// 	head = head->next;
-	// }
+// t_node	*head;
+// int		i;
+
+// head = node;
+// i = 0;
+// while (head)
+// {
+// 	printf("Node : %s\n", (char *)head->content);
+// 	// printf("Cmd : %s\n", head->cmd);
+// 	// printf("File name out: %s\n", head->filename_out);
+// 	while (i < node->limiter_hd_count)
+// 	{
+// 		if (head->filename_in)
+// 			printf("File name in: %s : %s\n", head->limiter_hd[i],
+// 				head->filename_in);
+// 		printf("File name heredoc: %s\n", head->limiter_hd[i++]);
+// 	}
+// 	// printf("Node expansion: %s\n", head->key_expansion);
+// 	// printf("Arg cunt : %d\n", head->arg_count);
+// 	// int x = 0;
+// 	// while (x < head->arg_count)
+// 	// {
+// 	// 	printf("Arg[x] : %s\n", head->args[x++]);
+// 	// }
+// 	head = head->next;
+// }
