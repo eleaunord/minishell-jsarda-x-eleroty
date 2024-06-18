@@ -34,6 +34,21 @@ void	init_minishell(t_minishell *mini)
 	mini->exit = 0;
 }
 
+void print_cmd(t_node *start){
+	t_token *first;
+
+	while(start)
+	{
+		first = start->tokens_in_node;
+		while(first)
+		{
+			printf("%d\n", first->type);
+			first = first->next;
+		}
+		start = start->next;
+	}
+}
+
 int	main(int argc, char *argv[], char *env[])
 {
 	char		*input_line;
@@ -71,26 +86,33 @@ int	main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		head_nodes = node_list;
 		head = node_list;
-		// DEBUG
+		//print_cmd(head);
+		// // DEBUG
 		// while (head != NULL)
 		// {
 		// 	printf("NODE : %s\n", (char *)head->content);
 		// 	printf("CMD : %s\n", (char *)head->cmd);
 		// 	int i = 0;
+		// 	printf("type : %d\n", head->tokens_in_node->type);
 		// 	while (i < head->file_count)
 		// 	{
 		// 		printf("file name in order : %s at index : %d\n", head->filenames[i], i);
 		// 		i++;
 		// 	}
-		// 	// i = 0;
-		// 	// while (i < head->file_out_count)
-		// 	// 	printf("file name OUT : %s\n", head->filename_out[i++]);
-		// 	// i = 0;
-		// 	// while (i < head->limiter_hd_count)
-		// 	// 	printf("name EOF : %s\n", head->limiter_hd[i++]);
+		// 	i = 0;
+		// 	while (i < head->limiter_hd_count)
+		// 	{
+		// 		printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
+		// 		i++;
+		// 	}
+		// 	i = 0;
+		// 	while (i < head->file_out_count)
+		// 		printf("file name OUT : %s\n", head->filename_out[i++]);
+		// 	i = 0;
+		// 	while (i < head->limiter_hd_count)
+		// 		printf("name EOF : %s\n", head->limiter_hd[i++]);
 		// 	head = head->next;
 		// }
-		
 		exec(head, &data);
 		if (data.exit)
 		{

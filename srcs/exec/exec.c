@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/17 09:03:53 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/18 16:25:45 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void	exec(t_node *list, t_minishell *data)
 	{
 		while (list->limiter_hd[i])
 		{
-			heredoc(list->limiter_hd[i], list->filename_in[i]);
+			heredoc(list->limiter_hd[i], list->heredoc_filename);
 			i++;
 		}
 	}
-	if (list->next != NULL)
-		exec_pipe(list);
-	else
+	// if (list->next != NULL)
+	// 	exec_pipe(list);
+	// else
 		exec_simple_cmd(data, list);
 }
