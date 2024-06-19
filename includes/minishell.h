@@ -122,6 +122,8 @@ void				heredoc(char *eof, char *file_name_in);
 void				exec_simple_cmd(t_minishell *data, t_node *list);
 int					is_built_in(t_node *list);
 void				handle_redir(t_node *redir);
+int					check_if_redir(t_node *node);
+void				exec_built_in(t_minishell *data, t_node *list);
 // BUILTINS
 void				ft_exit(t_minishell *data, t_node *node, char **args);
 void				ft_pwd(t_minishell *data, t_node *node, char **args);

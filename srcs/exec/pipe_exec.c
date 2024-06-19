@@ -6,22 +6,11 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/19 15:26:12 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/19 16:30:46 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	manage_mid_fd(t_node *cmd_lst, int *fd_temp, t_minishell *data)
-{
-	if (cmd_lst->fd_in == 0)
-		cmd_lst->fd_in = *fd_temp;
-	if (cmd_lst->fd_out == 1)
-	{
-		close(data->nodes->pipes[0]);
-		cmd_lst->fd_out = data->nodes->pipes[1];
-	}
-}
 
 void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 {
@@ -45,7 +34,10 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 	if (pid == 0)
 	{
 		if (prev)
+		{
 			dup2(prev->pipes[0], STDIN_FILENO);
+			close(prev->pipes[0]);
+		}
 		if (cmd->next)
 			dup2(cmd->pipes[1], STDOUT_FILENO);
 		close(cmd->pipes[0]);
@@ -128,7 +120,10 @@ void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 	if (pid == 0)
 	{
 		if (prev)
+		{
 			dup2(prev->pipes[0], STDIN_FILENO);
+			close(prev->pipes[0]);
+		}
 		if (cmd->cmd && is_built_in(cmd) == -1)
 		{
 			env = create_char_env(data->env);
@@ -152,12 +147,26 @@ void	exec_pipe(t_node *nodes, t_minishell *data)
 {
 	t_node	*current;
 	t_node	*prev;
+	int		i;
 
-	prev = nodes;
+	i = 0;
+	prev = NULL;
 	current = nodes;
+	if (nodes->here_doc)
+	{
+		while (nodes->limiter_hd[i])
+		{
+			get_tmp_file(nodes);
+			heredoc(nodes->limiter_hd[i], nodes->heredoc_filename);
+			i++;
+			if (nodes->limiter_hd[i])
+				unlink(nodes->heredoc_filename);
+		}
+	}
 	if (current)
 	{
 		exec_first(current, data);
+		prev = current;
 		current = current->next;
 	}
 	while (current && current->next)
@@ -168,4 +177,6 @@ void	exec_pipe(t_node *nodes, t_minishell *data)
 	}
 	if (current)
 		exec_last(current, data, prev);
+	while (wait(NULL) > 0)
+		;
 }
