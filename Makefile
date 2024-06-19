@@ -30,6 +30,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/parse/filename.c \
 					srcs/parsing/parse/expansion.c \
 					srcs/parsing/parse/init_parsing.c \
+					srcs/parsing/parse/count_expansions.c \
 					srcs/parsing/parse/remove_quotes.c \
 					srcs/parsing/parse/update_tokens.c \
 					srcs/parsing/tokenization/collapse_spaces.c \

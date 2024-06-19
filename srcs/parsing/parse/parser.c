@@ -1,5 +1,29 @@
 #include "../../../includes/minishell.h"
 
+char *get_expansion(t_minishell *data, char *key_expansion)
+{
+    char *path_value;
+    char *result;
+    char *start;
+    char *end;
+    char *dollar_pos;
+
+    find_key_start_end(key_expansion, &start, &end);
+
+    dollar_pos = strchr(key_expansion, '$');
+    char *key = extract_key(start, end, dollar_pos);
+
+    path_value = get_path_value(data, key);
+    free(key);
+
+    if (!path_value)
+        return NULL;
+
+    result = construct_result(key_expansion, start, end, path_value);
+
+    return result;
+}
+
 void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 {
 	t_token *tok;
@@ -82,26 +106,19 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	// SET EXPANSION
 	process_expansions(&tokens);
 	// UPDATE NODE
-		
+
 	update_tokens(&tokens, node);
 	// GET EXPANSION from tokens
 	set_expansions(tokens, node);
 	// SET ARGS
+	// t_token *tok;
+	// tok = tokens;
+	// while (tok)
+	// {
+	// 	printf("token : %s\n", (char *)tok->key_expansion);
+	// 	tok = tok->next;
+	// }
 	fill_args(tokens, node, mini);
-t_node	*head;
-
-head = node;
-	while (head)
-{
-	printf("Node : %s\n", (char *)head->content);
-	int x = 0;
-	while (x < head->arg_count)
-	{
-		printf("Arg[x] : %s\n", head->args[x++]);
-	}
-	head = head->next;
-}
-
 }
 
 // DEBUG

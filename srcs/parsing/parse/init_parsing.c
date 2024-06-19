@@ -32,8 +32,6 @@ int	init_args(t_token *tokens, t_node *node)
 	return (0);
 }
 
-
-
 void	set_cmd(t_token *tokens, t_node *node)
 {
 	t_token	*tok;

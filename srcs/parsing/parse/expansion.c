@@ -92,74 +92,38 @@ char	*expand_variables(char *token)
 	return (extract_variables_from_single_quotes(token));
 }
 
-void	process_expansions(t_token **tokens)
+void process_expansions(t_token **tokens)
 {
-	t_token	*tok;
-	int i;
+    t_token *tok;
 
-	if (!tokens)
-		return ;
-	tok = *tokens;
-	while (tok != NULL)
-	{
-		if (ft_strchr(tok->value, '$') != NULL)
-		{
-			tok->key_expansion = expand_variables(tok->value);
-			//printf("tok key expansion : %s\n", tok->key_expansion);
-		}
-		else
-		{
-			tok->key_expansion = NULL;
-			//printf("tok key expansion : %s\n", tok->key_expansion);
-		}
-		i++;
-		tok = tok->next;
-	}
+    if (!tokens)
+        return;
+
+    tok = *tokens;
+    while (tok != NULL)
+    {
+        int needs_expansion = 0;
+        char *value = tok->value;
+        
+        while (*value)
+        {
+            if (*value == '$' && is_alpha_underscore(*(value + 1)))
+            {
+                needs_expansion = 1;
+                break;
+            }
+            value++;
+        }
+
+        if (needs_expansion)
+        {
+            tok->key_expansion = expand_variables(tok->value);
+        }
+        else
+        {
+            tok->key_expansion = NULL;
+        }
+
+        tok = tok->next;
+    }
 }
-
-
-// void	set_expansions(t_token **tokens, t_node *node)
-// {
-// 	t_token	*tok;
-// 	int i;
-
-// 	if (!tokens || !node)
-// 		return ;
-// 	tok = *tokens;
-// 	i = 0;
-// 	while (tok != NULL)
-// 	{
-// 		node->key_expansion[i++] = tok->key_expansion;
-// 		tok = tok->next;
-// 	}
-// }
-// char	*expand_variables(char *token)
-// {
-// 	int		i;
-// 	int		in_single_quotes;
-// 	char	*variable;
-
-// 	i = -1;
-// 	in_single_quotes = 0;
-// 	while (token[++i])
-// 	{
-// 		if (token[i] == '\'')
-// 			in_single_quotes = !in_single_quotes;
-// 		else if (token[i] == '$' && !in_single_quotes)
-// 		{
-// 			if (token[i + 1] == '{')
-// 			{
-// 				variable = extract_variables_within_braces(&token[i]);
-// 				if (variable)
-// 					return (variable);
-// 			}
-// 			else
-// 			{
-// 				variable = extract_variables_without_braces(&token[i]);
-// 				if (variable)
-// 					return (variable);
-// 			}
-// 		}
-// 	}
-// 	return (extract_variables_from_single_quotes(token));
-// }
