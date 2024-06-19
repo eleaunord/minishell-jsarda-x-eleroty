@@ -1,5 +1,6 @@
 #include "../../../includes/minishell.h"
 
+// Get the index of a key in the environment list
 int get_the_key(t_env *env, char *key)
 {
     int index = 0;
@@ -13,7 +14,7 @@ int get_the_key(t_env *env, char *key)
     return -1;
 }
 
-// Helper function to get the value of a key in the environment list
+// Get the value of a key in the environment list
 char *get_key_value(t_minishell *data, char *key)
 {
     int index;
@@ -26,41 +27,39 @@ char *get_key_value(t_minishell *data, char *key)
     return env->value;
 }
 
-// Helper function to construct the result string with preserved leading and trailing spaces
+// Construct the result string with preserved parts before and after the key
 char *construct_result(char *key_expansion, char *start, char *end, char *path_value)
 {
-    // Find leading and trailing spaces
-    char *leading = key_expansion;
-    char *trailing = end;
-    while (leading < start && *leading == ' ')
-        leading++;
-    while (*trailing == ' ')
-        trailing++;
-
-    size_t leading_spaces = leading - key_expansion;
-    size_t trailing_spaces = strlen(trailing);
-    size_t result_length = leading_spaces + strlen(path_value) + trailing_spaces;
+    size_t leading_length = start - key_expansion;
+    size_t key_length = strlen(path_value);
+    size_t trailing_length = strlen(end);
+    size_t result_length = leading_length + key_length + trailing_length;
 
     char *result = (char *)malloc(result_length + 1);
     if (!result)
         return NULL;
 
-    strncpy(result, key_expansion, leading_spaces);
-    result[leading_spaces] = '\0';
+    // Copy leading part
+    strncpy(result, key_expansion, leading_length);
+    result[leading_length] = '\0';
+
+    // Append expanded key
     strcat(result, path_value);
-    strcat(result, trailing);
+
+    // Append trailing part
+    strcat(result, end);
 
     return result;
 }
 
-// Helper function to extract the key from the key expansion string
+// Extract the key from the key expansion string
 char *extract_the_key(char *start, char *end, char *dollar_pos)
 {
     size_t key_length = end - start;
     return strndup(start + (dollar_pos ? 1 : 0), key_length - (dollar_pos ? 1 : 0));
 }
 
-// Helper function to find the start and end of the key in the key expansion string
+// Find the start and end of the key in the key expansion string
 void find_key_start_end(char *key_expansion, char **start, char **end)
 {
     char *dollar_pos = strchr(key_expansion, '$');

@@ -73,7 +73,7 @@ int	main(int argc, char *argv[], char *env[])
 		head = node_list;
 		// while (head != NULL)
 		// {
-		// 	printf("NODE : %s\n", (char *)head->content);
+		// 	printf("last heredoc : %s\n", head->last_heredoc);
 		// 	printf("CMD : %s\n", (char *)head->cmd);
 		// 	int i = 0;
 		// 	while (head->args && i < head->arg_count)

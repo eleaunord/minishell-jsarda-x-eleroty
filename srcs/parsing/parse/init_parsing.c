@@ -80,5 +80,7 @@ void	init_parsing(t_node *node)
 	node->filenames = NULL;
 	node->file_count = 0;
 	node->expansion_count = 0;
+	node->last_heredoc = NULL;
+	node->error_num = 0;
 }
 

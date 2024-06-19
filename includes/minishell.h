@@ -13,6 +13,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <stdarg.h>
+#include <stddef.h>
 
 # define NUM_OF_BUILT_INS 7
 
@@ -92,12 +94,14 @@ typedef struct s_node
 	int				limiter_hd_count;
 	char			*last_heredoc;
 
+	int error_num;
 	int node_index;
 	int file_index;
 	// OTHER (?)
 	int fd_in; // <
 	int				fd_out;
 }					t_node;
+
 
 // // Struct qui centralise tout
 typedef struct s_minishell
@@ -231,9 +235,13 @@ char				*trim_whitespace(char *str);
 char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_strsub(const char *s, unsigned int start, size_t len);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
-
-// USEFUL FUNCTIONS FOR DEBUG
-void				print_node(t_node *head);
+char *ft_strstr(char *str, char *to_find);
+char *ft_strncpy(char *dest, char *src, unsigned int n);
+char *ft_strcat(char *dest, char *src);
+size_t ft_itoa_str(int value, char *str);
+	
+	// USEFUL FUNCTIONS FOR DEBUG
+	void print_node(t_node *head);
 int					is_alpha_underscore(int c);
 
 #endif

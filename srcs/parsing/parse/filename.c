@@ -67,11 +67,10 @@ void process_filenames(t_token *tokens, t_node *node)
                 {
                     node->limiter_hd[j++] = current->next->value;
                     node->filenames[i++] = get_tmp_file();
-                }
+					node->last_heredoc = current->next->value;
+				}
                 else
-                {
                     node->filenames[i++] = current->next->value;
-                }
             }
             node->redir = 1;
             current->next->processed = 1;
