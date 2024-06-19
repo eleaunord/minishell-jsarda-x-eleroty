@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/18 16:52:17 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/19 14:45:26 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,17 @@ void	exec_child_process(t_minishell *data, t_node *list)
 	env = create_char_env(data->env);
 	if (!env)
 	{
-		printf("no env\n");
 		free_minishell(data, list);
 		exit(EXIT_FAILURE);
 	}
 	if (list->cmd)
 	{
 		path = get_cmd_path(list->cmd, data);
-		if (execve(path, list->args, env) == -1)
+		if (path == NULL || execve(path, list->args, env) == -1)
 		{
 			perror("execve");
 			fprintf(stderr, "minishell: %s: command not found\n",
-				list->tokens_in_node->cmd);
+				list->cmd);
 		}
 	}
 	free_minishell(data, list);
@@ -116,9 +115,19 @@ void	exec_parent_process(pid_t pid)
 void	exec_simple_cmd(t_minishell *data, t_node *list)
 {
 	pid_t	pid;
+	t_node	*current;
 
-	if (is_built_in(list) != -1)
+	current = list;
+	if (is_built_in(current) != -1)
 	{
+		if (check_if_redir(current) == 0 || current->here_doc == 1)
+		{
+			while (current)
+			{
+				handle_redir(current);
+				current = current->next;
+			}
+		}
 		exec_built_in(data, list);
 		return ;
 	}

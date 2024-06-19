@@ -67,7 +67,6 @@ void	process_filenames(t_token *tokens, t_node *node)
 					&& j < node->limiter_hd_count)
 				{
 					node->limiter_hd[j++] = current->next->value;
-					get_tmp_file(node);
 					node->here_doc = 1;
 				}
 				else

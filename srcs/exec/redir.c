@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/18 16:29:22 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/19 15:07:33 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	get_tmp_file(t_node *node)
 	int		random_fd;
 	size_t	i;
 	char	rand_char;
-	char	filename[30] = "minishell-XXXXXX";
+	char	filename[36] = "/tmp/.minishell-XXXXXX";
 
 	i = 11;
 	random_fd = open("/dev/urandom", O_RDONLY);
@@ -147,8 +147,6 @@ void	handle_redir(t_node *redir)
 		if (token->type == HEREDOC_TOKEN)
 		{
 			redir_in(current->heredoc_filename);
-			if (current->last_heredoc)
-				unlink(current->heredoc_filename);
 		}
 		else if (token->type == REDIR_IN_TOKEN)
 		{

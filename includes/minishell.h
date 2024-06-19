@@ -70,13 +70,13 @@ typedef struct s_node
 	char			**args;
 	int				arg_count;
 	char **key_expansion; // in args
-	int expansion_count;
+	int				expansion_count;
 
 	// Redirections, filenames not in args
 	// NEW STRUCTURE FOR FILENAMES :
 	int				file_count;
 	char			**filenames;
-	char			heredoc_filename[30];
+	char			heredoc_filename[36];
 	int redir; // is there a redir ? 1 : yes, 0 : no
 
 	// OLD STRUCTURE FOR FILENAMES :
@@ -117,7 +117,7 @@ void				exec(t_node *list, t_minishell *data);
 char				*get_cmd_path(char *cmd, t_minishell *data);
 char				*get_path_value(t_minishell *data, char *key);
 char				**create_char_env(t_env *env);
-// void				exec_pipeline(t_node *nodes, t_minishell *data);
+void				exec_pipe(t_node *nodes, t_minishell *data);
 void				heredoc(char *eof, char *file_name_in);
 void				exec_simple_cmd(t_minishell *data, t_node *list);
 int					is_built_in(t_node *list);
@@ -188,16 +188,17 @@ void				allocate_memory_for_limiter_hd(t_node *node);
 void				process_heredoc_tokens(t_token *tokens, t_node *node);
 void				process_filename_out(t_token *tokens, t_node *node);
 void				process_filename_in(t_token *tokens, t_node *node);
-void	count_redirections(t_token **tokens, t_node *node);
-void	process_filenames(t_token *tokens, t_node *node);
-void	allocate_memory_for_filenames(t_node *node);
-void	set_expansions(t_token *tokens, t_node *node);
-void	fill_expansions(t_token *tokens, t_node *node);
-int	count_expansions(t_token *tokens);
-void	process_expansions(t_token **tokens);
-int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
-void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
-char *get_expansion(t_minishell *data, char *key_expansion);
+void				count_redirections(t_token **tokens, t_node *node);
+void				process_filenames(t_token *tokens, t_node *node);
+void				allocate_memory_for_filenames(t_node *node);
+void				set_expansions(t_token *tokens, t_node *node);
+void				fill_expansions(t_token *tokens, t_node *node);
+int					count_expansions(t_token *tokens);
+void				process_expansions(t_token **tokens);
+int					tokenizer(char *line, t_node **nodes, t_minishell *mini);
+void				parse_tokens(t_token *tokens, t_node *node,
+						t_minishell *mini);
+char				*get_expansion(t_minishell *data, char *key_expansion);
 
 // LIBFT FUNCTIONS
 void				*ft_lstdelone(void *lst);

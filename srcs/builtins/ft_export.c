@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 13:14:14 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/19 09:48:39 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ void	create_var(t_minishell *data, const char *key, const char *value)
 {
 	t_env	*new_var;
 	t_env	*current;
+	size_t	value_size;
+	size_t	key_size;
+
+	key_size = 0;
+	value_size = 0;
 
 	new_var = malloc(sizeof(t_env));
 	if (!new_var)
@@ -44,16 +49,28 @@ void	create_var(t_minishell *data, const char *key, const char *value)
 		return ;
 	}
 	new_var->key = ft_strdup(key);
-	new_var->value = ft_strdup(value);
-	if (!new_var->key || !new_var->value)
+	if (!new_var->key)
 	{
 		perror("strdup");
-		free(new_var->key);
-		free(new_var->value);
 		free(new_var);
 		return ;
 	}
-	new_var->str = malloc(ft_strlen(key) + ft_strlen(value) + 2);
+	if (value)
+	{
+		new_var->value = ft_strdup(value);
+		if (!new_var->value)
+		{
+			perror("strdup");
+			free(new_var->key);
+			free(new_var);
+			return ;
+		}
+		value_size = ft_strlen(value);
+	}
+	else
+		new_var->value = NULL;
+	key_size = ft_strlen(key);
+	new_var->str = malloc(key_size + value_size + 2);
 	if (!new_var->str)
 	{
 		perror("malloc");
@@ -86,7 +103,7 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 	i = 1;
 	if (!args[1])
 	{
-		ft_env(data, node, args); // function print and ascci sorted
+		ft_env(data, node, args);
 		return ;
 	}
 	while (args[i])
