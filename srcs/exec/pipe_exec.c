@@ -6,105 +6,177 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/14 16:32:01 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/19 16:30:46 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	count_cmds(t_node *nodes)
+void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 {
-	int		count;
-	t_node	*current;
+	int		pid;
+	char	**env;
+	char	*path;
 
-	count = 0;
-	current = nodes;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	return (count);
-}
-
-void	create_pipes(int pipes[2])
-{
-	if (pipe(pipes) == -1)
+	path = NULL;
+	env = NULL;
+	if (pipe(cmd->pipes) == -1)
 	{
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-}
-
-void	close_pipes_and_wait(int num_commands, int **pipes)
-{
-	int	i;
-
-	i = 0;
-	while (i < num_commands - 1)
+	pid = fork();
+	if (pid == -1)
 	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		i++;
+		perror("fork");
+		exit(EXIT_FAILURE);
 	}
-}
-
-void	init_pipes(t_minishell *data, t_node *nodes)
-{
-	int i;
-
-	i = 0;
-	data->command_count = count_cmds(nodes);
-	data->pipes = malloc(sizeof(int *) * data->command_count - 1);
-	if (!data->pipes)
-		return ;
-	while (i < data->command_count - 1)
+	if (pid == 0)
 	{
-		data->pipes[i] = malloc(sizeof(int) * 2);
-		i++;
+		if (prev)
+		{
+			dup2(prev->pipes[0], STDIN_FILENO);
+			close(prev->pipes[0]);
+		}
+		if (cmd->next)
+			dup2(cmd->pipes[1], STDOUT_FILENO);
+		close(cmd->pipes[0]);
+		close(cmd->pipes[1]);
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
 	}
-	create_pipes(data->command_count, data->pipes);
+	close(cmd->pipes[1]);
+	if (prev)
+		close(prev->pipes[0]);
+}
+void	exec_first(t_node *cmd, t_minishell *data)
+{
+	int		pid;
+	char	**env;
+	char	*path;
+
+	env = NULL;
+	path = NULL;
+	if (pipe(cmd->pipes) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
+		dup2(cmd->pipes[1], STDOUT_FILENO);
+		close(cmd->pipes[0]);
+		close(cmd->pipes[1]);
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
+	}
+	close(cmd->pipes[1]);
 }
 
-void	exec_pipeline(t_node *nodes, t_minishell *data)
+void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 {
-	t_node	*current_node;
+	int		pid;
+	char	**env;
+	char	*path;
+
+	env = NULL;
+	path = NULL;
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
+		if (prev)
+		{
+			dup2(prev->pipes[0], STDIN_FILENO);
+			close(prev->pipes[0]);
+		}
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
+	}
+	if (prev)
+		close(prev->pipes[0]);
+}
+
+void	exec_pipe(t_node *nodes, t_minishell *data)
+{
+	t_node	*current;
+	t_node	*prev;
 	int		i;
-	int		pipes[2];
 
-	init_pipes(data, nodes);
-	current_node = nodes;
 	i = 0;
-	while (i < data->command_count)
+	prev = NULL;
+	current = nodes;
+	if (nodes->here_doc)
 	{
-		if (i == 0)
-			current_node->fd_in = STDIN_FILENO;
-		else
-			current_node->fd_in = data->pipes[i - 1][0];
-		if (i == data->command_count - 1)
-			current_node->fd_out = STDOUT_FILENO;
-		else
-			current_node->fd_out = data->pipes[i][1];
-		 exec_simple_cmd(data, current_node);
-		if (current_node->fd_in != STDIN_FILENO)
-			close(current_node->fd_in);
-		if (current_node->fd_out != STDOUT_FILENO)
-			close(current_node->fd_out);
-		current_node = current_node->next;
-		i++;
+		while (nodes->limiter_hd[i])
+		{
+			get_tmp_file(nodes);
+			heredoc(nodes->limiter_hd[i], nodes->heredoc_filename);
+			i++;
+			if (nodes->limiter_hd[i])
+				unlink(nodes->heredoc_filename);
+		}
 	}
-	close_pipes_and_wait(data->command_count, data->pipes);
+	if (current)
+	{
+		exec_first(current, data);
+		prev = current;
+		current = current->next;
+	}
+	while (current && current->next)
+	{
+		exec_mid(current, data, prev);
+		prev = current;
+		current = current->next;
+	}
+	if (current)
+		exec_last(current, data, prev);
+	while (wait(NULL) > 0)
+		;
 }
-
-// void	exec_first()
-// void	exec_mid()
-// void exec_last()
-// void	exec_pipe()
-// {
-// 	if (le prenmier)
-// 		exec_first
-// 	while (its not the last)
-// 		exec_mid
-// 	if (le dernier)
-// 		exec_last
-// }

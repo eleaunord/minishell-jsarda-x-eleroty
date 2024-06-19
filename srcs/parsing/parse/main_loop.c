@@ -34,13 +34,42 @@ void init_minishell(t_minishell *mini)
 	mini->exit = 0;
 }
 
+void print_cmd(t_node *start){
+	t_token *first;
+
+	while(start)
+	{
+		first = start->tokens_in_node;
+		while(first)
+		{
+			printf("%d\n", first->type);
+			first = first->next;
+		}
+		start = start->next;
+	}
+}
+
+void print_cmd(t_node *start){
+	t_token *first;
+
+	while(start)
+	{
+		first = start->tokens_in_node;
+		while(first)
+		{
+			printf("%d\n", first->type);
+			first = first->next;
+		}
+		start = start->next;
+	}
+}
+
 int main(int argc, char *argv[], char *env[])
 {
-	char *input_line;
-	t_node *node_list;
-	t_minishell data;
-	t_node *head_nodes;
-	t_node *head;
+	char		*input_line;
+	t_node		*node_list;
+	t_minishell	data;
+	t_node		*head_nodes;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -70,7 +99,8 @@ int main(int argc, char *argv[], char *env[])
 		}
 		add_history(input_line);
 		head_nodes = node_list;
-		head = node_list;
+		t_node *head = node_list;
+		// DEBUG
 		// while (head != NULL)
 		// {
 		// 	printf("CMD : %s\n", (char *)head->cmd);
@@ -80,6 +110,7 @@ int main(int argc, char *argv[], char *env[])
 		// 	{
 		// 		printf("ARGS : %s\n", head->args[i++]);
 		// 	}
+		// 	head = head->next;
 		// 	head = head->next;
 		// }
 		exec(head, &data);
@@ -99,6 +130,29 @@ int main(int argc, char *argv[], char *env[])
 // PRINT ENV
 // print_env(data.env);
 // Main shell execution Loop
+
+// DEBUG
+
+// while (current != NULL)
+// {
+// 	printf("NODE : %s\n", (char *)current->content);
+// 	t_token *temp = current->tokens_in_node;
+// 	printf("CMD : %s\n", temp->cmd);
+// 	while (temp != NULL)
+// 	{
+// 		printf("TOKEN : %s\n", temp->value);
+// 		printf("TYPE: %d\n", temp->type);
+// 		printf("cmd : %s\n", temp->cmd);
+// 		printf("file name : %s\n", temp->filename);
+// 		printf("key expansion : %s\n", temp->key_expansion);
+// 		int i = 0;
+// 		while (temp->args && i < count_arguments(temp))
+// 		{
+// 			printf("ARGS : %s\n", temp->args[i++]);
+// 		}
+// 		temp = temp->next;
+// 	}
+
 
 // DEBUG
 
