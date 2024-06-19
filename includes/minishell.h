@@ -198,7 +198,7 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
 void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
 char *get_expansion(t_minishell *data, char *key_expansion);
 void find_key_start_end(char *key_expansion, char **start, char **end);
-char *extract_key(char *start, char *end, char *dollar_pos);
+char *extract_the_key(char *start, char *end, char *dollar_pos);
 char *construct_result(char *key_expansion, char *start, char *end, char *path_value);
 char *get_key_value(t_minishell *data, char *key);
 int get_the_key(t_env *env, char *key);

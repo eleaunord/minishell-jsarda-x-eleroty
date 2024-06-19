@@ -1,27 +1,30 @@
 #include "../../../includes/minishell.h"
 
-char *get_expansion(t_minishell *data, char *key_expansion)
+
+void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index)
 {
-    char *path_value;
-    char *result;
-    char *start;
-    char *end;
-    char *dollar_pos;
+	if (tok->key_expansion != NULL)
+	{
+		node->args[*arg_index] = get_expansion(mini, tok->key_expansion);
+	}
+	else
+	{
+		node->args[*arg_index] = ft_strdup(tok->value);
+	}
 
-    find_key_start_end(key_expansion, &start, &end);
-
-    dollar_pos = strchr(key_expansion, '$');
-    char *key = extract_key(start, end, dollar_pos);
-
-    path_value = get_path_value(data, key);
-    free(key);
-
-    if (!path_value)
-        return NULL;
-
-    result = construct_result(key_expansion, start, end, path_value);
-
-    return result;
+	if (!node->args[*arg_index])
+	{
+		while (*arg_index > 0)
+		{
+			free(node->args[--(*arg_index)]);
+		}
+		free(node->args);
+		free(node->cmd);
+		node->args = NULL;
+		node->cmd = NULL;
+		return;
+	}
+	(*arg_index)++;
 }
 
 void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
@@ -32,24 +35,15 @@ void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	tok = tokens;
 	if (!tokens || !node)
 		return;
+
 	i = 0;
 	while (tok)
 	{
 		if (tok->type == TOKEN_WORD && !tok->processed)
 		{
-			if (tok->key_expansion != NULL)
-				node->args[i] = get_expansion(mini, tok->key_expansion);
-			else
-				node->args[i] = ft_strdup(tok->value);
-			if (!node->args[i])
-			{
-				while (i > 0)
-					free(node->args[--i]);
-				free(node->args);
-				free(node->cmd);
+			process_token(tok, node, mini, &i);
+			if (!node->args)
 				return;
-			}
-			i++;
 		}
 		tok = tok->next;
 	}
