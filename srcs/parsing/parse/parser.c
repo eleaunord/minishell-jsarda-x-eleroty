@@ -82,11 +82,26 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	// SET EXPANSION
 	process_expansions(&tokens);
 	// UPDATE NODE
+		
 	update_tokens(&tokens, node);
 	// GET EXPANSION from tokens
 	set_expansions(tokens, node);
 	// SET ARGS
 	fill_args(tokens, node, mini);
+t_node	*head;
+
+head = node;
+	while (head)
+{
+	printf("Node : %s\n", (char *)head->content);
+	int x = 0;
+	while (x < head->arg_count)
+	{
+		printf("Arg[x] : %s\n", head->args[x++]);
+	}
+	head = head->next;
+}
+
 }
 
 // DEBUG
