@@ -37,12 +37,11 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/exec/simple_command_exec.c \
 					srcs/exec/env_utils.c \
 					srcs/exec/redir.c \
-					srcs/exec/pipe_exec.c \
 					srcs/exec/exec.c \
 					srcs/exec/get_env_path.c \
 					utils/perror.c \
 					utils/ft_free.c \
-					utils/count_args.c \
+					utils/count.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \
@@ -50,6 +49,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_cd.c \
 					srcs/builtins/ft_exit.c \
 					srcs/builtins/ft_unset.c \
+					#srcs/exec/pipe_exec.c \
 
 
 OBJS        := $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 12:39:19 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 16:42:50 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,36 +62,31 @@ int	check_if_redir(t_node *node)
 	return (1);
 }
 
-void	exec_child_process(t_minishell *data, t_node *list, char *path)
+void	exec_child_process(t_minishell *data, t_node *list)
 {
 	t_node	*current;
 	char	**env;
+	char	*path;
 
 	current = list;
-	if (current->fd_in != STDIN_FILENO)
-	{
-		dup2(current->fd_in, STDIN_FILENO);
-		close(current->fd_in);
-	}
-	if (current->fd_out != STDOUT_FILENO)
-	{
-		dup2(current->fd_out, STDOUT_FILENO);
-		close(current->fd_out);
-	}
 	if (check_if_redir(current) == 0 || list->here_doc == 1)
+	{
 		while (current)
 		{
 			handle_redir(current);
 			current = current->next;
 		}
+	}
 	env = create_char_env(data->env);
 	if (!env)
 	{
+		printf("no env\n");
 		free_minishell(data, list);
 		exit(EXIT_FAILURE);
 	}
 	if (list->cmd)
 	{
+		path = get_cmd_path(list->cmd, data);
 		if (execve(path, list->args, env) == -1)
 		{
 			perror("execve");
@@ -111,7 +106,7 @@ void	exec_parent_process(pid_t pid)
 		perror("waitpid");
 }
 
-void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
+void	exec_simple_cmd(t_minishell *data, t_node *list)
 {
 	pid_t	pid;
 
@@ -124,7 +119,7 @@ void	exec_simple_cmd(t_minishell *data, t_node *list, char *path)
 	if (pid < 0)
 		perror("fork");
 	else if (pid == 0)
-		exec_child_process(data, list, path);
+		exec_child_process(data, list);
 	else
 		exec_parent_process(pid);
 }

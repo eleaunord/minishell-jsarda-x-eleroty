@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 13:16:14 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:33:17 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,14 @@ void	heredoc(char *eof, char *file_name_in)
 {
 	char	*buf;
 	int		fd;
-
+	printf("%s\n", file_name_in);
 	if (!eof)
 	{
 		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
 			2);
 		return ;
 	}
-	printf("%s\n", file_name_in);
+	file_name_in = "testheredoc";
 	fd = open(file_name_in, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{

@@ -12,7 +12,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <unistd.h> 
+# include <unistd.h>
 
 # define NUM_OF_BUILT_INS 7
 
@@ -40,7 +40,6 @@ typedef struct s_token
 	int				processed;
 	// EXPANSIONS
 	char			*key_expansion;
-
 	int				limiter_hd_count;
 }					t_token;
 
@@ -100,16 +99,6 @@ typedef struct s_node
 	int				fd_out;
 }					t_node;
 
-// Structure pour exec
-typedef struct t_redir
-{
-	char			*filename;
-	char			*eof;
-	char			**heredoc;
-	struct s_redir	*next;
-	struct s_redir	*prev;
-}					t_redir;
-
 // // Struct qui centralise tout
 typedef struct s_minishell
 {
@@ -119,8 +108,6 @@ typedef struct s_minishell
 	// EXITS
 	int				exit;
 	int				exit_status;
-	t_redir			redir;
-
 }					t_minishell;
 
 // EXEC FUNCTIONS
@@ -131,8 +118,7 @@ char				*get_path_value(t_minishell *data, char *key);
 char				**create_char_env(t_env *env);
 void				exec_pipeline(t_node *nodes, t_minishell *data);
 void	heredoc(char *eof, char *file_name_in);
-void				exec_simple_cmd(t_minishell *data, t_node *list,
-						char *path);
+void				exec_simple_cmd(t_minishell *data, t_node *list);
 int					is_built_in(t_node *list);
 void				handle_redir(t_node *redir);
 // BUILTINS

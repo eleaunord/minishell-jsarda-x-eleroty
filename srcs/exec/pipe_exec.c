@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/13 13:05:47 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/14 16:32:01 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,16 @@ int	count_cmds(t_node *nodes)
 	return (count);
 }
 
-void	create_pipes(int num_commands, int pipes[][2])
+void	create_pipes(int pipes[2])
 {
-	int	i;
-
-	i = 0;
-	while (i < num_commands - 1)
+	if (pipe(pipes) == -1)
 	{
-		if (pipe(pipes[i]) == -1)
-		{
-			perror("pipe");
-			exit(EXIT_FAILURE);
-		}
-		i++;
+		perror("pipe");
+		exit(EXIT_FAILURE);
 	}
 }
 
-void	close_pipes_and_wait(int num_commands, int pipes[][2])
+void	close_pipes_and_wait(int num_commands, int **pipes)
 {
 	int	i;
 
@@ -54,38 +47,45 @@ void	close_pipes_and_wait(int num_commands, int pipes[][2])
 		close(pipes[i][1]);
 		i++;
 	}
+}
+
+void	init_pipes(t_minishell *data, t_node *nodes)
+{
+	int i;
+
 	i = 0;
-	while (i < num_commands)
+	data->command_count = count_cmds(nodes);
+	data->pipes = malloc(sizeof(int *) * data->command_count - 1);
+	if (!data->pipes)
+		return ;
+	while (i < data->command_count - 1)
 	{
-		wait(NULL);
+		data->pipes[i] = malloc(sizeof(int) * 2);
 		i++;
 	}
+	create_pipes(data->command_count, data->pipes);
 }
 
 void	exec_pipeline(t_node *nodes, t_minishell *data)
 {
-	int		num_commands;
 	t_node	*current_node;
 	int		i;
+	int		pipes[2];
 
-	num_commands = count_cmds(nodes);
-	int		pipes[num_commands - 1][2];
-	create_pipes(num_commands, pipes);
+	init_pipes(data, nodes);
 	current_node = nodes;
 	i = 0;
-
-	while (i < num_commands)
+	while (i < data->command_count)
 	{
 		if (i == 0)
 			current_node->fd_in = STDIN_FILENO;
 		else
-			current_node->fd_in = pipes[i - 1][0];
-		if (i == num_commands - 1)
+			current_node->fd_in = data->pipes[i - 1][0];
+		if (i == data->command_count - 1)
 			current_node->fd_out = STDOUT_FILENO;
 		else
-			current_node->fd_out = pipes[i][1];
-		exec_simple_cmd(data, current_node, get_cmd_path(current_node->cmd,
-				data));
+			current_node->fd_out = data->pipes[i][1];
+		 exec_simple_cmd(data, current_node);
 		if (current_node->fd_in != STDIN_FILENO)
 			close(current_node->fd_in);
 		if (current_node->fd_out != STDOUT_FILENO)
@@ -93,5 +93,18 @@ void	exec_pipeline(t_node *nodes, t_minishell *data)
 		current_node = current_node->next;
 		i++;
 	}
-	close_pipes_and_wait(num_commands, pipes);
+	close_pipes_and_wait(data->command_count, data->pipes);
 }
+
+// void	exec_first()
+// void	exec_mid()
+// void exec_last()
+// void	exec_pipe()
+// {
+// 	if (le prenmier)
+// 		exec_first
+// 	while (its not the last)
+// 		exec_mid
+// 	if (le dernier)
+// 		exec_last
+// }

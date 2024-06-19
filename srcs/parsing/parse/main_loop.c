@@ -27,7 +27,6 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	return (1);
 }
 
-
 void	init_minishell(t_minishell *mini)
 {
 	mini->env = NULL;
@@ -40,7 +39,8 @@ int	main(int argc, char *argv[], char *env[])
 	char		*input_line;
 	t_node		*node_list;
 	t_minishell	data;
-	t_node *head_nodes;
+	t_node		*head_nodes;
+	t_node		*head;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -62,16 +62,15 @@ int	main(int argc, char *argv[], char *env[])
 			free(input_line);
 			continue ;
 		}
-
 		if (!tokenizer(input_line, &node_list, &data))
 		{
 			add_history(input_line);
 			free(input_line);
-			continue;
+			continue ;
 		}
 		add_history(input_line);
 		head_nodes = node_list;
-		t_node *head = node_list;
+		head = node_list;
 		// DEBUG
 		while (head != NULL)
 		{
@@ -91,43 +90,41 @@ int	main(int argc, char *argv[], char *env[])
 		}
 		head_nodes = NULL;
 	}
-    free(input_line);
-    free_minishell(&data, head_nodes);
+	free(input_line);
+	free_minishell(&data, head_nodes);
 	return (0);
 }
 
+// DEBUG
+
+// PRINT ENV
+// print_env(data.env);
+// Main shell execution Loop
 
 // DEBUG
 
-	// PRINT ENV
-	// print_env(data.env);
-	// Main shell execution Loop
+// while (current != NULL)
+// {
+// 	printf("NODE : %s\n", (char *)current->content);
+// 	t_token *temp = current->tokens_in_node;
+// 	printf("CMD : %s\n", temp->cmd);
+// 	while (temp != NULL)
+// 	{
+// 		printf("TOKEN : %s\n", temp->value);
+// 		printf("TYPE: %d\n", temp->type);
+// 		printf("cmd : %s\n", temp->cmd);
+// 		printf("file name : %s\n", temp->filename);
+// 		printf("key expansion : %s\n", temp->key_expansion);
+// 		int i = 0;
+// 		while (temp->args && i < count_arguments(temp))
+// 		{
+// 			printf("ARGS : %s\n", temp->args[i++]);
+// 		}
+// 		temp = temp->next;
+// 	}
 
-
-// DEBUG
-
-		// while (current != NULL)
-		// {
-		// 	printf("NODE : %s\n", (char *)current->content);
-		// 	t_token *temp = current->tokens_in_node;
-		// 	printf("CMD : %s\n", temp->cmd);
-		// 	while (temp != NULL)
-		// 	{
-		// 		printf("TOKEN : %s\n", temp->value);
-		// 		printf("TYPE: %d\n", temp->type);
-		// 		printf("cmd : %s\n", temp->cmd);
-		// 		printf("file name : %s\n", temp->filename);
-		// 		printf("key expansion : %s\n", temp->key_expansion);
-		// 		int i = 0;
-		// 		while (temp->args && i < count_arguments(temp))
-		// 		{
-		// 			printf("ARGS : %s\n", temp->args[i++]);
-		// 		}
-		// 		temp = temp->next;
-		// 	}
-
-		// 	current = current->next;
-		// }
+// 	current = current->next;
+// }
 
 			// int i = 0;
 			// while (i < head->file_count)
