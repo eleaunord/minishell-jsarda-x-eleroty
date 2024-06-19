@@ -1,11 +1,11 @@
 #include "../../../includes/minishell.h"
 
-int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
+int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 {
-	t_node	*current;
-	t_token	*tokens;
-	char	*input;
-	int		node_index;
+	t_node *current;
+	t_token *tokens;
+	char *input;
+	int node_index;
 
 	if (open_quote_check(line))
 		return (free(line), 0);
@@ -27,20 +27,20 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	return (1);
 }
 
-void	init_minishell(t_minishell *mini)
+void init_minishell(t_minishell *mini)
 {
 	mini->env = NULL;
 	mini->nodes = NULL;
 	mini->exit = 0;
 }
 
-int	main(int argc, char *argv[], char *env[])
+int main(int argc, char *argv[], char *env[])
 {
-	char		*input_line;
-	t_node		*node_list;
-	t_minishell	data;
-	t_node		*head_nodes;
-	t_node		*head;
+	char *input_line;
+	t_node *node_list;
+	t_minishell data;
+	t_node *head_nodes;
+	t_node *head;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -55,37 +55,37 @@ int	main(int argc, char *argv[], char *env[])
 		if (!input_line)
 		{
 			rl_clear_history();
-			break ;
+			break;
 		}
 		if (check_line(&input_line))
 		{
 			free(input_line);
-			continue ;
+			continue;
 		}
 		if (!tokenizer(input_line, &node_list, &data))
 		{
 			add_history(input_line);
 			free(input_line);
-			continue ;
+			continue;
 		}
 		add_history(input_line);
 		head_nodes = node_list;
 		head = node_list;
 		// while (head != NULL)
 		// {
-		// 	printf("last heredoc : %s\n", head->last_heredoc);
 		// 	printf("CMD : %s\n", (char *)head->cmd);
-		// 	int i = 0;
+		// 	printf("input line : %s\n", input_line);
+		// 	i = 0;
 		// 	while (head->args && i < head->arg_count)
 		// 	{
 		// 		printf("ARGS : %s\n", head->args[i++]);
 		// 	}
-		// 	head = head->next; 
+		// 	head = head->next;
 		// }
 		exec(head, &data);
 		if (data.exit)
 		{
-			break ;
+			break;
 		}
 		head_nodes = NULL;
 	}
@@ -125,21 +125,21 @@ int	main(int argc, char *argv[], char *env[])
 // 	current = current->next;
 // }
 
-			// int i = 0;
-			// while (i < head->file_count)
-			// {
-			// 	printf("file name in order : %s at index : %d\n", head->filenames[i], i);
-			// 	i++;
-			// }
-			// i = 0;
-			// while (i < head->limiter_hd_count)
-			// {
-			// 	printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
-			// 	i++;
-			// }
-			// i = 0;
-			// while (i < head->file_out_count)
-			// 	printf("file name OUT : %s\n", head->filename_out[i++]);
-			// i = 0;
-			// while (i < head->limiter_hd_count)
-			// 	printf("name EOF : %s\n", head->limiter_hd[i++]);
+// int i = 0;
+// while (i < head->file_count)
+// {
+// 	printf("file name in order : %s at index : %d\n", head->filenames[i], i);
+// 	i++;
+// }
+// i = 0;
+// while (i < head->limiter_hd_count)
+// {
+// 	printf("file name in order : %s at index : %d\n", head->limiter_hd[i], i);
+// 	i++;
+// }
+// i = 0;
+// while (i < head->file_out_count)
+// 	printf("file name OUT : %s\n", head->filename_out[i++]);
+// i = 0;
+// while (i < head->limiter_hd_count)
+// 	printf("name EOF : %s\n", head->limiter_hd[i++]);
