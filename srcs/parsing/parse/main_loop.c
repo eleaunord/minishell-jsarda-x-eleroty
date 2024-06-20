@@ -49,21 +49,6 @@ void print_cmd(t_node *start){
 	}
 }
 
-void print_cmd(t_node *start){
-	t_token *first;
-
-	while(start)
-	{
-		first = start->tokens_in_node;
-		while(first)
-		{
-			printf("%d\n", first->type);
-			first = first->next;
-		}
-		start = start->next;
-	}
-}
-
 int main(int argc, char *argv[], char *env[])
 {
 	char		*input_line;

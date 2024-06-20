@@ -66,7 +66,6 @@ void	process_filenames(t_token *tokens, t_node *node)
                 if (current->type == HEREDOC_TOKEN && j < node->limiter_hd_count)
                 {
                     node->limiter_hd[j++] = current->next->value;
-                    node->filenames[i++] = get_tmp_file();
 					node->last_heredoc = current->next->value;
 				}
                 else
