@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/20 12:10:28 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 13:52:44 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,60 +46,55 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 	char	**env;
 	char	*path;
 
-	if (is_built_in(cmd) != -1)
+	path = NULL;
+	env = NULL;
+	if (pipe(cmd->pipes) == -1)
 	{
-		handle_heredoc(cmd);
-		handle_builtin(cmd, data);
+		perror("pipe");
+		exit(EXIT_FAILURE);
 	}
-	else
+	handle_heredoc(cmd);
+	pid = fork();
+	if (pid == -1)
 	{
-		path = NULL;
-		env = NULL;
-		if (pipe(cmd->pipes) == -1)
-		{
-			perror("pipe");
-			exit(EXIT_FAILURE);
-		}
-		handle_heredoc(cmd);
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(EXIT_FAILURE);
-		}
-		if (pid == 0)
-		{
-			if (prev)
-			{
-				dup2(prev->pipes[0], STDIN_FILENO);
-				close(prev->pipes[0]);
-			}
-			if (cmd->next)
-				dup2(cmd->pipes[1], STDOUT_FILENO);
-			if (check_if_redir(cmd) == 0)
-				handle_redir(cmd);
-			close(cmd->pipes[0]);
-			close(cmd->pipes[1]);
-			if (cmd->cmd && is_built_in(cmd) == -1)
-			{
-				env = create_char_env(data->env);
-				path = get_cmd_path(cmd->cmd, data);
-				if (execve(path, cmd->args, env) == -1)
-				{
-					perror("execve");
-					fprintf(stderr, "minishell: %s: command not found\n",
-						cmd->tokens_in_node->cmd);
-					exit(EXIT_FAILURE);
-				}
-			}
-			free_minishell(data, cmd);
-			exit(EXIT_SUCCESS);
-		}
-		close(cmd->pipes[1]);
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
 		if (prev)
+		{
+			dup2(prev->pipes[0], STDIN_FILENO);
 			close(prev->pipes[0]);
+		}
+		if (cmd->next)
+			dup2(cmd->pipes[1], STDOUT_FILENO);
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
+		close(cmd->pipes[0]);
+		close(cmd->pipes[1]);
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
 	}
+	close(cmd->pipes[1]);
+	if (prev)
+		close(prev->pipes[0]);
 }
+
 void	exec_first(t_node *cmd, t_minishell *data)
 {
 	int		pid;
@@ -139,6 +134,8 @@ void	exec_first(t_node *cmd, t_minishell *data)
 				exit(EXIT_FAILURE);
 			}
 		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
 		free_minishell(data, cmd);
 		exit(EXIT_SUCCESS);
 	}
@@ -151,49 +148,43 @@ void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 	char	**env;
 	char	*path;
 
-	if (is_built_in(cmd) != -1)
+	env = NULL;
+	path = NULL;
+	handle_heredoc(cmd);
+	pid = fork();
+	if (pid == -1)
 	{
-		handle_heredoc(cmd);
-		handle_builtin(cmd, data);
+		perror("fork");
+		exit(EXIT_FAILURE);
 	}
-	else
+	if (pid == 0)
 	{
-		env = NULL;
-		path = NULL;
-		handle_heredoc(cmd);
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(EXIT_FAILURE);
-		}
-		if (pid == 0)
-		{
-			if (prev)
-			{
-				dup2(prev->pipes[0], STDIN_FILENO);
-				close(prev->pipes[0]);
-			}
-			if (check_if_redir(cmd) == 0)
-				handle_redir(cmd);
-			if (cmd->cmd && is_built_in(cmd) == -1)
-			{
-				env = create_char_env(data->env);
-				path = get_cmd_path(cmd->cmd, data);
-				if (execve(path, cmd->args, env) == -1)
-				{
-					perror("execve");
-					fprintf(stderr, "minishell: %s: command not found\n",
-						cmd->tokens_in_node->cmd);
-					exit(EXIT_FAILURE);
-				}
-			}
-			free_minishell(data, cmd);
-			exit(EXIT_SUCCESS);
-		}
 		if (prev)
+		{
+			dup2(prev->pipes[0], STDIN_FILENO);
 			close(prev->pipes[0]);
+		}
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
 	}
+	if (prev)
+		close(prev->pipes[0]);
 }
 
 void	exec_pipe(t_node *nodes, t_minishell *data)
