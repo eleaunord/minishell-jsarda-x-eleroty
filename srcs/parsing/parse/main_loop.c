@@ -30,6 +30,7 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 void init_minishell(t_minishell *mini)
 {
 	mini->env = NULL;
+	mini->env_dup = NULL;
 	mini->nodes = NULL;
 	mini->exit = 0;
 }
@@ -62,6 +63,8 @@ int main(int argc, char *argv[], char *env[])
 	(void)argv;
 	init_minishell(&data);
 	if (!init_env(&data, env))
+		return (1);
+	if (!init_env_dup(&data, env))
 		return (1);
 	while (1)
 	{

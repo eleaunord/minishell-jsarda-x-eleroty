@@ -108,6 +108,7 @@ typedef struct s_node
 typedef struct s_minishell
 {
 	t_env			*env;
+	t_env *env_dup;
 	t_node			*nodes;
 	int				nb_cmd;
 	// EXITS
@@ -205,6 +206,14 @@ int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
 void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
 char *get_expansion(t_minishell *data, char *key_expansion);
 void set_expansions(t_token *tokens, t_node *node);
+int init_env_dup(t_minishell *data, char **env);
+int append(t_env **list, char *elem);
+void add_first(t_env **list, t_env *new);
+void print_env(t_env *list);
+int list_new_elem_str(t_env **new, char *elem);
+t_env *allocate_new_env(void);
+void free_t_env(t_env *env);
+int parse_key_value(t_env **new, char *elem);
 	// LIBFT FUNCTIONS
 	void *ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
