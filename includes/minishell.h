@@ -73,10 +73,10 @@ typedef struct s_node
 	int				arg_count;
 	char **key_expansion; // in args
 	int				expansion_count;
-
-	// Redirections, filenames not in args
-	// NEW STRUCTURE FOR FILENAMES :
-	int				file_count;
+	int lonely_expansion;
+		// Redirections, filenames not in args
+		// NEW STRUCTURE FOR FILENAMES :
+		int file_count;
 	char			**filenames;
 	char			heredoc_filename[36];
 	int redir; // is there a redir ? 1 : yes, 0 : no
@@ -204,9 +204,9 @@ void	process_expansions(t_token **tokens);
 int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
 void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
 char *get_expansion(t_minishell *data, char *key_expansion);
-
-// LIBFT FUNCTIONS
-void				*ft_lstdelone(void *lst);
+void set_expansions(t_token *tokens, t_node *node);
+	// LIBFT FUNCTIONS
+	void *ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
 void				free_split(char **split);
 void				ft_putstr_fd(char *s, int fd);

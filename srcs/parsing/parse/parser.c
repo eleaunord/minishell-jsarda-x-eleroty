@@ -66,7 +66,12 @@ void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	tok = tokens;
 	if (!tokens || !node)
 		return;
-
+	if (node->lonely_expansion == 1)
+	{
+		node->args[0] = get_expansion(mini, tok->key_expansion);
+		node->args[1] = NULL;
+		return ;
+	}
 	i = 0;
 	while (tok)
 	{
@@ -93,8 +98,10 @@ void set_filename(t_token **tokens, t_node *node)
 	allocate_memory_for_filenames(node);
 	allocate_memory_for_limiter_hd(node);
 	process_filenames(*tokens, node);
-	node->filenames[node->file_count] = NULL;
-	node->limiter_hd[node->limiter_hd_count] = NULL;
+	if (node->filenames != NULL)
+		node->filenames[node->file_count] = NULL;
+	if (node->limiter_hd != NULL)
+		node->limiter_hd[node->limiter_hd_count] = NULL;
 	// OLD STRUCTURE WITH DIFF REDIR
 	// count_heredocs(&tok, node);
 	// // Allocation de mémoire pour limiter_hd
@@ -117,6 +124,23 @@ void set_filename(t_token **tokens, t_node *node)
 	// node->filename_out[node->file_out_count] = NULL;
 }
 
+void check_lonely_expansions(t_token *tokens, t_node *node)
+{
+	t_token *tok;
+	int i;
+
+	tok = tokens;
+	if (!tokens || !node)
+		return;
+	i = 0;
+	while (tok && i < 1)
+	{
+		if (tok->key_expansion != NULL)
+			node->lonely_expansion = 1;
+		i++;
+	}
+}
+
 void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 {
 	if (!tokens)
@@ -131,20 +155,40 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	// SET EXPANSION
 	process_expansions(&tokens);
 	// UPDATE NODE
-
 	update_tokens(&tokens, node);
-
-	// GET EXPANSION from tokens
-	set_expansions(tokens, node);
-	//SET ARGS
+	// CHECK LONELY
+	check_lonely_expansions(tokens, node);
+	// printf("is lonely : %d\n", node->lonely_expansion);
 	// t_token *tok;
 	// tok = tokens;
 	// while (tok)
 	// {
 	// 	printf("token : %s\n", (char *)tok->value);
+	// 	printf("expansion : %s\n", (char *)tok->key_expansion);
 	// 	tok = tok->next;
 	// }
+	
+	// GET EXPANSION from tokens
+	set_expansions(tokens, node);
+	//SET ARGS
+
 	fill_args(tokens, node, mini);
+	// t_node *head = node;
+	// while (head)
+	// {
+	// 	printf("Node : %s\n", (char *)head->content);
+	// 	printf("is lonely : %d\n", node->lonely_expansion);
+	// 	printf("Cmd : %s\n", head->cmd);
+	// 	printf("File name out: %s\n", head->filename_out);
+	// 	printf("Node expansion: %s\n", head->key_expansion);
+	// 	printf("Arg cunt : %d\n", head->arg_count);
+	// 	int x = 0;
+	// 	while (x < head->arg_count)
+	// 	{
+	// 		printf("Arg[x] : %s\n", head->args[x++]);
+	// 	}
+	// 	head = head->next;
+	// }
 }
 
 // DEBUG
