@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:01:41 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 10:26:11 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 10:54:03 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	ft_cd(t_minishell *data, t_node *node, char **args)
 {
-	(void)node;
 	int	cd_ret;
 
+	(void)node;
 	if (!args[1])
 		cd_ret = chdir(get_path_value(data, "HOME"));
 	else

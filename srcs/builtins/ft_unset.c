@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:22:18 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 14:16:34 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 11:08:33 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	ft_unset(t_minishell *data, t_node *node, char **args)
 				free(current->value);
 				free(current->key);
 				prev = current;
-
 				break ;
 			}
 			prev = current;

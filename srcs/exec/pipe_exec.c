@@ -6,11 +6,39 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/19 16:30:46 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 13:52:44 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	handle_heredoc(t_node *cmd)
+{
+	int	i;
+
+	i = 0;
+	if (cmd->here_doc)
+	{
+		while (cmd->limiter_hd[i])
+		{
+			get_tmp_file(cmd);
+			heredoc(cmd->limiter_hd[i], cmd->heredoc_filename);
+			i++;
+			if (cmd->limiter_hd[i])
+				unlink(cmd->heredoc_filename);
+		}
+	}
+}
+
+void	handle_builtin(t_node *list, t_minishell *data)
+{
+	if (is_built_in(list) != -1)
+	{
+		if (check_if_redir(list) == 0 || list->here_doc == 1)
+			handle_redir(list);
+		exec_built_in(data, list);
+	}
+}
 
 void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 {
@@ -25,6 +53,7 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
+	handle_heredoc(cmd);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -40,6 +69,8 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 		}
 		if (cmd->next)
 			dup2(cmd->pipes[1], STDOUT_FILENO);
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
 		close(cmd->pipes[0]);
 		close(cmd->pipes[1]);
 		if (cmd->cmd && is_built_in(cmd) == -1)
@@ -54,6 +85,8 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 				exit(EXIT_FAILURE);
 			}
 		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
 		free_minishell(data, cmd);
 		exit(EXIT_SUCCESS);
 	}
@@ -61,6 +94,7 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 	if (prev)
 		close(prev->pipes[0]);
 }
+
 void	exec_first(t_node *cmd, t_minishell *data)
 {
 	int		pid;
@@ -74,6 +108,7 @@ void	exec_first(t_node *cmd, t_minishell *data)
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
+	handle_heredoc(cmd);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -83,6 +118,8 @@ void	exec_first(t_node *cmd, t_minishell *data)
 	if (pid == 0)
 	{
 		dup2(cmd->pipes[1], STDOUT_FILENO);
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
 		close(cmd->pipes[0]);
 		close(cmd->pipes[1]);
 		if (cmd->cmd && is_built_in(cmd) == -1)
@@ -97,6 +134,8 @@ void	exec_first(t_node *cmd, t_minishell *data)
 				exit(EXIT_FAILURE);
 			}
 		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
 		free_minishell(data, cmd);
 		exit(EXIT_SUCCESS);
 	}
@@ -111,6 +150,7 @@ void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 
 	env = NULL;
 	path = NULL;
+	handle_heredoc(cmd);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -124,6 +164,8 @@ void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 			dup2(prev->pipes[0], STDIN_FILENO);
 			close(prev->pipes[0]);
 		}
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
 		if (cmd->cmd && is_built_in(cmd) == -1)
 		{
 			env = create_char_env(data->env);
@@ -136,6 +178,8 @@ void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 				exit(EXIT_FAILURE);
 			}
 		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
 		free_minishell(data, cmd);
 		exit(EXIT_SUCCESS);
 	}
@@ -147,22 +191,9 @@ void	exec_pipe(t_node *nodes, t_minishell *data)
 {
 	t_node	*current;
 	t_node	*prev;
-	int		i;
 
-	i = 0;
 	prev = NULL;
 	current = nodes;
-	if (nodes->here_doc)
-	{
-		while (nodes->limiter_hd[i])
-		{
-			get_tmp_file(nodes);
-			heredoc(nodes->limiter_hd[i], nodes->heredoc_filename);
-			i++;
-			if (nodes->limiter_hd[i])
-				unlink(nodes->heredoc_filename);
-		}
-	}
 	if (current)
 	{
 		exec_first(current, data);

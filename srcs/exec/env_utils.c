@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/19 14:49:32 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 10:53:26 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,18 @@
 
 int	get_key(t_env *env, char *key)
 {
-	int	index;
-	t_env *start;
+	int		index;
+	t_env	*start;
 
 	index = 0;
 	start = env;
-
 	while (env)
 	{
 		if (env->key && ft_strcmp(env->key, key) == 0)
 			return (index);
 		env = env->next;
 		if (env == start)
-			break;
+			break ;
 		index++;
 	}
 	return (-1);
@@ -38,7 +37,6 @@ char	*get_path_value(t_minishell *data, char *key)
 
 	env = data->env;
 	index = get_key(env, key);
-
 	if (index == -1)
 		return (NULL);
 	for (int i = 0; i < index; i++)

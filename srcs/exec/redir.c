@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/19 15:07:33 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 11:33:04 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ void	get_tmp_file(t_node *node)
 		i++;
 	}
 	filename[i] = '\0';
-
 	ft_strcpy(node->heredoc_filename, filename);
 	close(random_fd);
 	node->heredoc_filename[sizeof(node->heredoc_filename)] = '\0';
