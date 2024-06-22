@@ -4,12 +4,16 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 {
 	t_node *current;
 	t_token *tokens;
-	char *input;
 	int node_index;
+	char *line_copy;
 
 	if (open_quote_check(line))
 		return (free(line), 0);
-	input = ft_split_pipes_spaces(line, nodes);
+	line_copy = strdup(line);
+	if (!line_copy)
+		return (0);
+	ft_split_pipes_spaces(line_copy, nodes);
+	free(line_copy);
 	current = *nodes;
 	mini->nb_cmd = 0;
 	node_index = 0;
@@ -23,7 +27,6 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 		node_index++;
 		current = current->next;
 	}
-	line = input;
 	return (1);
 }
 
@@ -49,13 +52,18 @@ void print_cmd(t_node *start){
 		start = start->next;
 	}
 }
+void disable_tab_completion(void)
+{
+	rl_replace_line("", 0); // Replace the current input line with an empty string
+	rl_redisplay();			// Redisplay the modified input line
+}
 
 int main(int argc, char *argv[], char *env[])
 {
-	char		*input_line;
-	t_node		*node_list;
-	t_minishell	data;
-	t_node		*head_nodes;
+	char *input_line;
+	t_node *node_list;
+	t_minishell data;
+	t_node *head_nodes;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -66,16 +74,25 @@ int main(int argc, char *argv[], char *env[])
 		return (1);
 	if (!init_env_dup(&data, env))
 		return (1);
+	
 	while (1)
 	{
 		input_line = readline("prompt > ");
 		if (!input_line)
 		{
-			rl_clear_history();
+			rl_clear_history(); // ?
 			break;
 		}
+		
 		if (check_line(&input_line))
 		{
+			free(input_line);
+			continue;
+		}
+		// Ne marche pas
+		if (is_only_tabs(input_line))
+		{
+			disable_tab_completion();
 			free(input_line);
 			continue;
 		}
@@ -88,6 +105,20 @@ int main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		head_nodes = node_list;
 		t_node *head = node_list;
+
+		exec(head, &data);
+		if (data.exit)
+		{
+			break;
+		}
+		head_nodes = NULL;
+		free(input_line);
+	}
+	//free(input_line);
+	free_minishell(&data, head_nodes);
+	return (0);
+}
+
 		// DEBUG
 		// while (head != NULL)
 		// {
@@ -101,18 +132,6 @@ int main(int argc, char *argv[], char *env[])
 		// 	head = head->next;
 		// 	head = head->next;
 		// }
-		exec(head, &data);
-		if (data.exit)
-		{
-			break;
-		}
-		head_nodes = NULL;
-	}
-	free(input_line);
-	free_minishell(&data, head_nodes);
-	return (0);
-}
-
 // DEBUG
 
 // PRINT ENV

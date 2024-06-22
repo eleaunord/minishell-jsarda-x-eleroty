@@ -2,4 +2,4 @@
 - expr $? + $?
 - CTRL C
 - CTRL \ (? j ai pas reussi a test ca)
--  echo "cat Makefile | cat > test1" => doit renvoyer juste ce qu il y a entre guillemets
+

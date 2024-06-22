@@ -82,9 +82,9 @@ void split_line(char *line, t_node **tokens_list)
 	process_segment(start, tokens_list);
 }
 
-char *ft_split_pipes_spaces(char *line, t_node **tokens_list)
+void ft_split_pipes_spaces(char *line, t_node **tokens_list)
 {
 	*tokens_list = NULL;
 	split_line(line, tokens_list);
-	return line;
+	return ;
 }

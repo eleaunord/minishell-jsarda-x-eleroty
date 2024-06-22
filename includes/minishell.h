@@ -143,7 +143,6 @@ t_token				*tokenize_input(char *line);
 int					is_space(char *line);
 char				*create_token(char *str, int start, int end);
 char				*create_token(char *str, int start, int end);
-char				*ft_split_pipes_spaces(char *line, t_node **tokens_list);
 char				*remove_quotes(const char *line);
 int					ft_strcmp(char *s1, char *s2);
 int					tokenizer(char *line, t_node **nodes, t_minishell *mini);
@@ -214,6 +213,8 @@ int list_new_elem_str(t_env **new, char *elem);
 t_env *allocate_new_env(void);
 void free_t_env(t_env *env);
 int parse_key_value(t_env **new, char *elem);
+void ft_split_pipes_spaces(char *line, t_node **tokens_list);
+int is_only_tabs(char *str);
 	// LIBFT FUNCTIONS
 	void *ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
