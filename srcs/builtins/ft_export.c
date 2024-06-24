@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/24 13:54:39 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/24 14:39:22 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,13 @@ void	create_var(t_env *env, const char *key, const char *value)
 		free(new_var);
 		return ;
 	}
+	char *tmp = NULL;
+	tmp = ft_strjoin(key, "=");
+	if (value)
+		new_var->str = ft_strjoin(tmp, value);
+	else
+		new_var->str = ft_strdup(tmp);
+	free(tmp);
 	if (value)
 	{
 		new_var->value = ft_strdup(value);
@@ -52,6 +59,7 @@ void	create_var(t_env *env, const char *key, const char *value)
 			return ;
 		}
 	}
+
 	else
 		new_var->value = NULL;
 	if (env == NULL)
@@ -152,7 +160,10 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 			if (current == data->env)
 			{
 				if (ft_strchr(args[i], '='))
+				{
 					create_var(current, var[0], var[1]);
+					//update_str();
+				}
 				break ;
 			}
 		}
