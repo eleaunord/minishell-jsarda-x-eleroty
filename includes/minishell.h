@@ -15,6 +15,7 @@
 # include <unistd.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <errno.h>
 
 # define NUM_OF_BUILT_INS 7
 
@@ -115,7 +116,8 @@ typedef struct s_minishell
 	int				exit;
 	int				exit_status;
 }					t_minishell;
-
+// utils
+char	*get_key_value(t_env *env, char *key);
 // EXEC FUNCTIONS
 void				perror_handler(char *type);
 void				exec(t_node *list, t_minishell *data);

@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/24 14:28:20 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/24 16:48:39 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void	exec_child_process(t_minishell *data, t_node *list)
 		}
 	}
 	env = create_char_env(data->env);
-		fprintf(stderr, "motherfocker = %s\n", list->cmd);
 	if (!env)
 	{
 		free_minishell(data, list);
