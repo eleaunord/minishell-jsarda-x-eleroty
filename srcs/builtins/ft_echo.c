@@ -47,11 +47,12 @@ void	ft_echo(t_minishell *data, t_node *node, char **args)
 		n_option = 1;
 		i++;
 	}
-	while (args[i++])
+	while (args[i])
 	{
 		ft_putstr_fd(args[i], 1);
 		if (args[i + 1])
 			write(1, " ", 1);
+		i++;
 	}
 	if (!n_option)
 		write(1, "\n", 1);

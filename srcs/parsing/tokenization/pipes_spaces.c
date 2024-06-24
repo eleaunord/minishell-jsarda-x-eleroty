@@ -1,8 +1,8 @@
 #include "../../../includes/minishell.h"
 
-t_node	*create_node(char *token)
+t_node *create_node(char *token)
 {
-	t_node	*new_node;
+	t_node *new_node;
 
 	new_node = (t_node *)calloc(1, sizeof(t_node));
 	// Use calloc instead of malloc
@@ -20,15 +20,15 @@ t_node	*create_node(char *token)
 	return (new_node);
 }
 
-void	append_node(t_node **tokens_list, char *token)
+void append_node(t_node **tokens_list, char *token)
 {
-	t_node	*new_node;
-	t_node	*current;
+	t_node *new_node;
+	t_node *current;
 
 	new_node = create_node(token);
 	if (!new_node)
 	{
-		return ; // If new_node creation failed, return immediately
+		return; // If new_node creation failed, return immediately
 	}
 	if (*tokens_list == NULL)
 	{
@@ -45,29 +45,46 @@ void	append_node(t_node **tokens_list, char *token)
 	}
 }
 
-// Main function to trim spaces and store tokens in the linked list,
-// preserving spaces inside quotes
-char	*ft_split_pipes_spaces(char *line, t_node **tokens_list)
+void process_segment(char *start, t_node **tokens_list)
 {
-	char	*start;
-	char	*pipe_pos;
-	char	*segment;
+	char *segment;
 
-	*tokens_list = NULL; // Initialize the linked list
-	start = line;
-	while ((pipe_pos = strchr(start, '|')) != NULL)
-	{
-		// Extract the segment before the pipe symbol
-		*pipe_pos = '\0';
-		segment = trim_whitespace(start);
-		segment = collapse_spaces(segment);
-		append_node(tokens_list, segment);
-		// Move to the next segment after the pipe symbol
-		start = pipe_pos + 1;
-	}
-	// Process the last segment
 	segment = trim_whitespace(start);
 	segment = collapse_spaces(segment);
 	append_node(tokens_list, segment);
-	return (line);
+}
+
+void split_line(char *line, t_node **tokens_list)
+{
+	char *start;
+	char *current;
+	bool in_single_quote;
+	bool in_double_quote;
+
+	start = line;
+	current = line;
+	in_single_quote = false;
+	in_double_quote = false;
+	while (*current != '\0')
+	{
+		if (*current == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (*current == '"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else if (*current == '|' && !in_single_quote && !in_double_quote)
+		{
+			*current = '\0';
+			process_segment(start, tokens_list);
+			start = current + 1;
+		}
+		current++;
+	}
+	process_segment(start, tokens_list);
+}
+
+void ft_split_pipes_spaces(char *line, t_node **tokens_list)
+{
+	*tokens_list = NULL;
+	split_line(line, tokens_list);
+	return ;
 }

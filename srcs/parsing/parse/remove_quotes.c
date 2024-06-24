@@ -1,7 +1,7 @@
 #include "../../../includes/minishell.h"
 
-static void	init_variables(int *i, int *j, char *quote, int *len, char **result,
-		char *word)
+static void init_variables(int *i, int *j, char *quote, int *len, char **result,
+						   char *word)
 {
 	*i = -1;
 	*j = 0;
@@ -9,10 +9,10 @@ static void	init_variables(int *i, int *j, char *quote, int *len, char **result,
 	*len = strlen(word);
 	*result = (char *)malloc(*len + 1);
 	if (!(*result))
-		return ;
+		return;
 }
-static int	process_single_quotes(const char *word, int *i, int len,
-		char *result, int j)
+static int process_single_quotes(const char *word, int *i, int len,
+								 char *result, int j)
 {
 	while (word[++(*i)] != '\'' && *i < len)
 	{
@@ -21,13 +21,13 @@ static int	process_single_quotes(const char *word, int *i, int len,
 	return (j);
 }
 
-char	*remove_quotes_from_word(char *word)
+char *remove_quotes_from_word(char *word)
 {
-	int		len;
-	char	*result;
-	int		i;
-	int		j;
-	char	quote;
+	int len;
+	char *result;
+	int i;
+	int j;
+	char quote;
 
 	if (!word)
 		return (NULL);
@@ -40,8 +40,7 @@ char	*remove_quotes_from_word(char *word)
 			quote = '"';
 		else if (word[i] == '"' && quote == '"')
 			quote = 0;
-		else if (quote == '"' && (word[i] == '\\' || word[i] == '$'
-				|| word[i] == '`'))
+		else if (quote == '"' && (word[i] == '\\' || word[i] == '$' || word[i] == '`'))
 			result[j++] = word[i];
 		else
 			result[j++] = word[i];

@@ -1,5 +1,17 @@
 #include "../../../includes/minishell.h"
 
+int is_only_tabs(char *str)
+{
+	while (*str)
+	{
+		if (*str != '\t')
+		{
+			return 0;
+		}
+		str++;
+	}
+	return 1;
+}
 int	is_space(char *line)
 {
 	int	a;
@@ -12,11 +24,11 @@ int	is_space(char *line)
 	return (0);
 }
 
-int	check_line(char **line)
+int check_line(char **line)
 {
-	if (*line[0] == '\0' || is_space(*line) || ft_strncmp(*line, "\n", 0))
-		return (1);
-	return (0);
+	if ((*line)[0] == '\0' || is_space(*line) || ft_strncmp(*line, "\n", 0))
+		return 1;
+	return 0;
 }
 bool	is_quote(char c)
 {

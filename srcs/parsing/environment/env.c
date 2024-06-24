@@ -19,7 +19,7 @@ void	print_env(t_env *list)
 	}
 }
 
-static void	add_first(t_env **list, t_env *new)
+void	add_first(t_env **list, t_env *new)
 {
 	(*list) = new;
 	(*list)->prev = *list;
@@ -43,7 +43,34 @@ int	append(t_env **list, char *elem)
 	}
 	return (1);
 }
+int init_env_dup(t_minishell *data, char **env)
+{
+	t_env *list;
+	int i;
+	char *tmp;
 
+	i = 0;
+	list = NULL;
+	while (env[i])
+	{
+		tmp = strdup(env[i]);
+		if (!tmp)
+		{
+			free_env_list(list);
+			return (0);
+		}
+		if (!append(&list, tmp))
+		{
+			free(tmp);
+			free_env_list(list);
+			return (0);
+		}
+		free(tmp);
+		i++;
+	}
+	data->env_dup = list;
+	return (1);
+}
 int	init_env(t_minishell *data, char **env)
 {
 	t_env	*list;

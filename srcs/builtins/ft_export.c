@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/20 15:11:41 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/24 09:06:41 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 	i = 1;
 	if (!args[1])
 	{
-		ft_print_export(data->env_duplicate);
+		ft_print_export(data->env_dup);
 		return ;
 	}
 	while (args[i])
@@ -122,7 +122,7 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 			continue ;
 		}
 		current = data->env;
-		current_duplicate = data->env_duplicate;
+		current_duplicate = data->env_dup;
 		while (current)
 		{
 			if (ft_strcmp(current->key, var[0]) == 0)

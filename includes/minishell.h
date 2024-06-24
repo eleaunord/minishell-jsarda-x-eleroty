@@ -13,6 +13,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <stdarg.h>
+#include <stddef.h>
 
 # define NUM_OF_BUILT_INS 7
 
@@ -71,10 +73,10 @@ typedef struct s_node
 	int				arg_count;
 	char **key_expansion; // in args
 	int				expansion_count;
-
-	// Redirections, filenames not in args
-	// NEW STRUCTURE FOR FILENAMES :
-	int				file_count;
+	int lonely_expansion;
+		// Redirections, filenames not in args
+		// NEW STRUCTURE FOR FILENAMES :
+		int file_count;
 	char			**filenames;
 	char			heredoc_filename[36];
 	int redir; // is there a redir ? 1 : yes, 0 : no
@@ -93,6 +95,7 @@ typedef struct s_node
 	int				limiter_hd_count;
 	char			*last_heredoc;
 	int				pipes[2];
+	int error_num;
 	int				node_index;
 	int				file_index;
 	// OTHER (?)
@@ -100,11 +103,12 @@ typedef struct s_node
 	int				fd_out;
 }					t_node;
 
+
 // // Struct qui centralise tout
 typedef struct s_minishell
 {
 	t_env			*env;
-	t_env			*env_duplicate;
+	t_env *env_dup;
 	t_node			*nodes;
 	int				nb_cmd;
 	// EXITS
@@ -139,7 +143,6 @@ t_token				*tokenize_input(char *line);
 int					is_space(char *line);
 char				*create_token(char *str, int start, int end);
 char				*create_token(char *str, int start, int end);
-char				*ft_split_pipes_spaces(char *line, t_node **tokens_list);
 char				*remove_quotes(const char *line);
 int					ft_strcmp(char *s1, char *s2);
 int					tokenizer(char *line, t_node **nodes, t_minishell *mini);
@@ -191,20 +194,29 @@ void				allocate_memory_for_limiter_hd(t_node *node);
 void				process_heredoc_tokens(t_token *tokens, t_node *node);
 void				process_filename_out(t_token *tokens, t_node *node);
 void				process_filename_in(t_token *tokens, t_node *node);
-void				count_redirections(t_token **tokens, t_node *node);
-void				process_filenames(t_token *tokens, t_node *node);
-void				allocate_memory_for_filenames(t_node *node);
-void				set_expansions(t_token *tokens, t_node *node);
-void				fill_expansions(t_token *tokens, t_node *node);
-int					count_expansions(t_token *tokens);
-void				process_expansions(t_token **tokens);
-int					tokenizer(char *line, t_node **nodes, t_minishell *mini);
-void				parse_tokens(t_token *tokens, t_node *node,
-						t_minishell *mini);
-char				*get_expansion(t_minishell *data, char *key_expansion);
-
-// LIBFT FUNCTIONS
-void				*ft_lstdelone(void *lst);
+void	count_redirections(t_token **tokens, t_node *node);
+void	process_filenames(t_token *tokens, t_node *node);
+void	allocate_memory_for_filenames(t_node *node);
+void	set_expansions(t_token *tokens, t_node *node);
+void	fill_expansions(t_token *tokens, t_node *node);
+int	count_expansions(t_token *tokens);
+void	process_expansions(t_token **tokens);
+int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
+void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
+char *get_expansion(t_minishell *data, char *key_expansion);
+void set_expansions(t_token *tokens, t_node *node);
+int init_env_dup(t_minishell *data, char **env);
+int append(t_env **list, char *elem);
+void add_first(t_env **list, t_env *new);
+void print_env(t_env *list);
+int list_new_elem_str(t_env **new, char *elem);
+t_env *allocate_new_env(void);
+void free_t_env(t_env *env);
+int parse_key_value(t_env **new, char *elem);
+void ft_split_pipes_spaces(char *line, t_node **tokens_list);
+int is_only_tabs(char *str);
+	// LIBFT FUNCTIONS
+	void *ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
 void				free_split(char **split);
 void				ft_putstr_fd(char *s, int fd);
@@ -231,9 +243,13 @@ char				*trim_whitespace(char *str);
 char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_strsub(const char *s, unsigned int start, size_t len);
 size_t				ft_strlcpy(char *dst, const char *src, size_t size);
+char *ft_strstr(char *str, char *to_find);
+char *ft_strncpy(char *dest, char *src, unsigned int n);
+char *ft_strcat(char *dest, char *src);
+size_t ft_itoa_str(int value, char *str);
 
-// USEFUL FUNCTIONS FOR DEBUG
-void				print_node(t_node *head);
+	// USEFUL FUNCTIONS FOR DEBUG
+	void print_node(t_node *head);
 int					is_alpha_underscore(int c);
 
 #endif

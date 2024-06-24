@@ -18,7 +18,7 @@ void	init_fd(t_node *node)
 	node->fd_out = STDOUT_FILENO;
 }
 
-void	exec(t_node *list, t_minishell *data)
+void exec(t_node *list, t_minishell *data)
 {
 	int	i;
 

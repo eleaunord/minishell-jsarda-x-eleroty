@@ -56,27 +56,24 @@ void	process_filenames(t_token *tokens, t_node *node)
 	i = 0;
 	j = 0;
 	current = tokens;
-	while (current)
-	{
-		if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN
-			&& current->next && current->next->type == TOKEN_WORD)
-		{
-			if (i < node->file_count)
-			{
-				if (current->type == HEREDOC_TOKEN
-					&& j < node->limiter_hd_count)
-				{
-					node->limiter_hd[j++] = current->next->value;
-					node->here_doc = 1;
+    while (current)
+    {
+        if (current->type >= APPEND_TOKEN && current->type <= REDIR_IN_TOKEN && current->next
+            && current->next->type == TOKEN_WORD)
+        {
+            if (i < node->file_count)
+            {
+                if (current->type == HEREDOC_TOKEN && j < node->limiter_hd_count)
+                {
+                    node->limiter_hd[j++] = current->next->value;
+					node->last_heredoc = current->next->value;
 				}
-				else
-				{
-					node->filenames[i++] = current->next->value;
-				}
-			}
-			node->redir = 1;
-			current->next->processed = 1;
-		}
-		current = current->next;
-	}
+                else
+                    node->filenames[i++] = current->next->value;
+            }
+            node->redir = 1;
+            current->next->processed = 1;
+        }
+        current = current->next;
+    }
 }
