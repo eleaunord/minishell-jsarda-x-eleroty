@@ -104,6 +104,7 @@ typedef struct s_node
 typedef struct s_minishell
 {
 	t_env			*env;
+	t_env			*env_duplicate;
 	t_node			*nodes;
 	int				nb_cmd;
 	// EXITS
