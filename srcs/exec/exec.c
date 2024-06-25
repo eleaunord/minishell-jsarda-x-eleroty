@@ -6,7 +6,7 @@
 /*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/17 09:03:53 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/17 14:08:16 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@ void	exec(t_node *list, t_minishell *data)
 
 	init_fd(list);
 	i = 0;
-	if (list->here_doc)
+	printf("heredoc filename is%s\n", list->filenames[i]);
+	if (list->tokens_in_node->type == HEREDOC_TOKEN)
 	{
-		while (list->limiter_hd[i])
+		while (list->filenames[i])
 		{
-			heredoc(list->limiter_hd[i], list->filename_in[i]);
+			heredoc(list->filenames[i]);
 			i++;
 		}
 	}
-	if (list->next != NULL)
-		exec_pipe(list);
-	else
+	// if (list->next != NULL)
+	// 	exec_pipe(list);
+	// else
 		exec_simple_cmd(data, list);
 }

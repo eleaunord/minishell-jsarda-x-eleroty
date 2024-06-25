@@ -6,17 +6,17 @@
 /*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/17 08:51:27 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/17 14:06:33 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	redir_in(char *file_name_in)
+void	redir_in(char *filename)
 {
 	int	fd;
 
-	fd = open(file_name_in, O_RDONLY);
+	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening input file");
@@ -30,11 +30,11 @@ void	redir_in(char *file_name_in)
 	close(fd);
 }
 
-void	redir_out(char *file_name_out)
+void	redir_out(char *filename)
 {
 	int	fd;
 
-	fd = open(file_name_out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -49,11 +49,11 @@ void	redir_out(char *file_name_out)
 	close(fd);
 }
 
-void	appen_redir_out(char *file_name_out)
+void	appen_redir_out(char *filename)
 {
 	int	fd;
 
-	fd = open(file_name_out, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		perror("Error opening output file");
@@ -97,22 +97,23 @@ char	*get_tmp_file(void)
 	return (ft_strdup(template));
 }
 
-void	heredoc(char *eof, char *file_name_in)
+void	heredoc(char *eof)
 {
 	char	*buf;
+	char *filename;
 	int		fd;
-	printf("%s\n", file_name_in);
+
 	if (!eof)
 	{
 		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
 			2);
 		return ;
 	}
-	file_name_in = "testheredoc";
-	fd = open(file_name_in, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	filename = get_tmp_file();
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror("Error opening output file");
+		perror("Error opening output file in heredoc");
 		exit(EXIT_FAILURE);
 	}
 	while (1)
@@ -137,19 +138,19 @@ void	handle_redir(t_node *redir)
 	int	i;
 
 	i = 0;
-	while (redir->filename_in[i] || redir->filename_out[i])
+	while (redir->filenames[i])
 	{
 		if (redir->tokens_in_node->type == HEREDOC_TOKEN)
 		{
-			redir_in(redir->filename_in[i]);
-			unlink(redir->filename_in[i]);
+			redir_in(redir->filenames[i]);
+			unlink(redir->filenames[i]);
 		}
 		else if (redir->tokens_in_node->type == REDIR_IN_TOKEN)
-			redir_in(redir->filename_in[i]);
+			redir_in(redir->filenames[i]);
 		else if (redir->tokens_in_node->type == REDIR_OUT_TOKEN)
-			redir_out(redir->filename_out[i]);
+			redir_out(redir->filenames[i]);
 		else if (redir->tokens_in_node->type == APPEND_TOKEN)
-			appen_redir_out(redir->filename_out[i]);
+			appen_redir_out(redir->filenames[i]);
 		i++;
 	}
 }
