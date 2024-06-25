@@ -3,93 +3,211 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/17 12:09:45 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/20 13:52:44 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	exec_mid(t_node *cmd, t_minishell *data)
+void	handle_heredoc(t_node *cmd)
 {
-	t_node *mid_cmd;
-	int pid;
-	char *env;
-	char path;
-	
-	path = NULL;
-	env = NULL;
-	mid_cmd = cmd;
-	pipe(mid_cmd->pipes);
-	pid = fork();
-	if (pid == 0)
+	int	i;
+
+	i = 0;
+	if (cmd->here_doc)
 	{
-		manage_mid_fd();
-		if (mid_cmd->cmd && is_built_in(cmd) == -1)
+		while (cmd->limiter_hd[i])
 		{
-			env = create_char_env(data->env);
-			path = get_cmd_path(mid_cmd->cmd, data);
-			dup2(mid_cmd->pipes[0], mid_cmd->pipes[1]);
-			if (execve(path, mid_cmd->args, env) == -1)
-			{
-				perror("execve");
-				fprintf(stderr, "minishell: %s: command not found\n",
-					mid_cmd->tokens_in_node->cmd);
-			}
+			get_tmp_file(cmd);
+			heredoc(cmd->limiter_hd[i], cmd->heredoc_filename);
+			i++;
+			if (cmd->limiter_hd[i])
+				unlink(cmd->heredoc_filename);
 		}
-		// exit child 
 	}
-	close(mid_cmd->pipes[1]);
-	// close tmp fd
-	// close fd in and out
 }
-void	exec_first(t_node *cmd)
+
+void	handle_builtin(t_node *list, t_minishell *data)
 {
-	
+	if (is_built_in(list) != -1)
+	{
+		if (check_if_redir(list) == 0 || list->here_doc == 1)
+			handle_redir(list);
+		exec_built_in(data, list);
+	}
 }
-void exec_last(t_node *cmd, t_minishell *data)
+
+void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 {
-	t_node *last_cmd;
-	char *path;
-	int pid;
-	char *env;
+	int		pid;
+	char	**env;
+	char	*path;
 
 	path = NULL;
-	last_cmd = cmd;
 	env = NULL;
+	if (pipe(cmd->pipes) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	handle_heredoc(cmd);
 	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
 	if (pid == 0)
 	{
-		if (last_cmd->fd_in == 0)
-			last_cmd->fd_in = last_cmd->pipes[0];
-		if (last_cmd->cmd && is_built_in(cmd) == -1)
+		if (prev)
+		{
+			dup2(prev->pipes[0], STDIN_FILENO);
+			close(prev->pipes[0]);
+		}
+		if (cmd->next)
+			dup2(cmd->pipes[1], STDOUT_FILENO);
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
+		close(cmd->pipes[0]);
+		close(cmd->pipes[1]);
+		if (cmd->cmd && is_built_in(cmd) == -1)
 		{
 			env = create_char_env(data->env);
-			path = get_cmd_path(last_cmd->cmd, data);
-			dup2(last_cmd->pipes[0], last_cmd->pipes[1]);
-			if (execve(path, last_cmd->args, env) == -1)
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
 			{
 				perror("execve");
 				fprintf(stderr, "minishell: %s: command not found\n",
-					last_cmd->tokens_in_node->cmd);
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
 			}
 		}
-		// exit child
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
 	}
-	close(last_cmd->pipes[0]);
-	// close fdin and out
+	close(cmd->pipes[1]);
+	if (prev)
+		close(prev->pipes[0]);
 }
+
+void	exec_first(t_node *cmd, t_minishell *data)
+{
+	int		pid;
+	char	**env;
+	char	*path;
+
+	env = NULL;
+	path = NULL;
+	if (pipe(cmd->pipes) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	handle_heredoc(cmd);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
+		dup2(cmd->pipes[1], STDOUT_FILENO);
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
+		close(cmd->pipes[0]);
+		close(cmd->pipes[1]);
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
+	}
+	close(cmd->pipes[1]);
+}
+
+void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
+{
+	int		pid;
+	char	**env;
+	char	*path;
+
+	env = NULL;
+	path = NULL;
+	handle_heredoc(cmd);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
+		if (prev)
+		{
+			dup2(prev->pipes[0], STDIN_FILENO);
+			close(prev->pipes[0]);
+		}
+		if (check_if_redir(cmd) == 0)
+			handle_redir(cmd);
+		if (cmd->cmd && is_built_in(cmd) == -1)
+		{
+			env = create_char_env(data->env);
+			path = get_cmd_path(cmd->cmd, data);
+			if (execve(path, cmd->args, env) == -1)
+			{
+				perror("execve");
+				fprintf(stderr, "minishell: %s: command not found\n",
+					cmd->tokens_in_node->cmd);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if (is_built_in(cmd) != -1)
+			handle_builtin(cmd, data);
+		free_minishell(data, cmd);
+		exit(EXIT_SUCCESS);
+	}
+	if (prev)
+		close(prev->pipes[0]);
+}
+
 void	exec_pipe(t_node *nodes, t_minishell *data)
 {
-	t_node *current;
+	t_node	*current;
+	t_node	*prev;
 
+	prev = NULL;
 	current = nodes;
 	if (current)
-		exec_first(current);
-	while (current->next)
-		exec_mid(current, data);
-	if (current->next == NULL)
-		exec_last(current, data);
+	{
+		exec_first(current, data);
+		prev = current;
+		current = current->next;
+	}
+	while (current && current->next)
+	{
+		exec_mid(current, data, prev);
+		prev = current;
+		current = current->next;
+	}
+	if (current)
+		exec_last(current, data, prev);
+	while (wait(NULL) > 0)
+		;
 }

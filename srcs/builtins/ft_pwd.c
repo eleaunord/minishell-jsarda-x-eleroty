@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 10:35:20 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/10 10:15:23 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/20 10:57:28 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_pwd(t_minishell *data, t_node *node, char **args)
 {
-	char cwd[PATH_MAX];
+	char	cwd[PATH_MAX];
 
 	(void)args;
 	(void)data;

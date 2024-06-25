@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   count.c                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 10:38:30 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/19 13:57:39 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/24 18:09:37 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/24 18:12:32 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-size_t	count_args(char **args)
+char	*get_key_value(t_env *env, char *key)
 {
-	size_t	len;
+	t_env	*start;
+	t_env	*current;
 
-	len = 0;
-	while (args[len])
-		len++;
-	return (len);
+	current = env;
+	start = env;
+	while (current)
+	{
+		if (!ft_strcmp(current->key, key))
+			return (current->value);
+		current = current->next;
+		if (current == start)
+			return (NULL);
+	}
+	return (NULL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 15:27:07 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 14:32:21 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/06/19 14:52:05 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,18 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 		return (NULL);
 	path_value = get_path_value(data, "PATH");
 	if (!path_value)
+	{
+		if (access(cmd, X_OK) == 0)
+			return (cmd);
 		return (NULL);
+	}
 	paths = ft_split(path_value, ':');
 	if (!paths)
+	{
+		if (access(cmd, X_OK) == 0)
+			return (cmd);
 		return (NULL);
+	}
 	i = 0;
 	while (paths[i])
 	{
@@ -44,5 +52,7 @@ char	*get_cmd_path(char *cmd, t_minishell *data)
 		free(path);
 		i++;
 	}
+	if (access(cmd, X_OK) == 0)
+		return (free_split(paths), cmd);
 	return (free_split(paths), NULL);
 }

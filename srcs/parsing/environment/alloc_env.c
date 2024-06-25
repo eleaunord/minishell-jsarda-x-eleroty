@@ -9,7 +9,7 @@ void	free_t_env(t_env *env)
 	free(env->value);
 	free(env);
 }
-static t_env	*allocate_new_env(void)
+t_env	*allocate_new_env(void)
 {
 	t_env	*new_env;
 

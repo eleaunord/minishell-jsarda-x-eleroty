@@ -3,36 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/11 13:14:14 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/24 17:06:21 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	modify_value(t_env *current, const char *value)
+void	modify_value(t_env *env, const char *value)
 {
-	free(current->value);
-	current->value = ft_strdup(value);
-	if (!current->value)
+	free(env->value);
+	env->value = ft_strdup(value);
+	if (!env->value)
 	{
 		perror("strdup");
 		return ;
 	}
-	free(current->str);
-	current->str = malloc(ft_strlen(current->key) + ft_strlen(current->value)
-			+ 2);
-	if (!current->str)
-	{
-		perror("malloc");
-		return ;
-	}
-	sprintf(current->str, "%s=%s", current->key, current->value);
 }
 
-void	create_var(t_minishell *data, const char *key, const char *value)
+void	create_var(t_env *env, const char *key, const char *value)
 {
 	t_env	*new_var;
 	t_env	*current;
@@ -44,49 +35,105 @@ void	create_var(t_minishell *data, const char *key, const char *value)
 		return ;
 	}
 	new_var->key = ft_strdup(key);
-	new_var->value = ft_strdup(value);
-	if (!new_var->key || !new_var->value)
+	if (!new_var->key)
 	{
 		perror("strdup");
-		free(new_var->key);
-		free(new_var->value);
 		free(new_var);
 		return ;
 	}
-	new_var->str = malloc(ft_strlen(key) + ft_strlen(value) + 2);
-	if (!new_var->str)
+	char *tmp = NULL;
+	tmp = ft_strjoin(key, "=");
+	if (value)
+		new_var->str = ft_strjoin(tmp, value);
+	else
+		new_var->str = ft_strdup(tmp);
+	free(tmp);
+	if (value)
 	{
-		perror("malloc");
-		free(new_var->key);
-		free(new_var->value);
-		free(new_var);
-		return ;
+		new_var->value = ft_strdup(value);
+		if (!new_var->value)
+		{
+			perror("strdup");
+			free(new_var->key);
+			free(new_var);
+			return ;
+		}
 	}
-	if (data->env == NULL)
+	else
+		new_var->value = NULL;
+	if (env == NULL)
 		new_var->next = new_var;
 	else
 	{
-		current = data->env;
-		while (current->next != data->env)
+		current = env;
+		while (current->next != env)
 			current = current->next;
 		current->next = new_var;
-		new_var->next = data->env;
+		new_var->next = env;
 	}
-	data->env = new_var;
+	env = new_var;
+}
+
+void	sort_ascii(t_env *env)
+{
+	int		swapped;
+	t_env	*ptr1;
+	t_env	*lptr;
+	t_env	*start;
+	char	*temp_key;
+	char	*temp_value;
+
+	lptr = NULL;
+	start = env;
+	if (env == NULL)
+		return ;
+	swapped = 1;
+	while (swapped)
+	{
+		swapped = 0;
+		ptr1 = start;
+		while (ptr1->next != lptr)
+		{
+			if (strcmp(ptr1->key, ptr1->next->key) > 0)
+			{
+				temp_key = ptr1->key;
+				temp_value = ptr1->value;
+				ptr1->key = ptr1->next->key;
+				ptr1->value = ptr1->next->value;
+				ptr1->next->key = temp_key;
+				ptr1->next->value = temp_value;
+				swapped = 1;
+			}
+			ptr1 = ptr1->next;
+			if (ptr1 == start)
+				break ;
+		}
+		lptr = ptr1;
+	}
+}
+
+void	ft_print_export(t_env *env_dup)
+{
+	if (!env_dup)
+		return ; // need to add pwd , shlvl , _
+	sort_ascii(env_dup);
+	print_env(env_dup);
 }
 
 void	ft_export(t_minishell *data, t_node *node, char **args)
 {
 	int		i;
 	t_env	*current;
+	t_env	*current_duplicate;
 	char	**var;
 
+	(void)node;
 	if (!args || !data)
 		return ;
 	i = 1;
 	if (!args[1])
 	{
-		ft_env(data, node, args); // function print and ascci sorted
+		ft_print_export(data->env_dup);
 		return ;
 	}
 	while (args[i])
@@ -103,13 +150,33 @@ void	ft_export(t_minishell *data, t_node *node, char **args)
 		{
 			if (ft_strcmp(current->key, var[0]) == 0)
 			{
+				if (!var[1])
+					break ;
 				modify_value(current, var[1]);
 				break ;
 			}
 			current = current->next;
 			if (current == data->env)
 			{
-				create_var(data, var[0], var[1]);
+				if (ft_strchr(args[i], '='))
+					create_var(current, var[0], var[1]);
+				break ;
+			}
+		}
+		current_duplicate = data->env_dup;
+		while (current_duplicate)
+		{
+			if (ft_strcmp(current_duplicate->key, var[0]) == 0)
+			{
+				if (!var[1])
+					break ;
+				modify_value(current_duplicate, var[1]);
+				break ;
+			}
+			current_duplicate = current_duplicate->next;
+			if (current_duplicate == data->env_dup)
+			{
+				create_var(current_duplicate, var[0], var[1]);
 				break ;
 			}
 		}

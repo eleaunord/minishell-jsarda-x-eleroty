@@ -14,6 +14,9 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_itoa.c \
 					libft/ft_strtrim.c \
 					libft/ft_copy.c \
+					libft/ft_strcat.c \
+					libft/ft_strstr.c \
+					libft/ft_strncpy.c \
 					srcs/parsing/tokenization/word_tokens.c \
 					srcs/parsing/tokenization/special_tokens.c \
 					srcs/parsing/parse/main_loop.c \
@@ -25,10 +28,12 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/environment/key_value.c \
 					srcs/parsing/parse/free.c \
 					srcs/parsing/environment/alloc_env.c \
-					srcs/parsing/parse/expansion.c \
+					srcs/parsing/parse/get_expansion.c \
 					srcs/parsing/parse/checkers.c \
 					srcs/parsing/parse/filename.c \
+					srcs/parsing/parse/expansion.c \
 					srcs/parsing/parse/init_parsing.c \
+					srcs/parsing/parse/count_expansions.c \
 					srcs/parsing/parse/remove_quotes.c \
 					srcs/parsing/parse/update_tokens.c \
 					srcs/parsing/tokenization/collapse_spaces.c \
@@ -41,6 +46,7 @@ SRCS        :=   libft/ft_lst.c \
 					utils/perror.c \
 					utils/ft_free.c \
 					utils/count.c \
+					utils/utils.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \
@@ -48,7 +54,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_cd.c \
 					srcs/builtins/ft_exit.c \
 					srcs/builtins/ft_unset.c \
-					#srcs/exec/pipe_exec.c \
+					srcs/exec/pipe_exec.c \
 
 
 OBJS        := $(SRCS:.c=.o)
