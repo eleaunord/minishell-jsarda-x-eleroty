@@ -81,7 +81,7 @@ int	init_env(t_minishell *data, char **env)
 	list = NULL;
 	while (env[i])
 	{
-		tmp = strdup(env[i]);
+		tmp = ft_strdup(env[i]);
 		if (!tmp)
 		{
 			free_env_list(list);

@@ -41,14 +41,14 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 			return;
 		node->args[*arg_index] = expanded_value;
 	}
-	else if (ft_strstr(tok->value, "$SHLVL") != NULL)
-	{
-		//UPDATE node->shlvl_num : node->shlvl_num = function in exec catching the shell level change, set to 1 by default
-		expanded_value = expand_exit_status(tok->value, node->shlvl_num);
-		if (!expanded_value)
-			return;
-		node->args[*arg_index] = expanded_value;
-	}
+	// else if (ft_strstr(tok->value, "$SHLVL") != NULL)
+	// {
+	// 	//UPDATE node->shlvl_num : node->shlvl_num = function in exec catching the shell level change, set to 1 by default
+	// 	expanded_value = expand_exit_status(tok->value, node->shlvl_num);
+	// 	if (!expanded_value)
+	// 		return;
+	// 	node->args[*arg_index] = expanded_value;
+	// }
 	else if (tok->key_expansion != NULL)
 		node->args[*arg_index] = get_expansion(mini, tok->key_expansion);
 	else

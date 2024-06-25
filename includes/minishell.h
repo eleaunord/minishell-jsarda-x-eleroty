@@ -52,6 +52,7 @@ typedef struct s_env
 	char			*str;
 	char			*key;
 	char			*value;
+	int shlvl_num;
 	struct s_env	*next;
 	struct s_env	*prev;
 }					t_env;
@@ -100,7 +101,6 @@ typedef struct s_node
 	int				node_index;
 	int				file_index;
 
-	int shlvl_num;
 		// OTHER (?)
 		int fd_in; // <
 	int				fd_out;
@@ -220,7 +220,9 @@ void free_t_env(t_env *env);
 int parse_key_value(t_env **new, char *elem);
 void ft_split_pipes_spaces(char *line, t_node **tokens_list);
 int is_only_tabs(char *str);
-
+int is_number(const char *str);
+int ft_atoi(const char *nptr);
+void increment_shlvl(t_env **env);
 	// LIBFT FUNCTIONS
 	void *ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
