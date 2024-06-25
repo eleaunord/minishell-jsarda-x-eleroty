@@ -99,9 +99,12 @@ typedef struct s_node
 	int error_num;
 	int				node_index;
 	int				file_index;
-	// OTHER (?)
-	int fd_in; // <
+
+	int shlvl_num;
+		// OTHER (?)
+		int fd_in; // <
 	int				fd_out;
+	
 }					t_node;
 
 
@@ -217,6 +220,7 @@ void free_t_env(t_env *env);
 int parse_key_value(t_env **new, char *elem);
 void ft_split_pipes_spaces(char *line, t_node **tokens_list);
 int is_only_tabs(char *str);
+
 	// LIBFT FUNCTIONS
 	void *ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);

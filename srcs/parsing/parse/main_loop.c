@@ -105,7 +105,18 @@ int main(int argc, char *argv[], char *env[])
 		add_history(input_line);
 		head_nodes = node_list;
 		t_node *head = node_list;
-
+		//DEBUG
+		// while (head != NULL)
+		// {
+		// 	printf("CMD : %s\n", (char *)head->cmd);
+		// 	printf("input line : %s\n", input_line);
+		// 	int i = 0;
+		// 	while (head->args && i < head->arg_count)
+		// 	{
+		// 		printf("ARGS : %s\n", head->args[i++]);
+		// 	}
+		// 	head = head->next;
+		// }
 		exec(head, &data);
 		if (data.exit)
 		{
@@ -119,19 +130,7 @@ int main(int argc, char *argv[], char *env[])
 	return (0);
 }
 
-		// DEBUG
-		// while (head != NULL)
-		// {
-		// 	printf("CMD : %s\n", (char *)head->cmd);
-		// 	printf("input line : %s\n", input_line);
-		// 	i = 0;
-		// 	while (head->args && i < head->arg_count)
-		// 	{
-		// 		printf("ARGS : %s\n", head->args[i++]);
-		// 	}
-		// 	head = head->next;
-		// 	head = head->next;
-		// }
+
 // DEBUG
 
 // PRINT ENV

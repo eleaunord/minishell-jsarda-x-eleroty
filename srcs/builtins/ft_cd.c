@@ -34,16 +34,16 @@ void	update_pwd(t_minishell *data, t_node *node)
 	free(tmp);
 	if (!new_tab[1])
 	{
-		free(new_tab);
 		free(new_tab[0]);
+		free(new_tab);
 		return ;
 	}
 	new_tab[2] = ft_strdup(ft_strjoin("PWD=", getcwd(cwd, PATH_MAX)));
 	if (!new_tab[2])
-	{
-		free(new_tab);
+	{	
 		free(new_tab[0]);
 		free(new_tab[1]);
+		free(new_tab);
 		return ;
 	}
 	new_tab[3] = NULL;
