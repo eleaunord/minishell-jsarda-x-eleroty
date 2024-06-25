@@ -33,7 +33,7 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 {
 	char *expanded_value;
 	
-	if (strstr(tok->value, "$?") != NULL)
+	if (ft_strstr(tok->value, "$?") != NULL)
 	{
 		// UPDATE node->error_num : node->error_num = function in exec catching the error, 0 if no error 5default)
 		expanded_value = expand_exit_status(tok->value, node->error_num);
@@ -41,7 +41,7 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 			return;
 		node->args[*arg_index] = expanded_value;
 	}
-	else if (strstr(tok->value, "$SHLVL") != NULL)
+	else if (ft_strstr(tok->value, "$SHLVL") != NULL)
 	{
 		//UPDATE node->shlvl_num : node->shlvl_num = function in exec catching the shell level change, set to 1 by default
 		expanded_value = expand_exit_status(tok->value, node->shlvl_num);
