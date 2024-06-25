@@ -14,18 +14,6 @@ int get_the_key(t_env *env, char *key)
     return -1;
 }
 
-// Get the value of a key in the environment list
-char *get_key_value(t_minishell *data, char *key)
-{
-    int index;
-    t_env *env = data->env;
-    index = get_the_key(env, key);
-    if (index == -1)
-        return NULL;
-    for (int i = 0; i < index; i++)
-        env = env->next;
-    return env->value;
-}
 
 // Construct the result string with preserved parts before and after the key
 char *construct_result(char *key_expansion, char *start, char *end, char *path_value)
@@ -93,7 +81,7 @@ char *get_expansion(t_minishell *data, char *key_expansion)
     dollar_pos = strchr(key_expansion, '$');
     char *key = extract_the_key(start, end, dollar_pos);
 
-    path_value = get_key_value(data, key);
+    path_value = get_key_value(data->env, key);
     free(key);
 
     if (!path_value)

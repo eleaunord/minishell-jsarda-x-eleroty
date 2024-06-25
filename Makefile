@@ -46,6 +46,7 @@ SRCS        :=   libft/ft_lst.c \
 					utils/perror.c \
 					utils/ft_free.c \
 					utils/count.c \
+					utils/utils.c \
 					srcs/builtins/ft_echo.c \
 					srcs/builtins/ft_env.c \
 					srcs/builtins/ft_pwd.c \
