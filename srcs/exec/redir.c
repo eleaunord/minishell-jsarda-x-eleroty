@@ -6,7 +6,7 @@
 /*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/25 09:18:49 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/25 09:32:28 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	get_tmp_file(t_node *node)
 void	heredoc(char *eof, char *file_name)
 {
 	char	*buf;
-	char *filename;
 	int		fd;
 
 	if (!eof)

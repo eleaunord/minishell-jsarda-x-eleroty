@@ -4,10 +4,10 @@
 // Librairies
 # include <fcntl.h>
 # include <limits.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdbool.h>
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -118,8 +118,12 @@ typedef struct s_minishell
 }					t_minishell;
 // utils
 char	*get_key_value(t_env *env, char *key);
-// EXEC FUNCTIONS
+int	check_key(t_env *env, char *key);
+void	ft_error(char *message, char *err, int exit_status, t_minishell *data);
+void	sort_ascii(t_env *env);
 void				perror_handler(char *type);
+void	modify_value(t_env *env, const char *value);
+// EXEC FUNCTIONS
 void				exec(t_node *list, t_minishell *data);
 char				*get_cmd_path(char *cmd, t_minishell *data);
 char				*get_path_value(t_minishell *data, char *key);

@@ -55,6 +55,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/builtins/ft_exit.c \
 					srcs/builtins/ft_unset.c \
 					srcs/exec/pipe_exec.c \
+					srcs/builtins/builtins_utils.c \
 
 
 OBJS        := $(SRCS:.c=.o)

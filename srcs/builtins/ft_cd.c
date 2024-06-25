@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 10:01:41 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/24 18:26:52 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/25 09:34:05 by juliensarda      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,65 +20,23 @@ void	update_pwd(t_minishell *data, t_node *node)
 
 	new_tab = malloc(sizeof(char *) * 4);
 	if (!new_tab)
-		return ;
+		return(ft_error("malloc : ", strerror(errno), 1, data));
 	new_tab[0] = ft_strdup("export");
 	if (!new_tab[0])
-	{
-		free(new_tab);
-		return ;
-	}
+		return(ft_error("malloc : ", strerror(errno), 1, data), free(new_tab));
 	tmp = ft_strdup(get_key_value(data->env, "PWD"));
 	if (!tmp)
-		return ; // ft_error + free new_tab and new_tab[0]
+		return(ft_error("malloc : ", strerror(errno), 1, data), free(new_tab[0]), free(new_tab));
 	new_tab[1] = ft_strdup(ft_strjoin("OLDPWD=", tmp));
 	free(tmp);
 	if (!new_tab[1])
-	{
-		free(new_tab);
-		free(new_tab[0]);
-		return ;
-	}
+		return(ft_error("malloc : ", strerror(errno), 1, data), free(new_tab[0]), free(new_tab));
 	new_tab[2] = ft_strdup(ft_strjoin("PWD=", getcwd(cwd, PATH_MAX)));
 	if (!new_tab[2])
-	{
-		free(new_tab);
-		free(new_tab[0]);
-		free(new_tab[1]);
-		return ;
-	}
+		return(ft_error("malloc : ", strerror(errno), 1, data), free(new_tab[0]), free(new_tab[1]), free(new_tab));
 	new_tab[3] = NULL;
 	ft_export(data, node, new_tab);
-}
-
-void	ft_error(char *message, char *err, int exit_status, t_minishell *data)
-{
-	if (err)
-	{
-		ft_putstr_fd(message, 2);
-		ft_putendl_fd(err, 2);
-	}
-	else
-		ft_putendl_fd(message, 2);
-	data->exit_status = exit_status;
-}
-
-int	check_key(t_env *env, char *key)
-{
-	t_env	*start;
-	t_env	*current;
-
-	current = env;
-	start = env;
-	while (current)
-	{
-		if (!ft_strcmp(current->key, key))
-			return (0);
-		current = current->next;
-		if (current == start)
-			return (1);
-	}
-	return (1);
-}
+} // probably need to free all the tab here
 
 void	ft_cd(t_minishell *data, t_node *node, char **args)
 {
