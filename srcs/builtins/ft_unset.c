@@ -6,20 +6,18 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 16:22:18 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/24 13:24:33 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/26 11:37:12 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_unset_env(t_env *data, char **args)
+void	ft_unset_env(t_env *data, char **args, int i)
 {
 	t_env	*current;
 	t_env	*prev;
-	int		i;
 
-	i = 0;
-	while (args[i])
+	while (args[++i])
 	{
 		current = data;
 		prev = NULL;
@@ -31,9 +29,7 @@ void	ft_unset_env(t_env *data, char **args)
 					data = current->next;
 				else
 					prev->next = current->next;
-				free(current->value);
-				free(current->key);
-				prev = current;
+				(free(current->value), free(current->key), prev = current);
 				break ;
 			}
 			prev = current;
@@ -41,13 +37,12 @@ void	ft_unset_env(t_env *data, char **args)
 			if (current == data)
 				break ;
 		}
-		i++;
 	}
 }
 
 void	ft_unset(t_minishell *data, t_node *node, char **args)
 {
 	(void)node;
-	ft_unset_env(data->env, args);
-	ft_unset_env(data->env_dup, args);
+	ft_unset_env(data->env, args, -1);
+	ft_unset_env(data->env_dup, args, -1);
 }

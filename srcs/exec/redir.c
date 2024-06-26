@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/25 09:32:28 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/26 12:58:06 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,7 @@ void	handle_redir(t_node *redir)
 	while (token)
 	{
 		if (token->type == HEREDOC_TOKEN)
-		{
 			redir_in(current->heredoc_filename);
-		}
 		else if (token->type == REDIR_IN_TOKEN)
 		{
 			redir_in(current->filenames[i]);

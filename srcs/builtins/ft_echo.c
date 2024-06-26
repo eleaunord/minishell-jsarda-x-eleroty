@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 10:41:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/20 10:54:59 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/26 10:02:47 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,12 @@ void	ft_echo(t_minishell *data, t_node *node, char **args)
 	int	i;
 	int	n_option;
 
-	i = 1;
+	i = 0;
 	n_option = 0;
 	(void)data;
 	(void)node;
-	while (args[i] && check_arg(args[i]) == 1)
-	{
+	while (args[++i] && check_arg(args[i]) == 1)
 		n_option = 1;
-		i++;
-	}
 	while (args[i] && ft_strcmp(args[i], "-n") == 0)
 	{
 		n_option = 1;

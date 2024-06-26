@@ -3,5 +3,6 @@
 		"minishell.h": "c",
 		"stdio.h": "c",
 		"type_traits": "c"
-	}
+	},
+	"C_Cpp.errorSquiggles": "disabled"
 }

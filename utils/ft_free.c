@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:04:41 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/06 15:38:26 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/06/26 12:30:12 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void free_split(char **split)
+void	free_split(char **split)
 {
 	for (int i = 0; split[i]; i++)
 		free(split[i]);

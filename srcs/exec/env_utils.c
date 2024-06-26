@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:56:06 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/24 14:29:39 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/26 12:42:34 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,23 @@ int	get_key(t_env *env, char *key)
 	}
 	return (-1);
 }
+
 char	*get_path_value(t_minishell *data, char *key)
 {
 	int		index;
 	t_env	*env;
+	int		i;
 
+	i = 0;
 	env = data->env;
 	index = get_key(env, key);
 	if (index == -1)
 		return (NULL);
-	for (int i = 0; i < index; i++)
+	while (i < index)
+	{
 		env = env->next;
+		i++;
+	}
 	return (env->value);
 }
 
@@ -68,17 +74,15 @@ char	**create_char_env(t_env *env)
 	t_env	*temp_env;
 	char	**dest;
 	int		i;
-	int		size;
 
-	i = 0;
+	i = -1;
 	if (!env)
 		return (NULL);
-	size = get_env_list_size(env);
-	dest = malloc(sizeof(char *) * (size + 1));
+	dest = malloc(sizeof(char *) * (get_env_list_size(env) + 1));
 	if (!dest)
 		return (NULL);
 	temp_env = env;
-	while (i < size)
+	while (++i < get_env_list_size(env))
 	{
 		dest[i] = ft_strdup(temp_env->str);
 		if (!dest[i])
@@ -88,7 +92,6 @@ char	**create_char_env(t_env *env)
 			return (free(dest), NULL);
 		}
 		temp_env = temp_env->next;
-		i++;
 	}
 	dest[i] = NULL;
 	return (dest);

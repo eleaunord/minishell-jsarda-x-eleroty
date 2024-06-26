@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/25 09:18:28 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/26 12:54:46 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void exec(t_node *list, t_minishell *data)
 		while (list->filenames[i])
 		{
 			get_tmp_file(list);
+			printf("%s\n", list->heredoc_filename);
 			heredoc(list->limiter_hd[i], list->heredoc_filename);
 			i++;
 			if (list->limiter_hd[i])
