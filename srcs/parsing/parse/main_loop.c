@@ -52,11 +52,6 @@ void print_cmd(t_node *start){
 		start = start->next;
 	}
 }
-void disable_tab_completion(void)
-{
-	rl_replace_line("", 0); // Replace the current input line with an empty string
-	rl_redisplay();			// Redisplay the modified input line
-}
 
 int main(int argc, char *argv[], char *env[])
 {
@@ -83,16 +78,9 @@ int main(int argc, char *argv[], char *env[])
 			rl_clear_history(); // ?
 			break;
 		}
-		
+
 		if (check_line(&input_line))
 		{
-			free(input_line);
-			continue;
-		}
-		// Ne marche pas
-		if (is_only_tabs(input_line))
-		{
-			disable_tab_completion();
 			free(input_line);
 			continue;
 		}
@@ -102,10 +90,10 @@ int main(int argc, char *argv[], char *env[])
 			free(input_line);
 			continue;
 		}
+
 		add_history(input_line);
 		head_nodes = node_list;
 		t_node *head = node_list;
-
 		exec(head, &data);
 		if (data.exit)
 		{
@@ -119,19 +107,7 @@ int main(int argc, char *argv[], char *env[])
 	return (0);
 }
 
-		// DEBUG
-		// while (head != NULL)
-		// {
-		// 	printf("CMD : %s\n", (char *)head->cmd);
-		// 	printf("input line : %s\n", input_line);
-		// 	i = 0;
-		// 	while (head->args && i < head->arg_count)
-		// 	{
-		// 		printf("ARGS : %s\n", head->args[i++]);
-		// 	}
-		// 	head = head->next;
-		// 	head = head->next;
-		// }
+
 // DEBUG
 
 // PRINT ENV
