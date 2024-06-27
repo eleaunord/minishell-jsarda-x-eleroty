@@ -36,6 +36,7 @@ void init_minishell(t_minishell *mini)
 	mini->env_dup = NULL;
 	mini->nodes = NULL;
 	mini->exit = 0;
+	//mini->exit_status = 0;
 }
 
 void print_cmd(t_node *start){
@@ -90,7 +91,7 @@ int main(int argc, char *argv[], char *env[])
 			free(input_line);
 			continue;
 		}
-
+		data.exit_status = 0;
 		add_history(input_line);
 		head_nodes = node_list;
 		t_node *head = node_list;
