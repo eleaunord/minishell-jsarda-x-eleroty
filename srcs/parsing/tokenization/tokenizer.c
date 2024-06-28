@@ -8,7 +8,7 @@ t_token	*new_token(t_token_type type, char *value)
 	token = malloc(sizeof(t_token)); // LEAK
 	if (!token)
 		return (NULL);
-	token->value = ft_strdup(value); // LEAK
+	token->value = ft_strdup(value);
 	if (!token->value)
 	{
 		free(token);

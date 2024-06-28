@@ -102,6 +102,8 @@ int main(int argc, char *argv[], char *env[])
 		}
 		head_nodes = NULL;
 		free(input_line);
+		free_
+
 	}
 	//free(input_line);
 	free_minishell(&data, head_nodes);
