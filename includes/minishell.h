@@ -236,8 +236,9 @@ void				free_t_env(t_env *env);
 int					parse_key_value(t_env **new, char *elem);
 void				ft_split_pipes_spaces(char *line, t_node **tokens_list);
 int					is_only_tabs(char *str);
-// LIBFT FUNCTIONS
-unsigned long long int	ft_atol(const char *str);
+void free_node_cmd_args(t_node *node);
+	// LIBFT FUNCTIONS
+	unsigned long long int ft_atol(const char *str);
 void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
 void				free_split(char **split);

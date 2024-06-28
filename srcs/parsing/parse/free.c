@@ -46,8 +46,10 @@ void	free_nodes(t_node *list)
 	{
 		temp = list;
 		list = list->next;
+		if (temp->cmd || temp->args)
+			free_node_cmd_args(temp);
 		if (temp->content)
-			free(temp->content);
+				free(temp->content);
 		if (temp->limiter_hd)
 			free(temp->limiter_hd);
 		if (temp->tokens_in_node)
@@ -88,7 +90,6 @@ void	free_minishell(t_minishell *data, t_node *node)
 		free_env_list(data->env_dup);
 	if (node)
 	{
-		free_node_cmd_args(node);
 		free_nodes(node);
 	}
 }

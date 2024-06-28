@@ -98,14 +98,12 @@ int main(int argc, char *argv[], char *env[])
 		exec(head, &data);
 		if (data.exit)
 		{
+			free_nodes(node_list);
 			break;
 		}
-		head_nodes = NULL;
+		free_nodes(node_list);
 		free(input_line);
-		free_
-
 	}
-	//free(input_line);
 	free_minishell(&data, head_nodes);
 	return (0);
 }
