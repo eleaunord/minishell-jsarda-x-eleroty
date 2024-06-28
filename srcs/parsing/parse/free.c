@@ -49,7 +49,7 @@ void	free_nodes(t_node *list)
 		if (temp->cmd || temp->args)
 			free_node_cmd_args(temp);
 		if (temp->content)
-				free(temp->content);
+			free(temp->content);
 		if (temp->limiter_hd)
 			free(temp->limiter_hd);
 		if (temp->tokens_in_node)

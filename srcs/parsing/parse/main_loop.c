@@ -8,7 +8,7 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	char *line_copy;
 
 	if (open_quote_check(line))
-		return (free(line), 0);
+		return (0);
 	line_copy = strdup(line);
 	if (!line_copy)
 		return (0);
