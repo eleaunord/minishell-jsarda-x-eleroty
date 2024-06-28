@@ -68,6 +68,16 @@ int init_env_null(t_minishell *data, int mode)
 		free_env_list(list);
 		return (0);
 	}
+	free(tmp);
+	tmp = ft_strdup("_=/usr/bin/env");
+	if (!tmp)
+		return (0);
+	if (!append(&list, tmp))
+	{
+		free(tmp);
+		free_env_list(list);
+		return (0);
+	}
 	if (mode == 0)
 		data->env = list;
 	else
