@@ -40,7 +40,7 @@ int	append(t_env **list, char *elem)
 	}
 	return (1);
 }
-int init_env_null(t_minishell *data, int mode)
+int	init_env_null(t_minishell *data, int mode)
 {
 	t_env	*list;
 	char	*tmp;
@@ -69,10 +69,22 @@ int init_env_null(t_minishell *data, int mode)
 		return (0);
 	}
 	if (mode == 0)
+	{
+		free(tmp);
+		tmp = ft_strdup("_=/usr/bin/env");
+		if (!tmp)
+			return (0);
+		if (!append(&list, tmp))
+		{
+			free(tmp);
+			free_env_list(list);
+			return (0);
+		}
+	}
+	if (mode == 0)
 		data->env = list;
 	else
 		data->env_dup = list;
-
 	return (1);
 }
 
@@ -91,7 +103,7 @@ char	*recup_shlvl(char *tmp)
 	}
 	lvl = atoi(split[1]);
 	free(tmp);
-	char_lvl = ft_itoa(lvl+1);
+	char_lvl = ft_itoa(lvl + 1);
 	if (!char_lvl)
 	{
 		free_split(split);
@@ -103,14 +115,13 @@ char	*recup_shlvl(char *tmp)
 	if (!tmp)
 		return (NULL);
 	return (tmp);
-
 }
 
-int init_env_dup(t_minishell *data, char **env)
+int	init_env_dup(t_minishell *data, char **env)
 {
-	t_env *list;
-	int i;
-	char *tmp;
+	t_env	*list;
+	int		i;
+	char	*tmp;
 
 	if (env[0] == 0)
 	{

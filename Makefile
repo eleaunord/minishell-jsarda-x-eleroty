@@ -17,6 +17,7 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_strcat.c \
 					libft/ft_strstr.c \
 					libft/ft_strncpy.c \
+					libft/ft_atol.c \
 					srcs/parsing/tokenization/word_tokens.c \
 					srcs/parsing/tokenization/special_tokens.c \
 					srcs/parsing/parse/main_loop.c \

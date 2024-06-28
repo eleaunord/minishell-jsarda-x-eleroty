@@ -11,14 +11,14 @@ static char	*extract_key(const char *src, char *equal_sign)
 {
 	if (src == NULL || equal_sign == NULL)
 		return (NULL);
-	return (strndup(src, equal_sign - src));
+	return (ft_strndup(src, equal_sign - src));
 }
 
 static char	*extract_value(const char *src, char *equal_sign)
 {
 	if (src == NULL || equal_sign == NULL)
 		return (NULL);
-	return (strdup(equal_sign + 1));
+	return (ft_strdup(equal_sign + 1));
 }
 
 // Function to parse and assign key and value from an element string
@@ -26,7 +26,7 @@ int	parse_key_value(t_env **new, char *elem)
 {
 	char	*equal_sign;
 
-	equal_sign = strchr(elem, '=');
+	equal_sign = ft_strchr(elem, '=');
 	if (equal_sign)
 	{
 		(*new)->key = extract_key(elem, equal_sign);

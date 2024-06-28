@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:07:38 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/20 13:52:44 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/06/28 09:29:23 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ void	exec_pipe(t_node *nodes, t_minishell *data)
 	}
 	while (current && current->next)
 	{
+		printf("should not go here\n");
 		exec_mid(current, data, prev);
 		prev = current;
 		current = current->next;

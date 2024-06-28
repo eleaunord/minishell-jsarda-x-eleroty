@@ -52,7 +52,7 @@ typedef struct s_env
 	char			*str;
 	char			*key;
 	char			*value;
-	int shlvl_num;
+	int				shlvl_num;
 	struct s_env	*next;
 	struct s_env	*prev;
 }					t_env;
@@ -101,8 +101,8 @@ typedef struct s_node
 	int				node_index;
 	int				file_index;
 
-		// OTHER (?)
-		int fd_in; // <
+	// OTHER (?)
+	int fd_in; // <
 	int				fd_out;
 
 }					t_node;
@@ -116,7 +116,8 @@ typedef struct s_minishell
 	int				nb_cmd;
 	// EXITS
 	int				exit;
-	int				exit_status;
+	unsigned long long				exit_status;
+	int				print_exit;
 }					t_minishell;
 // utils
 char				*get_key_value(t_env *env, char *key);
@@ -213,32 +214,31 @@ void				allocate_memory_for_limiter_hd(t_node *node);
 void				process_heredoc_tokens(t_token *tokens, t_node *node);
 void				process_filename_out(t_token *tokens, t_node *node);
 void				process_filename_in(t_token *tokens, t_node *node);
-void	count_redirections(t_token **tokens, t_node *node);
-void	process_filenames(t_token *tokens, t_node *node);
-void	allocate_memory_for_filenames(t_node *node);
-void	set_expansions(t_token *tokens, t_node *node);
-void	fill_expansions(t_token *tokens, t_node *node);
-int	count_expansions(t_token *tokens);
-void	process_expansions(t_token **tokens);
-int	tokenizer(char *line, t_node **nodes, t_minishell *mini);
-void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini);
-char *get_expansion(t_minishell *data, char *key_expansion);
-void set_expansions(t_token *tokens, t_node *node);
-int init_env_dup(t_minishell *data, char **env);
-int append(t_env **list, char *elem);
-void add_first(t_env **list, t_env *new);
-void print_env(t_env *list);
-int list_new_elem_str(t_env **new, char *elem);
-t_env *allocate_new_env(void);
-void free_t_env(t_env *env);
-int parse_key_value(t_env **new, char *elem);
-void ft_split_pipes_spaces(char *line, t_node **tokens_list);
-int is_only_tabs(char *str);
-int is_number(const char *str);
-int ft_atoi(const char *nptr);
-void increment_shlvl(t_env **env);
-	// LIBFT FUNCTIONS
-	void *ft_lstdelone(void *lst);
+void				count_redirections(t_token **tokens, t_node *node);
+void				process_filenames(t_token *tokens, t_node *node);
+void				allocate_memory_for_filenames(t_node *node);
+void				set_expansions(t_token *tokens, t_node *node);
+void				fill_expansions(t_token *tokens, t_node *node);
+int					count_expansions(t_token *tokens);
+void				process_expansions(t_token **tokens);
+int					tokenizer(char *line, t_node **nodes, t_minishell *mini);
+void				parse_tokens(t_token *tokens, t_node *node,
+						t_minishell *mini);
+char				*get_expansion(t_minishell *data, char *key_expansion);
+void				set_expansions(t_token *tokens, t_node *node);
+int					init_env_dup(t_minishell *data, char **env);
+int					append(t_env **list, char *elem);
+void				add_first(t_env **list, t_env *new);
+void				print_env(t_env *list);
+int					list_new_elem_str(t_env **new, char *elem);
+t_env				*allocate_new_env(void);
+void				free_t_env(t_env *env);
+int					parse_key_value(t_env **new, char *elem);
+void				ft_split_pipes_spaces(char *line, t_node **tokens_list);
+int					is_only_tabs(char *str);
+// LIBFT FUNCTIONS
+unsigned long long int	ft_atol(const char *str);
+void				*ft_lstdelone(void *lst);
 char				**ft_split(char const *s, char c);
 void				free_split(char **split);
 void				ft_putstr_fd(char *s, int fd);

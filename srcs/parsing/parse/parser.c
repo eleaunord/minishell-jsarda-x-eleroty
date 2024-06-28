@@ -1,6 +1,6 @@
 #include "../../../includes/minishell.h"
 
-char *expand_exit_status(char *str, int error_num)
+char *expand_exit_status(char *str, unsigned long long error_num)
 {
 	char *pos;
 	size_t leading_len;
@@ -32,7 +32,7 @@ char *expand_exit_status(char *str, int error_num)
 void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index)
 {
 	char *expanded_value;
-	
+
 	if (ft_strstr(tok->value, "$?") != NULL)
 	{
 		expanded_value = expand_exit_status(tok->value, mini->exit_status);
@@ -166,7 +166,7 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	// 	printf("expansion : %s\n", (char *)tok->key_expansion);
 	// 	tok = tok->next;
 	// }
-	
+
 	// GET EXPANSION from tokens
 	set_expansions(tokens, node);
 	//SET ARGS
