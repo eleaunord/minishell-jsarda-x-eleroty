@@ -70,7 +70,7 @@ int main(int argc, char *argv[], char *env[])
 		return (1);
 	if (!init_env_dup(&data, env))
 		return (1);
-	
+
 	while (1)
 	{
 		input_line = readline("prompt > ");

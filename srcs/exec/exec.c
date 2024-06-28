@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/27 10:14:07 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/06/28 12:55:47 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	init_fd(t_node *node)
+void	init_exec(t_node *node, t_minishell *data)
 {
 	node->fd_in = STDIN_FILENO;
 	node->fd_out = STDOUT_FILENO;
+	data->print_exit = 0;
 }
 
 void exec(t_node *list, t_minishell *data)
@@ -24,7 +25,7 @@ void exec(t_node *list, t_minishell *data)
 
 	int		stdin_copy;
 	int		stdout_copy;
-	init_fd(list);
+	init_exec(list, data);
 	i = 0;
 	if (list->here_doc && list->next == NULL)
 	{
@@ -40,7 +41,10 @@ void exec(t_node *list, t_minishell *data)
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
 	if (list->next != NULL)
+	{
+		data->print_exit = 1;
 		exec_pipe(list, data);
+	}
 	else
 		exec_simple_cmd(data, list);
 	dup2(stdin_copy, STDIN_FILENO);

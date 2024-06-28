@@ -1,31 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   perror.c                                           :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 13:12:59 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/28 10:44:36 by jsarda           ###   ########.fr       */
+/*   Created: 2024/06/28 09:55:35 by jsarda            #+#    #+#             */
+/*   Updated: 2024/06/28 12:07:40 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	perror_handler(char *type)
+unsigned long long int	ft_atol(const char *str)
 {
-	perror(type);
-	exit(EXIT_FAILURE);
-}
+	int						i;
+	int						sign;
+	unsigned long long int	nb;
 
-void	ft_error(char *message, char *err, int exit_status, t_minishell *data)
-{
-	if (err)
+	i = 0;
+	sign = 1;
+	nb = 0;
+	while ((str[i] >= 8 && str[i] <= 13) || str[i] == 32)
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		ft_putstr_fd(message, 2);
-		ft_putendl_fd(err, 2);
+		if (str[i] == '-')
+			sign *= -1;
+		i++;
 	}
-	else
-		ft_putendl_fd(message, 2);
-	data->exit_status = exit_status;
+	while (str[i] >= '0' && str[i] <= '9' && nb < LONG_MAX)
+	{
+		nb = nb * 10 + (str[i] - 48);
+		i++;
+	}
+	return (nb * sign);
 }
