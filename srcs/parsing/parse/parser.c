@@ -68,6 +68,7 @@ void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	if (node->lonely_expansion == 1)
 	{
 		node->args[0] = get_expansion(mini, tok->key_expansion);
+		node->cmd = get_expansion(mini, tok->key_expansion);
 		node->args[1] = NULL;
 		return ;
 	}
@@ -178,8 +179,8 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	// 	printf("Node : %s\n", (char *)head->content);
 	// 	printf("is lonely : %d\n", node->lonely_expansion);
 	// 	printf("Cmd : %s\n", head->cmd);
-	// 	printf("File name out: %s\n", head->filename_out);
-	// 	printf("Node expansion: %s\n", head->key_expansion);
+	// 	//printf("File name out: %s\n", head->filename_out);
+	// 	printf("Node expansion: %s\n", (char *)head->key_expansion);
 	// 	printf("Arg cunt : %d\n", head->arg_count);
 	// 	int x = 0;
 	// 	while (x < head->arg_count)

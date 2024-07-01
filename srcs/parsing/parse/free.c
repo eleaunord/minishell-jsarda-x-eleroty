@@ -37,7 +37,29 @@ void	free_env_list(t_env *list)
 			break ;
 	}
 }
+void free_node_cmd_args(t_node *node)
+{
+	int i;
 
+	i = 0;
+	if (node == NULL)
+		return;
+	if (node->cmd)
+	{
+		free(node->cmd);
+		node->cmd = NULL;
+	}
+	if (node->args)
+	{
+		while (node->args[i] != NULL)
+		{
+			free(node->args[i]);
+			i++;
+		}
+		free(node->args);
+		node->args = NULL;
+	}
+}
 void	free_nodes(t_node *list)
 {
 	t_node	*temp;
@@ -55,33 +77,14 @@ void	free_nodes(t_node *list)
 		if (temp->tokens_in_node)
 			free_tokens(temp->tokens_in_node);
 		if (temp->filenames)
+		{
 			free_tab(temp->filenames);
+		}
+			
 		free(temp);
 	}
 }
-void	free_node_cmd_args(t_node *node)
-{
-	int	i;
 
-	i= 0;
-	if (node == NULL)
-		return ;
-	if (node->cmd)
-	{
-		free(node->cmd);
-		node->cmd = NULL;
-	}
-	if (node->args)
-	{
-		while (node->args[i] != NULL)
-		{
-			free(node->args[i]);
-			i++;
-		}
-		free(node->args);
-		node->args = NULL;
-	}
-}
 void	free_minishell(t_minishell *data, t_node *node)
 {
 	if (data->env)
