@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:55:30 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/28 14:27:59 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/01 10:43:07 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,58 @@ void	print_exit_message(char *message, char *args, t_minishell *data)
 	ft_putendl_fd(message, 2);
 }
 
+int	ft_check_arg(char *s)
+{
+	int						i;
+	unsigned long long int	nb;
+
+	i = 0;
+	if (s[i] == '-')
+		i++;
+	while (s[i])
+	{
+		if (!ft_isdigit(s[i]))
+			return (0);
+		i++;
+	}
+	if (s[0] == '-')
+		nb = ft_atol(s + 1);
+	else
+		nb = ft_atol(s);
+	if (nb > LONG_MAX)
+		return (0);
+	return (1);
+}
+
 void	ft_exit(t_minishell *data, t_node *node, char **args)
 {
+	long long	nb;
+
 	(void)node;
 	if (count_args(args) > 1)
 	{
-		if (!ft_isdigit(args[1]))
+		if (!ft_isdigit_str(args[1]))
 		{
 			data->exit_status = 2;
 			print_exit_message(": numeric argument required", args[1], data);
 		}
-		else if (count_args(args) == 2 && count_args(args) < 3)
+		else
 		{
-			data->exit_status = ft_atol(args[1]);
-			if (data->print_exit == 0)
-				printf("exit\n");
+			if (!ft_check_arg(args[1]))
+			{
+				data->exit_status = 2;
+				print_exit_message(": numeric argument required", args[1],
+					data);
+			}
+			else
+			{
+				nb = ft_atol(args[1]);
+				data->exit_status = nb;
+				if (data->print_exit == 0)
+					printf("exit\n");
+			}
 		}
-		else if (count_args(args) > 2)
+		if (count_args(args) > 2)
 		{
 			data->exit_status = 1;
 			print_exit_message(": too many arguments", NULL, data);
@@ -52,5 +87,5 @@ void	ft_exit(t_minishell *data, t_node *node, char **args)
 			printf("exit\n");
 	}
 	free_minishell(data, node);
-	return (exit(data->exit_status));
+	exit(data->exit_status);
 }

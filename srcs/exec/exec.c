@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/28 12:55:47 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/01 11:00:25 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ void exec(t_node *list, t_minishell *data)
 	int		stdout_copy;
 	init_exec(list, data);
 	i = 0;
-	if (list->here_doc && list->next == NULL)
+	if (list->limiter_hd && list->next == NULL)
 	{
-		while (list->filenames[i])
+		while (list->limiter_hd[i])
 		{
+			printf("HEREDOC FLAG%d\n", list->here_doc);
 			get_tmp_file(list);
 			heredoc(list->limiter_hd[i], list->heredoc_filename);
 			i++;
