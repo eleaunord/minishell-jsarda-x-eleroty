@@ -81,7 +81,7 @@ void	exec_mid(t_node *cmd, t_minishell *data, t_node *prev)
 			{
 				perror("execve");
 				fprintf(stderr, "minishell: %s: command not found\n",
-					cmd->tokens_in_node->cmd);
+					cmd->tokens_in_node->cmd); 
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -177,6 +177,8 @@ void	exec_last(t_node *cmd, t_minishell *data, t_node *prev)
 					cmd->tokens_in_node->cmd);
 				exit(EXIT_FAILURE);
 			}
+			// free(path);
+			// free_tab(env);
 		}
 		else if (is_built_in(cmd) != -1)
 			handle_builtin(cmd, data);

@@ -1,5 +1,28 @@
 #include "../../../includes/minishell.h"
 
+void free_var_env(t_env *node)
+{
+	if (node)
+	{
+		// Free dynamically allocated members
+		if (node->str)
+		{
+			free(node->str);
+			node->str = NULL;
+		}
+		if (node->key)
+		{
+			free(node->key);
+			node->key = NULL;
+		}
+		if (node->value)
+		{
+			free(node->value);
+			node->value = NULL;
+		}
+	}
+}
+
 void	free_t_env(t_env *env)
 {
 	if (env == NULL)
@@ -32,12 +55,12 @@ int	list_new_elem_str(t_env **new, char *elem)
 	(*new)->str = duplicate_string(elem);
 	if ((*new)->str == NULL)
 	{
-		free_t_env(*new);
+		free_env_list(*new);
 		return (0);
 	}
 	if (!parse_key_value(new, elem))
 	{
-		free_t_env(*new);
+		free_env_list(*new);
 		return (0);
 	}
 	return (1);

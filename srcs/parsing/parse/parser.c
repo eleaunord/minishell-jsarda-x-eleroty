@@ -33,6 +33,8 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 {
 	char *expanded_value;
 
+	if (!node->args || *arg_index >= node->arg_count)
+		return ;
 	if (ft_strstr(tok->value, "$?") != NULL)
 	{
 		expanded_value = expand_exit_status(tok->value, mini->exit_status);
@@ -52,7 +54,7 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 		free(node->cmd);
 		node->args = NULL;
 		node->cmd = NULL;
-		return;
+		return ;
 	}
 	(*arg_index)++;
 }

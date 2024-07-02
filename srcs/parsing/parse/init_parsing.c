@@ -17,7 +17,7 @@ int	count_arguments(t_token *tokens)
 	}
 	return (count);
 }
-int	init_args(t_token *tokens, t_node *node)
+void	init_args(t_token *tokens, t_node *node)
 {
 	int	arg_count;
 
@@ -25,11 +25,7 @@ int	init_args(t_token *tokens, t_node *node)
 	node->args = (char **)ft_calloc(arg_count + 1, sizeof(char *));
 	node->arg_count = arg_count;
 	if (!node->args)
-	{
-		free(node->cmd);
-		return (-1);
-	}
-	return (0);
+		return ;
 }
 
 void	set_cmd(t_token *tokens, t_node *node)
@@ -39,6 +35,8 @@ void	set_cmd(t_token *tokens, t_node *node)
 	tok = tokens;
 	if (!tokens || !node)
 		return ;
+	if (!node->args)
+		return;
 	while (tok != NULL)
 	{
 		if (tok->type == TOKEN_WORD)
@@ -67,13 +65,6 @@ void	init_parsing(t_node *node)
 	node->arg_count = 0;
 	node->cmd = NULL;
 	node->cmd_count = 0;
-	node->filename_out = NULL;
-	node->filename_in = NULL;
-	node->file_in_count = 0;
-	node->file_out_count = 0;
-	node->redir_in = 0;
-	node->redir_out = 0;
-	node->here_doc = 0;
 	node->limiter_hd = NULL;
 	node->limiter_hd_count = 0;
 	node->key_expansion = NULL;

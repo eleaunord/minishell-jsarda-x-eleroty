@@ -138,8 +138,9 @@ int						set_key(t_env *new_var, const char *key,
 							t_minishell *data);
 t_env					*allocate_new_var(t_minishell *data);
 void					insert_new_var(t_env *env, t_env *new_var);
-// EXEC FUNCTIONS
-void					exec(t_node *list, t_minishell *data);
+void free_var_env(t_env *node);
+	// EXEC FUNCTIONS
+	void exec(t_node *list, t_minishell *data);
 char					*get_cmd_path(char *cmd, t_minishell *data);
 char					*get_path_value(t_minishell *data, char *key);
 char					**create_char_env(t_env *env);
@@ -199,7 +200,7 @@ bool					is_quote(char c);
 char					*collapse_spaces(char *str);
 void					init_parsing(t_node *node);
 void					set_cmd(t_token *tokens, t_node *node);
-int						init_args(t_token *tokens, t_node *node);
+//int						init_args(t_token *tokens, t_node *node);
 void					update_tokens(t_token **tokens, t_node *node);
 char					*remove_quotes_from_word(char *word);
 void					set_cmd(t_token *tokens, t_node *node);
@@ -243,8 +244,10 @@ int						parse_key_value(t_env **new, char *elem);
 void					ft_split_pipes_spaces(char *line, t_node **tokens_list);
 int						is_only_tabs(char *str);
 void					free_node_cmd_args(t_node *node);
-// LIBFT FUNCTIONS
-int						ft_isdigit(int c);
+void init_args(t_token *tokens, t_node *node);
+
+	// LIBFT FUNCTIONS
+	int ft_isdigit(int c);
 unsigned long long int	ft_atol(const char *str);
 void					*ft_lstdelone(void *lst);
 char					**ft_split(char const *s, char c);

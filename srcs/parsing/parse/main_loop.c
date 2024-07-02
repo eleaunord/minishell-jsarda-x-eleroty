@@ -59,7 +59,8 @@ int main(int argc, char *argv[], char *env[])
 	char *input_line;
 	t_node *node_list;
 	t_minishell data;
-	t_node *head_nodes;
+	t_node *head;
+	//t_node *head_nodes;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -93,8 +94,8 @@ int main(int argc, char *argv[], char *env[])
 		}
 		data.exit_status = 0;
 		add_history(input_line);
-		head_nodes = node_list;
-		t_node *head = node_list;
+		//head_nodes = node_list;
+		head = node_list;
 		exec(head, &data);
 		if (data.exit)
 		{
@@ -104,7 +105,7 @@ int main(int argc, char *argv[], char *env[])
 		free_nodes(node_list);
 		free(input_line);
 	}
-	free_minishell(&data, head_nodes);
+	free_minishell(&data, head);
 	return (0);
 }
 

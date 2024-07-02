@@ -4,7 +4,7 @@ char	*duplicate_string(const char *src)
 {
 	if (src == NULL)
 		return (NULL);
-	return (strdup(src));
+	return (ft_strdup(src));
 }
 
 static char	*extract_key(const char *src, char *equal_sign)
@@ -14,9 +14,9 @@ static char	*extract_key(const char *src, char *equal_sign)
 	return (ft_strndup(src, equal_sign - src));
 }
 
-static char	*extract_value(const char *src, char *equal_sign)
+static char *extract_value(const char *src, char *equal_sign)
 {
-	if (src == NULL || equal_sign == NULL)
+	if (src == NULL || equal_sign == NULL || equal_sign[1] == '\0')
 		return (NULL);
 	return (ft_strdup(equal_sign + 1));
 }
@@ -35,7 +35,9 @@ int	parse_key_value(t_env **new, char *elem)
 		(*new)->value = extract_value(elem, equal_sign);
 		if ((*new)->value == NULL)
 		{
-			free_t_env(*new);
+			free((*new)->key);
+			(*new)->key = NULL;
+			free_var_env(*new);
 			return (0);
 		}
 	}

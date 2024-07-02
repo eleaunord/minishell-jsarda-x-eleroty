@@ -39,49 +39,51 @@ void	free_env_list(t_env *list)
 }
 void free_node_cmd_args(t_node *node)
 {
-	int i;
-
-	i = 0;
 	if (node == NULL)
 		return;
+
 	if (node->cmd)
 	{
 		free(node->cmd);
 		node->cmd = NULL;
 	}
+
 	if (node->args)
 	{
+		int i = 0;
 		while (node->args[i] != NULL)
 		{
 			free(node->args[i]);
+			node->args[i] = NULL; // Always good to NULL out freed pointers
 			i++;
 		}
 		free(node->args);
 		node->args = NULL;
 	}
 }
-void	free_nodes(t_node *list)
-{
-	t_node	*temp;
 
-	while (list)
+void free_nodes(t_node *head)
+{
+	t_node *current = head;
+	t_node *next;
+
+	if (head == NULL)
+		return ;
+	while (current != NULL)
 	{
-		temp = list;
-		list = list->next;
-		if (temp->cmd || temp->args)
-			free_node_cmd_args(temp);
-		if (temp->content)
-			free(temp->content);
-		if (temp->limiter_hd)
-			free(temp->limiter_hd);
-		if (temp->tokens_in_node)
-			free_tokens(temp->tokens_in_node);
-		if (temp->filenames)
-		{
-			free_tab(temp->filenames);
-		}
-			
-		free(temp);
+		next = current->next;
+		if (current->cmd || current->args)
+			free_node_cmd_args(current);
+		if (current->content)
+			free(current->content);
+		if (current->limiter_hd)
+			free(current->limiter_hd);
+		if (current->tokens_in_node)
+			free_tokens(current->tokens_in_node);
+		if (current->filenames)
+			free_tab(current->filenames);
+		free(current);
+		current = next;
 	}
 }
 
