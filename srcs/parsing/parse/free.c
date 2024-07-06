@@ -81,7 +81,7 @@ void free_nodes(t_node *head)
 		if (current->tokens_in_node)
 			free_tokens(current->tokens_in_node);
 		if (current->filenames)
-			free_tab(current->filenames);
+			free(current->filenames);
 		free(current);
 		current = next;
 	}

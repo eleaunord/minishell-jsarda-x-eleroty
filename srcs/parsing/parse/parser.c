@@ -104,6 +104,13 @@ void set_filename(t_token **tokens, t_node *node)
 		node->filenames[node->file_count] = NULL;
 	if (node->limiter_hd != NULL)
 		node->limiter_hd[node->limiter_hd_count] = NULL;
+	// for (int i = 0; i < node->file_count; i++)
+	// {
+	// 	if (node->filenames[i] != NULL)
+	// 	{
+	// 		printf("filename : %s\n", node->filenames[i]);
+	// 	}
+	// }
 	// OLD STRUCTURE WITH DIFF REDIR
 	// count_heredocs(&tok, node);
 	// // Allocation de mémoire pour limiter_hd

@@ -31,20 +31,14 @@ void	allocate_memory_for_filenames(t_node *node)
 {
 	node->filenames = (char **)calloc(node->file_count + 1, sizeof(char *));
 	if (!node->filenames)
-	{
-		perror("calloc failed");
 		exit(EXIT_FAILURE);
-	}
 }
 void	allocate_memory_for_limiter_hd(t_node *node)
 {
 	node->limiter_hd = (char **)calloc(node->limiter_hd_count + 1,
 			sizeof(char *));
 	if (!node->limiter_hd)
-	{
-		perror("calloc failed");
 		exit(EXIT_FAILURE);
-	}
 }
 
 void	process_filenames(t_token *tokens, t_node *node)

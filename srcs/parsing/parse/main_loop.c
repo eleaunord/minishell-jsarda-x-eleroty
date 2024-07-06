@@ -102,7 +102,7 @@ int main(int argc, char *argv[], char *env[])
 			free_nodes(node_list);
 			break;
 		}
-		//free_nodes(node_list);
+		free_nodes(node_list);
 		free(input_line);
 	}
 	free_minishell(&data, head);
