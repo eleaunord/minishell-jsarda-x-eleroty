@@ -1,7 +1,26 @@
 #include "../../../includes/minishell.h"
 
 int g_exit = 0;
-// CTRL + C
+
+/*
+
+// CTRL + C => SIGINT
+// CTRL + \ => SIGQUIT
+
+// Before executing a command
+set_signals(1); // Interactive mode
+
+// Execute the command
+exec_command();
+
+// After executing a command
+set_signals(0); // Back to normal mode
+
+// For heredoc handling
+set_signals(2); // Heredoc mode
+
+*/
+// NORMAL MODE
 void norm_handler(int sig)
 {
     if (sig == SIGINT)
@@ -14,7 +33,7 @@ void norm_handler(int sig)
     }
     return;
 }
-
+// INTERACTIVE MODE
 void interact_handler(int sig)
 {
     if (sig == SIGINT)
@@ -24,12 +43,13 @@ void interact_handler(int sig)
     }
     else if (sig == SIGQUIT)
     {
-        ft_putstr_fd("Quit: 3\n", 1);
+        ft_putstr_fd("exit\n", 1);
         g_exit = 131;
     }
     return;
 }
 
+// READING HEREDOC
 void heredoc_handler(int sig)
 {
     if (sig == SIGINT)
@@ -41,7 +61,7 @@ void heredoc_handler(int sig)
     return;
 }
 
-
+// IGNORE SIGNAL
 void ignore_signal(int signal)
 {
     struct sigaction sa;

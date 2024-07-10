@@ -60,22 +60,7 @@ void print_cmd(t_node *start){
 	}
 }
 
-// Signal handler for SIGINT (CTRL+C)
-void handle_sigint(int sig)
-{
-	(void)sig;
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	write(STDOUT_FILENO, "\n", 1);
-}
 
-// Signal handler for SIGQUIT (CTRL+\)
-void handle_sigquit(int sig)
-{
-	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
-}
 int main(int argc, char *argv[], char *env[])
 {
 	char *input_line;
