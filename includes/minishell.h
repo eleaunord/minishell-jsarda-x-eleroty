@@ -241,8 +241,8 @@ int						list_new_elem_str(t_env **new, char *elem);
 t_env					*allocate_new_env(void);
 void					free_t_env(t_env *env);
 int						parse_key_value(t_env **new, char *elem);
-void					ft_split_pipes_spaces(char *line, t_node **tokens_list);
-int						is_only_tabs(char *str);
+bool ft_split_pipes_spaces(char *line, t_node **tokens_list);
+int is_only_tabs(char *str);
 void					free_node_cmd_args(t_node *node);
 void init_args(t_token *tokens, t_node *node);
 

@@ -54,7 +54,7 @@ void process_segment(char *start, t_node **tokens_list)
 	append_node(tokens_list, segment);
 }
 
-void split_line(char *line, t_node **tokens_list)
+void split_line(char *line, t_node **tokens_list, bool *error)
 {
 	char *start;
 	char *current;
@@ -65,6 +65,8 @@ void split_line(char *line, t_node **tokens_list)
 	current = line;
 	in_single_quote = false;
 	in_double_quote = false;
+	*error = false;
+
 	while (*current != '\0')
 	{
 		if (*current == '\'' && !in_double_quote)
@@ -76,15 +78,28 @@ void split_line(char *line, t_node **tokens_list)
 			*current = '\0';
 			process_segment(start, tokens_list);
 			start = current + 1;
+
+			// Check if there's anything after the pipe
+			while (*start != '\0' && isspace(*start))
+				start++;
+			if (*start == '\0')
+			{
+				*error = true;
+				return;
+			}
+			current = start - 1;
 		}
 		current++;
 	}
 	process_segment(start, tokens_list);
 }
 
-void ft_split_pipes_spaces(char *line, t_node **tokens_list)
+bool ft_split_pipes_spaces(char *line, t_node **tokens_list)
 {
+	bool error;
+
 	*tokens_list = NULL;
-	split_line(line, tokens_list);
-	return ;
+	split_line(line, tokens_list, &error);
+
+	return error;
 }

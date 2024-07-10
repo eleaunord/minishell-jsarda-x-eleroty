@@ -6,13 +6,19 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	t_token *tokens;
 	int node_index;
 	char *line_copy;
+	bool error;
 
 	if (open_quote_check(line))
 		return (0);
-	line_copy = strdup(line);
+	line_copy = ft_strdup(line);
 	if (!line_copy)
 		return (0);
-	ft_split_pipes_spaces(line_copy, nodes);
+	error = ft_split_pipes_spaces(line_copy, nodes);
+	if (error)
+	{
+		write(1, "Syntax error\n", 13);
+		return (0);
+	}
 	free(line_copy);
 	current = *nodes;
 	mini->nb_cmd = 0;
