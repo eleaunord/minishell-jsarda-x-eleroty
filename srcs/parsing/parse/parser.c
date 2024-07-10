@@ -185,11 +185,6 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	// t_node *head = node;
 	// while (head)
 	// {
-	// 	printf("Node : %s\n", (char *)head->content);
-	// 	printf("is lonely : %d\n", node->lonely_expansion);
-	// 	printf("Cmd : %s\n", head->cmd);
-	// 	//printf("File name out: %s\n", head->filename_out);
-	// 	printf("Node expansion: %s\n", (char *)head->key_expansion);
 	// 	printf("Arg cunt : %d\n", head->arg_count);
 	// 	int x = 0;
 	// 	while (x < head->arg_count)

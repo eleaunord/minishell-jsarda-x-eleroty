@@ -28,6 +28,7 @@ SRCS        :=   libft/ft_lst.c \
 					srcs/parsing/environment/env.c \
 					srcs/parsing/environment/key_value.c \
 					srcs/parsing/parse/free.c \
+					srcs/parsing/parse/signals.c \
 					srcs/parsing/environment/alloc_env.c \
 					srcs/parsing/parse/get_expansion.c \
 					srcs/parsing/parse/checkers.c \

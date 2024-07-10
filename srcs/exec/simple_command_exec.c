@@ -131,6 +131,9 @@ void	exec_simple_cmd(t_minishell *data, t_node *list)
 		exec_built_in(data, list);
 		return ;
 	}
+	// SIGNAL FOR CMD
+	set_signals(1);
+	//
 	pid = fork();
 	if (pid < 0)
 		perror("fork");

@@ -42,7 +42,7 @@ void init_minishell(t_minishell *mini)
 	mini->env_dup = NULL;
 	mini->nodes = NULL;
 	mini->exit = 0;
-	//mini->exit_status = 0;
+	mini->exit_status = 0;
 }
 
 void print_cmd(t_node *start){
@@ -60,6 +60,22 @@ void print_cmd(t_node *start){
 	}
 }
 
+// Signal handler for SIGINT (CTRL+C)
+void handle_sigint(int sig)
+{
+	(void)sig;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	write(STDOUT_FILENO, "\n", 1);
+}
+
+// Signal handler for SIGQUIT (CTRL+\)
+void handle_sigquit(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+}
 int main(int argc, char *argv[], char *env[])
 {
 	char *input_line;
@@ -73,17 +89,18 @@ int main(int argc, char *argv[], char *env[])
 	(void)argc;
 	(void)argv;
 	init_minishell(&data);
-	if (!init_env(&data, env))
-		return (1);
-	if (!init_env_dup(&data, env))
-		return (1);
+	if (!init_env(&data, env) || !init_env_dup(&data, env))
+	{
+		return 1;
+	}
 
 	while (1)
 	{
+		set_signals(0);
 		input_line = readline("prompt > ");
 		if (!input_line)
 		{
-			rl_clear_history(); // ?
+			rl_clear_history();
 			break;
 		}
 
@@ -100,7 +117,6 @@ int main(int argc, char *argv[], char *env[])
 		}
 		data.exit_status = 0;
 		add_history(input_line);
-		//head_nodes = node_list;
 		head = node_list;
 		exec(head, &data);
 		if (data.exit)

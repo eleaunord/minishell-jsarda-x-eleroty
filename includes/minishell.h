@@ -16,6 +16,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <signal.h>
 
 # define NUM_OF_BUILT_INS 7
 
@@ -151,8 +152,9 @@ int						is_built_in(t_node *list);
 void					handle_redir(t_node *redir);
 int						check_if_redir(t_node *node);
 void					exec_built_in(t_minishell *data, t_node *list);
-// BUILTINS
-void					ft_exit(t_minishell *data, t_node *node, char **args);
+void set_signals(int mode);
+	// BUILTINS
+	void ft_exit(t_minishell *data, t_node *node, char **args);
 void					ft_pwd(t_minishell *data, t_node *node, char **args);
 void					ft_echo(t_minishell *data, t_node *node, char **args);
 void					ft_cd(t_minishell *data, t_node *node, char **args);
@@ -245,7 +247,8 @@ bool ft_split_pipes_spaces(char *line, t_node **tokens_list);
 int is_only_tabs(char *str);
 void					free_node_cmd_args(t_node *node);
 void init_args(t_token *tokens, t_node *node);
-
+void set_signals(int mode);
+void ft_putchar_fd(char c, int fd);
 	// LIBFT FUNCTIONS
 	int ft_isdigit(int c);
 unsigned long long int	ft_atol(const char *str);
