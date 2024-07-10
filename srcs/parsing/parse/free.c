@@ -86,7 +86,13 @@ void free_nodes(t_node *head)
 		current = next;
 	}
 }
-
+void free_mini(t_minishell *data)
+{
+	if (data->env)
+		free_env_list(data->env);
+	if (data->env_dup)
+		free_env_list(data->env_dup);
+}
 void	free_minishell(t_minishell *data, t_node *node)
 {
 	if (data->env)

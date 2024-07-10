@@ -140,6 +140,7 @@ int						set_key(t_env *new_var, const char *key,
 t_env					*allocate_new_var(t_minishell *data);
 void					insert_new_var(t_env *env, t_env *new_var);
 void free_var_env(t_env *node);
+void free_mini(t_minishell *data);
 	// EXEC FUNCTIONS
 	void exec(t_node *list, t_minishell *data);
 char					*get_cmd_path(char *cmd, t_minishell *data);
