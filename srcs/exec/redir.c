@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/26 12:58:06 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/17 15:19:52 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,32 @@ void	heredoc(char *eof, char *file_name)
 	}
 	close(fd);
 }
+// void	handle_redir(t_node *redir)
+// {
+// 	int		i;
+// 	t_node	*current;
+
+// 	i = 0;
+// 	current = redir;
+// 	while (current)
+// 	{
+// 		if (current->last_heredoc != NULL)
+// 			redir_in(current->last_heredoc);
+// 		else if (token->type == REDIR_IN_TOKEN)
+// 		{
+// 			redir_in(current->filenames[i]);
+// 			i++;
+// 		}
+// 		else if (token->type == REDIR_OUT_TOKEN)
+// 		{
+// 			redir_out(current->filenames[i]);
+// 			i++;
+// 		}
+// 		else if (token->type == APPEND_TOKEN)
+// 			appen_redir_out(current->filenames[i]);
+// 		token = token->next;
+// 	}
+// }
 
 void	handle_redir(t_node *redir)
 {
@@ -140,7 +166,6 @@ void	handle_redir(t_node *redir)
 
 	i = 0;
 	current = redir;
-	token = redir->tokens_in_node;
 	while (token)
 	{
 		if (token->type == HEREDOC_TOKEN)
