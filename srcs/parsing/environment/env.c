@@ -16,30 +16,37 @@ void	print_env(t_env *list)
 	}
 }
 
-void	add_first(t_env **list, t_env *new)
+void add_first(t_env **list, t_env *new)
 {
-	(*list) = new;
-	(*list)->prev = *list;
-	(*list)->next = *list;
+	*list = new;
+	new->prev = NULL;
+	new->next = NULL;
 }
 
-int	append(t_env **list, char *elem)
+int append(t_env **list, char *elem)
 {
-	t_env	*new;
+	t_env *new;
+	t_env *last;
 
 	if (!list_new_elem_str(&new, elem))
 		return (0);
+	new->next = NULL;
 	if (!(*list))
-		add_first(list, new);
+	{
+		new->prev = NULL;
+		*list = new;
+	}
 	else
 	{
-		new->prev = (*list)->prev;
-		new->next = (*list);
-		(*list)->prev->next = new;
-		(*list)->prev = new;
+		last = *list;
+		while (last->next != NULL)
+			last = last->next;
+		last->next = new;
+		new->prev = last;
 	}
 	return (1);
 }
+
 int	init_env_null(t_minishell *data, int mode)
 {
 	t_env	*list;
@@ -133,7 +140,7 @@ int	init_env_dup(t_minishell *data, char **env)
 	list = NULL;
 	while (env[i])
 	{
-		tmp = strdup(env[i]);
+		tmp = ft_strdup(env[i]);
 		if (ft_strstr(tmp, "SHLVL"))
 			tmp = recup_shlvl(tmp);
 		if (!tmp)
@@ -169,7 +176,7 @@ int	init_env(t_minishell *data, char **env)
 	list = NULL;
 	while (env[i])
 	{
-		tmp = strdup(env[i]);
+		tmp = ft_strdup(env[i]);
 		if (ft_strstr(tmp, "SHLVL"))
 			tmp = recup_shlvl(tmp);
 		if (!tmp)
