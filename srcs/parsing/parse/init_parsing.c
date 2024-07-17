@@ -74,5 +74,6 @@ void	init_parsing(t_node *node)
 	node->last_heredoc = NULL;
 	node->error_num = 0;
 	node->lonely_expansion = 0;
+	node->redir = 0;
 }
 

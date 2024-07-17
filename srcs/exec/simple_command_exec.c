@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_command_exec.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 09:18:47 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/01 11:21:45 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/17 14:17:38 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,29 @@ void	exec_built_in(t_minishell *data, t_node *list)
 	built_in_funcs[index](data, list, list->args);
 }
 
+// int	check_if_redir(t_node *node)
+// {
+// 	t_token	*token;
+
+// 	token = node->tokens_in_node;
+// 	while (token)
+// 	{
+// 		if (token->type >= 1 && token->type <= 4)
+// 			return (0);
+// 		token = token->next;
+// 	}
+// 	return (1);
+// }
 int	check_if_redir(t_node *node)
 {
-	t_token	*token;
-
-	token = node->tokens_in_node;
-	while (token)
+	while (node)
 	{
-		if (token->type >= 1 && token->type <= 4)
+		if (node->redir == 1)
 			return (0);
-		token = token->next;
+		node = node->next;
 	}
 	return (1);
 }
-
 void	exec_child_process(t_minishell *data, t_node *list)
 {
 	t_node	*current;

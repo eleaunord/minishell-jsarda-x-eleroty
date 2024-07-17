@@ -250,6 +250,7 @@ void					free_node_cmd_args(t_node *node);
 void init_args(t_token *tokens, t_node *node);
 void set_signals(int mode);
 void ft_putchar_fd(char c, int fd);
+void freetab(t_node **nodes);
 	// LIBFT FUNCTIONS
 	int ft_isdigit(int c);
 unsigned long long int	ft_atol(const char *str);

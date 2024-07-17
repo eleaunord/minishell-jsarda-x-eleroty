@@ -8,12 +8,14 @@ t_node *create_node(char *token)
 	// Use calloc instead of malloc
 	if (!new_node)
 	{
+		perror("Failed to allocate memory for new node");
 		exit(EXIT_FAILURE);
 	}
 	new_node->content = ft_strdup(token);
 	if (!new_node->content)
 	{
-		free(new_node); // Free the node if strdup fails
+		free(new_node);
+		perror("Failed to duplicate token string");
 		exit(EXIT_FAILURE);
 	}
 	new_node->next = NULL;
@@ -47,12 +49,22 @@ void append_node(t_node **tokens_list, char *token)
 
 void process_segment(char *start, t_node **tokens_list)
 {
-	char *segment;
+    char *trimmed;
+    char *collapsed;
+    char *segment;
 
-	segment = trim_whitespace(start);
-	segment = collapse_spaces(segment);
-	append_node(tokens_list, segment);
+    trimmed = trim_whitespace(start);
+    collapsed = collapse_spaces(trimmed);
+    segment = ft_strdup(collapsed);
+    if (!segment)
+    {
+        perror("Failed to duplicate segment");
+        return;
+    }
+    append_node(tokens_list, segment);
+    free(segment);
 }
+
 
 void split_line(char *line, t_node **tokens_list, bool *error)
 {

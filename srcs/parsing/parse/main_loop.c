@@ -17,6 +17,8 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	if (error)
 	{
 		write(1, "Syntax error\n", 13);
+		free(line_copy);
+		freetab(nodes);
 		return (0);
 	}
 	free(line_copy);
@@ -27,7 +29,13 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	{
 		current->node_index = node_index;
 		tokens = tokenize_input(current->content);
+		if (!tokens)
+		{
+			freetab(nodes);
+			return (0);
+		}
 		parse_tokens(tokens, current, mini);
+		free_tokens(tokens);
 		if (current->cmd_count != 0)
 			mini->nb_cmd++;
 		node_index++;
@@ -35,6 +43,8 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	}
 	return (1);
 }
+
+// free tokens ne pouvait pas etre mis avant car utilise dans check if redir: check if redir modif
 
 void init_minishell(t_minishell *mini)
 {
@@ -109,6 +119,7 @@ int main(int argc, char *argv[], char *env[])
 			free_nodes(node_list);
 			break;
 		}
+		//free_tokens(toke)
 		free_nodes(node_list);
 		free(input_line);
 	}
