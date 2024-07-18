@@ -75,5 +75,10 @@ void	init_parsing(t_node *node)
 	node->error_num = 0;
 	node->lonely_expansion = 0;
 	node->redir = 0;
+	node->fdout = 0;
+	node->fdin = 0;
+	node->is_here_doc = 0;
+	node->is_redir_out = 0;
+	node->is_redir_in = 0;
 }
 

@@ -7,6 +7,7 @@
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdarg.h>
 # include <stdbool.h>
 # include <stddef.h>
@@ -16,15 +17,13 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-#include <signal.h>
 
 # define NUM_OF_BUILT_INS 7
 
 // MINISHELL STRUCT
 typedef enum e_token_type
 {
-	TOKEN_WORD,
-	// "word" ; = 0 (bc first enumerator in our enum e_token_type)
+	TOKEN_WORD,      // = 0
 	APPEND_TOKEN,    // ">>" ; = 1
 	REDIR_OUT_TOKEN, // ">" ; = 2
 	HEREDOC_TOKEN,   // "<<" ; = 3
@@ -39,10 +38,7 @@ typedef struct s_token
 	struct s_token		*next;
 	char				*cmd;
 	char				**args;
-	// REDIRECTIONS
-	// char				*filename;
 	int					processed;
-	// EXPANSIONS
 	char				*key_expansion;
 	int					limiter_hd_count;
 }						t_token;
@@ -55,7 +51,6 @@ typedef struct s_env
 	char				*value;
 	int					shlvl_num;
 	struct s_env		*next;
-	struct s_env		*prev;
 }						t_env;
 
 // NODES (from parsing to exec, with love)
@@ -63,50 +58,36 @@ typedef struct s_node
 {
 	// Making the nodes (for parsing)
 	struct s_node		*next;
-	struct s_node		*prev;
 	void				*content;
 
 	// Dealing with tokens (for parsing)
 	struct s_token		*tokens_in_node;
 
 	// From parsing to exec
-	char *cmd; // in arg[0]
-	int					cmd_count;
-	int					arg_count;
-	char **key_expansion; // in args
+	char				*cmd;
 	char				**args;
+	int					arg_count;
+
+	char **key_expansion; // in args
 	int					expansion_count;
 	int					lonely_expansion;
-	// Redirections, filenames not in args
-	// NEW STRUCTURE FOR FILENAMES :
-	int					file_count;
-	char				**filenames;
-	char				heredoc_filename[36];
-	int redir; // is there a redir ? 1 : yes, 0 : no
 
-	// OLD STRUCTURE FOR FILENAMES :
-	// char *filename_out; // >
-	// char *filename_in;  // <
 	char				**filename_in;
 	char				**filename_out;
-	int					file_in_count;
-	int					file_out_count;
-	int					fdout;
-	int					fdin;
-	int redir_in;      // is there a redir in ? 1 : yes, 0 : no
-	int redir_out;     // is there a redir out ? 1 : yes, 0 : no
-	int here_doc;      // is there a here doc ? 1 : yes, 0 : no
-	char **limiter_hd; // eof
+	int file_in_count;  // count in (for parsing)
+	int file_out_count; // count out (for parsing)
+	int fdout;          // init to -1 in parsing if redir out
+	int fdin;           // init to -1 in parsing if redir in
+	int is_redir_in;    // is there a redir in ? 1 : yes, 0 : no
+	int redir_out;      // is there a redir out ? 1 : yes, 0 : no
+	int is_here_doc;    // is there a here doc ? 1 : yes, 0 : no
+	char **limiter_hd;  // eof
 	int					limiter_hd_count;
 	char				*last_heredoc;
+
+	int					pid;
 	int					pipes[2];
 	int					error_num;
-	int					node_index;
-	int					file_index;
-
-	// OTHER (?)
-	int fd_in; // <
-	int					fd_out;
 
 }						t_node;
 
@@ -116,12 +97,11 @@ typedef struct s_minishell
 	t_env				*env;
 	t_env				*env_dup;
 	t_node				*nodes;
-	int					nb_cmd;
-	// EXITS
-	int					exit;
-	unsigned long long	exit_status;
-	int					print_exit;
+	int					exit_status;
 }						t_minishell;
+
+extern int				g_exit;
+
 // utils
 char					*get_key_value(t_env *env, char *key);
 int						check_key(t_env *env, char *key);
@@ -141,10 +121,12 @@ int						set_key(t_env *new_var, const char *key,
 							t_minishell *data);
 t_env					*allocate_new_var(t_minishell *data);
 void					insert_new_var(t_env *env, t_env *new_var);
-void free_var_env(t_env *node);
-void free_mini(t_minishell *data);
-	// EXEC FUNCTIONS
-	void exec(t_node *list, t_minishell *data);
+void					free_var_env(t_env *node);
+void					free_mini(t_minishell *data);
+void					setup_signal_handlers(void);
+void					sigint_handler(int sig);
+// EXEC FUNCTIONS
+void					exec(t_node *list, t_minishell *data);
 char					*get_cmd_path(char *cmd, t_minishell *data);
 char					*get_path_value(t_minishell *data, char *key);
 char					**create_char_env(t_env *env);
@@ -155,9 +137,9 @@ int						is_built_in(t_node *list);
 void					handle_redir(t_node *redir);
 int						check_if_redir(t_node *node);
 void					exec_built_in(t_minishell *data, t_node *list);
-void set_signals(int mode);
-	// BUILTINS
-	void ft_exit(t_minishell *data, t_node *node, char **args);
+void					set_signals(int mode);
+// BUILTINS
+void					ft_exit(t_minishell *data, t_node *node, char **args);
 void					ft_pwd(t_minishell *data, t_node *node, char **args);
 void					ft_echo(t_minishell *data, t_node *node, char **args);
 void					ft_cd(t_minishell *data, t_node *node, char **args);
@@ -168,8 +150,6 @@ void					ft_export(t_minishell *data, t_node *node, char **args);
 int						open_quote_check(char *line);
 t_token					*tokenize_input(char *line);
 int						is_space(char *line);
-char					*create_token(char *str, int start, int end);
-char					*create_token(char *str, int start, int end);
 char					*remove_quotes(const char *line);
 int						ft_strcmp(char *s1, char *s2);
 int						tokenizer(char *line, t_node **nodes,
@@ -179,13 +159,9 @@ void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *data, char **env);
 void					print_env(t_env *list);
 void					free_tokens(t_token *tokens);
-void					extract_substring(char *token, int start, int end,
-							char **final_str);
 int						is_alpha_underscore(int c);
 void					*ft_memcpy(void *dest, const void *src, size_t n);
 char					*ft_itoa(int n);
-int						is_brace_expansion(char *token, int *i,
-							char **final_str);
 void					ft_putstr_fd(char *s, int fd);
 int						special_tokens(char *input, t_token **tokens,
 							int index);
@@ -205,7 +181,7 @@ bool					is_quote(char c);
 char					*collapse_spaces(char *str);
 void					init_parsing(t_node *node);
 void					set_cmd(t_token *tokens, t_node *node);
-//int						init_args(t_token *tokens, t_node *node);
+// int						init_args(t_token *tokens, t_node *node);
 void					update_tokens(t_token **tokens, t_node *node);
 char					*remove_quotes_from_word(char *word);
 void					set_cmd(t_token *tokens, t_node *node);
@@ -225,11 +201,7 @@ void					allocate_memory_for_limiter_hd(t_node *node);
 void					process_heredoc_tokens(t_token *tokens, t_node *node);
 void					process_filename_out(t_token *tokens, t_node *node);
 void					process_filename_in(t_token *tokens, t_node *node);
-void					count_redirections(t_token **tokens, t_node *node);
-void					process_filenames(t_token *tokens, t_node *node);
-void					allocate_memory_for_filenames(t_node *node);
 void					set_expansions(t_token *tokens, t_node *node);
-void					fill_expansions(t_token *tokens, t_node *node);
 int						count_expansions(t_token *tokens);
 void					process_expansions(t_token **tokens);
 int						tokenizer(char *line, t_node **nodes,
@@ -246,15 +218,17 @@ int						list_new_elem_str(t_env **new, char *elem);
 t_env					*allocate_new_env(void);
 void					free_t_env(t_env *env);
 int						parse_key_value(t_env **new, char *elem);
-bool ft_split_pipes_spaces(char *line, t_node **tokens_list);
-int is_only_tabs(char *str);
+bool					ft_split_pipes_spaces(char *line, t_node **tokens_list);
+int						is_only_tabs(char *str);
 void					free_node_cmd_args(t_node *node);
-void init_args(t_token *tokens, t_node *node);
-void set_signals(int mode);
-void ft_putchar_fd(char c, int fd);
-void freetab(t_node **nodes);
-	// LIBFT FUNCTIONS
-	int ft_isdigit(int c);
+void					init_args(t_token *tokens, t_node *node);
+void					set_signals(int mode);
+void					ft_putchar_fd(char c, int fd);
+void					freetab(t_node **nodes);
+int						process_input_line(char *input_line, t_node **node_list,
+							t_minishell *data);
+// LIBFT FUNCTIONS
+int						ft_isdigit(int c);
 unsigned long long int	ft_atol(const char *str);
 void					*ft_lstdelone(void *lst);
 char					**ft_split(char const *s, char c);
@@ -288,10 +262,6 @@ size_t					ft_strlcpy(char *dst, const char *src, size_t size);
 char					*ft_strstr(char *str, char *to_find);
 char					*ft_strncpy(char *dest, char *src, unsigned int n);
 char					*ft_strcat(char *dest, char *src);
-size_t					ft_itoa_str(int value, char *str);
-
-// USEFUL FUNCTIONS FOR DEBUG
-void					print_node(t_node *head);
 int						is_alpha_underscore(int c);
 
 #endif

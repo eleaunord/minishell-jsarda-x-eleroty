@@ -16,33 +16,38 @@ void	print_env(t_env *list)
 	}
 }
 
-void add_first(t_env **list, t_env *new)
+void	add_first(t_env **list, t_env *new)
 {
 	*list = new;
-	new->prev = NULL;
 	new->next = NULL;
 }
 
-int append(t_env **list, char *elem)
+int	append(t_env **list, char *elem)
 {
-	t_env *new;
-	t_env *last;
+	t_env	*new;
+	t_env	*last;
 
 	if (!list_new_elem_str(&new, elem))
 		return (0);
 	new->next = NULL;
 	if (!(*list))
-	{
-		new->prev = NULL;
 		*list = new;
-	}
 	else
 	{
 		last = *list;
 		while (last->next != NULL)
+		{
+			// Check for circular reference
+			if (last->next == *list)
+			{
+				perror("Detected circular reference in the list");
+				free(new->content);
+				free(new);
+				return (0);
+			}
 			last = last->next;
+		}
 		last->next = new;
-		new->prev = last;
 	}
 	return (1);
 }

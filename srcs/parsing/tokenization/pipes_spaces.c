@@ -41,6 +41,14 @@ void append_node(t_node **tokens_list, char *token)
 		current = *tokens_list;
 		while (current->next != NULL)
 		{
+			// Check for circular reference
+            if (current->next == *tokens_list)
+            {
+                perror("Detected circular reference in the list");
+                free(new_node->content);
+                free(new_node);
+                exit(EXIT_FAILURE);
+            }
 			current = current->next;
 		}
 		current->next = new_node;

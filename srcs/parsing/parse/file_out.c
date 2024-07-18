@@ -13,6 +13,8 @@ void	count_redir_out(t_token **tokens, t_node *node)
 	{
 		if (current->type == REDIR_OUT_TOKEN)
 		{
+			node->fdout = -1;
+			node->is_redir_out = 1;
 			if (current->next && current->next->type == TOKEN_WORD)
 			{
 				i++;

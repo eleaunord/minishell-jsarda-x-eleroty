@@ -18,17 +18,21 @@ SRCS        :=   libft/ft_lst.c \
 					libft/ft_strstr.c \
 					libft/ft_strncpy.c \
 					libft/ft_atol.c \
+					srcs/main.c \
 					srcs/parsing/tokenization/word_tokens.c \
 					srcs/parsing/tokenization/special_tokens.c \
-					srcs/parsing/parse/main_loop.c \
+					srcs/parsing/parse/main_parse.c \
 					srcs/parsing/parse/parser.c \
+					srcs/parsing/parse/signals.c \
+					srcs/parsing/parse/file_in.c \
+					srcs/parsing/parse/file_out.c \
+					srcs/parsing/parse/heredoc.c \
 					srcs/parsing/tokenization/pipes_spaces.c \
 					srcs/parsing/tokenization/quotes.c \
 					srcs/parsing/tokenization/tokenizer.c \
 					srcs/parsing/environment/env.c \
 					srcs/parsing/environment/key_value.c \
 					srcs/parsing/parse/free.c \
-					srcs/parsing/parse/signals.c \
 					srcs/parsing/environment/alloc_env.c \
 					srcs/parsing/parse/get_expansion.c \
 					srcs/parsing/parse/checkers.c \

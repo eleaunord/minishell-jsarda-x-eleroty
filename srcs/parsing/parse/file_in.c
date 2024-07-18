@@ -13,6 +13,8 @@ void	count_redir_in(t_token **tokens, t_node *node)
 	{
 		if (current->type == REDIR_IN_TOKEN)
 		{
+			node->fdin = -1;
+			node->is_redir_in = 1;
 			if (current->next && current->next->type == TOKEN_WORD)
 			{
 				i++;

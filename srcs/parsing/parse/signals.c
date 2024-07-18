@@ -1,99 +1,17 @@
 #include "../../../includes/minishell.h"
 
-int g_exit = 0;
-
-/*
-
-// CTRL + C => SIGINT
-// CTRL + \ => SIGQUIT
-
-// Before executing a command
-set_signals(1); // Interactive mode
-
-// Execute the command
-exec_command();
-
-// After executing a command
-set_signals(0); // Back to normal mode
-
-// For heredoc handling
-set_signals(2); // Heredoc mode
-
-*/
-// NORMAL MODE
-void norm_handler(int sig)
+void	sigint_handler(int sig)
 {
-    if (sig == SIGINT)
-    {
-        ft_putchar_fd('\n', 1);
-        rl_replace_line("", 1);
-        rl_on_new_line();
-        rl_redisplay();
-        g_exit = 1;
-    }
-    return;
+	(void)sig;
+	g_return_satus = 130;
+	rl_on_new_line();
+	printf("\n");
+	rl_replace_line("", 1);
+	rl_redisplay();
+	return ;
 }
-// INTERACTIVE MODE
-void interact_handler(int sig)
+void	setup_signal_handlers(void)
 {
-    if (sig == SIGINT)
-    {
-        ft_putchar_fd('\n', 1);
-        g_exit = 130;
-    }
-    else if (sig == SIGQUIT)
-    {
-        ft_putstr_fd("exit\n", 1);
-        g_exit = 131;
-    }
-    return;
-}
-
-// READING HEREDOC
-void heredoc_handler(int sig)
-{
-    if (sig == SIGINT)
-    {
-        printf("\n");
-        g_exit = 130;
-        exit(130);
-    }
-    return;
-}
-
-// IGNORE SIGNAL
-void ignore_signal(int signal)
-{
-    struct sigaction sa;
-
-    sa.sa_handler = SIG_IGN;
-    sa.sa_flags = 0;
-    sigemptyset(&sa.sa_mask);
-    if (sigaction(signal, &sa, NULL) < 0)
-        exit(1);
-}
-
-void set_signals(int mode)
-{
-    struct sigaction sa;
-
-    sa.sa_flags = 0;
-    sigemptyset(&sa.sa_mask);
-    if (mode == 0)
-        sa.sa_handler = &norm_handler;
-    else if (mode == 1)
-        sa.sa_handler = &interact_handler;
-    else if (mode == 2)
-        sa.sa_handler = &heredoc_handler;
-    else if (mode == 3)
-        sa.sa_handler = &ignore_signal;
-    sigaction(SIGINT, &sa, NULL);
-    if (!mode)
-    {
-        sa.sa_handler = SIG_IGN;
-        sa.sa_flags = 0;
-        sigemptyset(&sa.sa_mask);
-        sigaction(SIGQUIT, &sa, NULL);
-    }
-    sigaction(SIGQUIT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_handler);
 }

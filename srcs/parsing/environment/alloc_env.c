@@ -43,7 +43,6 @@ t_env	*allocate_new_env(void)
 	new_env->key = NULL;
 	new_env->value = NULL;
 	new_env->next = NULL;
-	new_env->prev = NULL;
 	return (new_env);
 }
 
