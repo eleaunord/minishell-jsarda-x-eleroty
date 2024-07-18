@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/17 15:19:52 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/18 11:41:02 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,22 @@ void	redir_out(char *file_name)
 	close(fd);
 }
 
-void	appen_redir_out(char *file_name)
+void	appen_redir_out(t_node *data, char *file_name)
 {
 	int	fd;
 
-	fd = open(file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
+	data->fdout = open(file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (data->fdout == -1)
 	{
 		perror("Error opening output file");
 		exit(EXIT_FAILURE);
 	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
+	if (dup2(data->fdout, STDOUT_FILENO) == -1)
 	{
 		perror("Error redirecting stdout");
 		exit(EXIT_FAILURE);
 	}
-	close(fd);
+	close(data->fdout);
 }
 
 void	get_tmp_file(t_node *node)

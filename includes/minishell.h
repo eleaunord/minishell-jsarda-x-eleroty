@@ -72,9 +72,9 @@ typedef struct s_node
 	// From parsing to exec
 	char *cmd; // in arg[0]
 	int					cmd_count;
-	char				**args;
 	int					arg_count;
 	char **key_expansion; // in args
+	char				**args;
 	int					expansion_count;
 	int					lonely_expansion;
 	// Redirections, filenames not in args
@@ -91,6 +91,8 @@ typedef struct s_node
 	char				**filename_out;
 	int					file_in_count;
 	int					file_out_count;
+	int					fdout;
+	int					fdin;
 	int redir_in;      // is there a redir in ? 1 : yes, 0 : no
 	int redir_out;     // is there a redir out ? 1 : yes, 0 : no
 	int here_doc;      // is there a here doc ? 1 : yes, 0 : no
