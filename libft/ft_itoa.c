@@ -1,70 +1,57 @@
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/16 14:07:27 by jsarda            #+#    #+#             */
+/*   Updated: 2023/11/16 17:43:31 by jsarda           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	get_size(int n)
+#include "libft.h"
+
+static int	n_len(int n)
 {
-	int	size;
+	int	i;
 
-	size = 1;
-	if (n < 0)
-		size++;
-	while (n <= -10)
+	i = 0;
+	if (n < 1)
+		i++;
+	while (n)
 	{
-		n /= 10;
-		size++;
+		n = n / 10;
+		i++;
 	}
-	while (n >= 10)
-	{
-		n /= 10;
-		size++;
-	}
-	return (size);
-}
-
-static char	*ft_malloc(int n)
-{
-	char	*s;
-	int		size;
-
-	size = get_size(n);
-	s = (char *)malloc(sizeof(char) * (size + 1));
-	if (!s)
-		return (NULL);
-	ft_bzero(s, size + 1);
-	return (s);
-}
-
-static void	ft_recursive(int n, char *res)
-{
-	if (n == -2147483648)
-	{
-		res[1] = '2';
-		ft_recursive(147483648, res);
-	}
-	else
-	{
-		if (n < 0)
-			n = -n;
-		if (n > 9)
-		{
-			ft_recursive((n / 10), res);
-			ft_recursive((n % 10), res);
-		}
-		else
-			res[ft_strlen(res)] = (n + '0');
-	}
+	return (i);
 }
 
 char	*ft_itoa(int n)
 {
 	char	*res;
+	int		len;
+	int		i;
+	long	nbr;
 
-	res = ft_malloc(n);
+	i = 0;
+	nbr = n;
+	len = n_len(n);
+	res = malloc(sizeof(char) * (len) + 1);
 	if (!res)
 		return (NULL);
-	if (n < 0)
+	if (nbr < 0)
 	{
-		res[0] = '-';
+		res[i] = '-';
+		nbr = -nbr;
+		i++;
 	}
-	ft_recursive(n, res);
+	res[len] = '\0';
+	len--;
+	while (len >= i)
+	{
+		res[len--] = (nbr % 10) + 48;
+		nbr = nbr / 10;
+	}
 	return (res);
 }

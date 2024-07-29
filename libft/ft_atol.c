@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/28 09:55:35 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/01 10:36:12 by jsarda           ###   ########.fr       */
+/*   Created: 2024/07/05 11:02:22 by jsarda            #+#    #+#             */
+/*   Updated: 2024/07/05 11:03:49 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "libft.h"
 
 unsigned long long int	ft_atol(const char *str)
 {

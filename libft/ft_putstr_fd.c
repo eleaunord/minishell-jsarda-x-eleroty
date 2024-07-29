@@ -5,17 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 10:59:51 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/27 11:02:04 by jsarda           ###   ########.fr       */
+/*   Created: 2023/11/17 10:17:23 by jsarda            #+#    #+#             */
+/*   Updated: 2023/11/17 10:28:27 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
+#include "libft.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {

@@ -5,58 +5,69 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 10:01:41 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/28 14:03:44 by jsarda           ###   ########.fr       */
+/*   Created: 2024/07/10 20:21:58 by juliensarda       #+#    #+#             */
+/*   Updated: 2024/07/29 09:40:45 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void	update_pwd(t_minishell *data, t_node *node)
+void	cd_errors(void)
+{
+	ft_errors_exec(1, strerror(errno), "malloc", errno);
+}
+
+void	update_pwd(t_shell *shell, t_node *data, char cwd[])
 {
 	char	**new_tab;
 	char	*tmp;
-	char	cwd[PATH_MAX];
+	char	*tmp_str;
 
 	new_tab = malloc(sizeof(char *) * 4);
 	if (!new_tab)
-		return (ft_error("malloc : ", strerror(errno), 1, data));
+		return (cd_errors());
 	new_tab[0] = ft_strdup("export");
 	if (!new_tab[0])
-		return (safe_malloc(new_tab, data));
-	tmp = ft_strdup(get_key_value(data->env, "PWD"));
+		return (cd_errors(), freetab(new_tab));
+	tmp = ft_strdup(get_key_value(shell->envp, "PWD"));
 	if (!tmp)
-		return (safe_malloc(new_tab, data), free(tmp));
-	new_tab[1] = ft_strdup(ft_strjoin("OLDPWD=", tmp));
+		tmp = ft_strdup(getcwd(cwd, PATH_MAX));
+	tmp_str = ft_strjoin("OLDPWD=", tmp);
 	free(tmp);
-	if (!new_tab[1])
-		return (safe_malloc(new_tab, data));
-	new_tab[2] = ft_strdup(ft_strjoin("PWD=", getcwd(cwd, PATH_MAX)));
-	if (!new_tab[2])
-		return (safe_malloc(new_tab, data));
+	if (!tmp_str)
+		return (cd_errors(), freetab(new_tab));
+	new_tab[1] = tmp_str;
+	tmp_str = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX));
+	if (!tmp_str)
+		return (cd_errors(), freetab(new_tab));
+	new_tab[2] = tmp_str;
 	new_tab[3] = NULL;
-	ft_export(data, node, new_tab);
-	free_tab(new_tab);
+	ft_export(data, shell, new_tab);
+	freetab(new_tab);
 }
 
-void	ft_cd(t_minishell *data, t_node *node, char **args)
+void	ft_cd(t_node *data, t_shell *shell, char **args)
 {
-	int	cd_ret;
+	int		cd_ret;
+	char	cwd[PATH_MAX];
 
-	if (count_args(args) >= 3)
-		return (ft_error("cd: too many arguments", NULL, 1, data));
-	if (!args[1])
+	(void)cd_ret;
+	(void)args;
+	if (count_args(data->args) >= 3)
+		return (ft_errors_exec(1, " too many arguments", "cd", 1));
+	if (!data->args[1])
 	{
-		if (check_key(data->env, "HOME"))
-			return (ft_error("cd : HOME not set", NULL, 1, data));
-		cd_ret = chdir(get_path_value(data, "HOME"));
+		if (check_key(shell->envp, "HOME"))
+			return (ft_errors_exec(1, " HOME not set", "cd", 1));
+		cd_ret = chdir(get_path_value(shell, "HOME"));
 		if (cd_ret != 0)
-			ft_error("cd : ", strerror(errno), 1, data);
-		update_pwd(data, node);
+			return (ft_errors_exec(1, strerror(errno), "cd", 1));
+		update_pwd(shell, data, cwd);
 		return ;
 	}
-	cd_ret = chdir(args[1]);
-	update_pwd(data, node);
+	cd_ret = chdir(data->args[1]);
 	if (cd_ret != 0)
-		ft_error("cd : ", strerror(errno), 1, data);
+		return (ft_errors_exec(1, strerror(errno), "cd", 1));
+	update_pwd(shell, data, cwd);
+	g_return_satus = 0;
 }

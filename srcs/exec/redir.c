@@ -3,185 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 12:40:39 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/18 11:41:02 by eleroty          ###   ########.fr       */
+/*   Created: 2024/07/02 09:36:05 by jsarda            #+#    #+#             */
+/*   Updated: 2024/07/29 09:41:33 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void	redir_in(char *file_name)
+void	heredoc(t_node *data, t_shell *shell, char *eof, char *file_name)
 {
-	int	fd;
-
-	fd = open(file_name, O_RDONLY);
-	if (fd == -1)
+	if (!eof)
+		return (ft_errors_exec(0, "syntax error near unexpected \
+		token `newline'\n", NULL, 2), free(data->tmpfile_hd));
+	data->fdin = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (data->fdin == -1)
+		return (ft_errors_exec(1, strerror(errno),
+				NULL, errno), free(data->tmpfile_hd));
+	data->pid = fork();
+	if (data->pid == 0)
 	{
-		perror("Error opening input file");
-		exit(EXIT_FAILURE);
+		manage_sig();
+		readline_loop(data, shell, eof, data->fdin);
+		close(data->fdin);
+		free_child(data, shell, 0);
 	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("Error redirecting stdin");
-		exit(EXIT_FAILURE);
-	}
-	close(fd);
+	else
+		ft_wait_hd(data);
+	if (ft_lstsize_cmd(shell->datas) == 1)
+		close(data->fdin);
 }
 
-void	redir_out(char *file_name)
+void	redir_in(t_node *data, t_shell *shell, char *file_name)
 {
-	int	fd;
+	if (data->is_hd && !file_name)
+		free_child(data, shell, 0);
+	data->fdin = open(file_name, O_RDONLY, 0644);
+}
 
-	fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		perror("Error opening output file");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		perror("Error redirecting stdout");
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	close(fd);
+void	redir_out(t_node *data, char *file_name)
+{
+	data->fdout = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 }
 
 void	appen_redir_out(t_node *data, char *file_name)
 {
-	int	fd;
-
 	data->fdout = open(file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (data->fdout == -1)
-	{
-		perror("Error opening output file");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(data->fdout, STDOUT_FILENO) == -1)
-	{
-		perror("Error redirecting stdout");
-		exit(EXIT_FAILURE);
-	}
-	close(data->fdout);
 }
 
-void	get_tmp_file(t_node *node)
+void	handle_redir(t_shell *shell, t_node *data)
 {
-	int		random_fd;
-	size_t	i;
-	char	rand_char;
-	char	filename[36] = "/tmp/.minishell-XXXXXX";
-
-	i = 11;
-	random_fd = open("/dev/urandom", O_RDONLY);
-	if (random_fd == -1)
-	{
-		perror("Error opening /dev/urandom");
-		exit(EXIT_FAILURE);
-	}
-	while (i < 22)
-	{
-		if (read(random_fd, &rand_char, 1) != 1)
-		{
-			perror("Error reading /dev/urandom");
-			close(random_fd);
-			exit(EXIT_FAILURE);
-		}
-		filename[i] = 'a' + (rand_char % 26);
-		i++;
-	}
-	filename[i] = '\0';
-	ft_strcpy(node->heredoc_filename, filename);
-	close(random_fd);
-	node->heredoc_filename[sizeof(node->heredoc_filename)] = '\0';
-}
-
-void	heredoc(char *eof, char *file_name)
-{
-	char	*buf;
-	int		fd;
-
-	if (!eof)
-	{
-		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
-			2);
-		return ;
-	}
-	fd = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		perror("Error opening output file in heredoc");
-		exit(EXIT_FAILURE);
-	}
-	while (1)
-	{
-		buf = readline("> ");
-		if (buf && !ft_strncmp(eof, buf, INT_MAX) && eof)
-		{
-			free(buf);
-			break ;
-		}
-		if (buf)
-		{
-			ft_putendl_fd(buf, fd);
-			free(buf);
-		}
-	}
-	close(fd);
-}
-// void	handle_redir(t_node *redir)
-// {
-// 	int		i;
-// 	t_node	*current;
-
-// 	i = 0;
-// 	current = redir;
-// 	while (current)
-// 	{
-// 		if (current->last_heredoc != NULL)
-// 			redir_in(current->last_heredoc);
-// 		else if (token->type == REDIR_IN_TOKEN)
-// 		{
-// 			redir_in(current->filenames[i]);
-// 			i++;
-// 		}
-// 		else if (token->type == REDIR_OUT_TOKEN)
-// 		{
-// 			redir_out(current->filenames[i]);
-// 			i++;
-// 		}
-// 		else if (token->type == APPEND_TOKEN)
-// 			appen_redir_out(current->filenames[i]);
-// 		token = token->next;
-// 	}
-// }
-
-void	handle_redir(t_node *redir)
-{
-	int		i;
-	t_token	*token;
-	t_node	*current;
+	int	i;
 
 	i = 0;
-	current = redir;
-	while (token)
+	if (data->redir_type_in == HD)
+		redir_in(data, shell, data->tmpfile_hd);
+	while (data->namein && data->namein[i])
 	{
-		if (token->type == HEREDOC_TOKEN)
-			redir_in(current->heredoc_filename);
-		else if (token->type == REDIR_IN_TOKEN)
-		{
-			redir_in(current->filenames[i]);
-			i++;
-		}
-		else if (token->type == REDIR_OUT_TOKEN)
-		{
-			redir_out(current->filenames[i]);
-			i++;
-		}
-		else if (token->type == APPEND_TOKEN)
-			appen_redir_out(current->filenames[i]);
-		token = token->next;
+		if (data->fdin != 0 && data->fdin != -1)
+			close(data->fdin);
+		if (data->redir_type_in == IN)
+			redir_in(data, shell, data->namein[i]);
+		i++;
+	}
+	i = 0;
+	while (data->nameout && data->nameout[i])
+	{
+		if (data->fdout != 1 && data->fdout != -1)
+			close(data->fdout);
+		if (data->redir_type_out == OUT)
+			redir_out(data, data->nameout[i]);
+		else if (data->redir_type_out == APPEND)
+			appen_redir_out(data, data->nameout[i]);
+		i++;
 	}
 }

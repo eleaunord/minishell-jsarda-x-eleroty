@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/29 14:02:02 by jsarda            #+#    #+#             */
-/*   Updated: 2024/05/29 14:02:56 by jsarda           ###   ########.fr       */
+/*   Created: 2023/11/15 13:41:20 by jsarda            #+#    #+#             */
+/*   Updated: 2023/11/17 08:50:29 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "libft.h"
 
 static size_t	count_words(char const *s, char c)
 {

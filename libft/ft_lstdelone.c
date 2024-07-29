@@ -5,19 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/04 16:24:22 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/05 09:34:11 by jsarda           ###   ########.fr       */
+/*   Created: 2023/11/20 09:17:35 by jsarda            #+#    #+#             */
+/*   Updated: 2023/11/20 10:42:05 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "libft.h"
 
-void	*ft_lstdelone(void *lst)
+void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
+	if (!del)
+		return ;
 	if (lst)
 	{
+		(*del)(lst->content);
 		free(lst);
-		lst = NULL;
 	}
-	return (NULL);
 }

@@ -54,7 +54,7 @@ typedef struct s_env
 }						t_env;
 
 // NODES (from parsing to exec, with love)
-typedef struct s_node
+typedef struct s_node //t_data
 {
 	// Making the nodes (for parsing)
 	struct s_node		*next;

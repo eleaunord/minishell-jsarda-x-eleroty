@@ -5,52 +5,47 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 13:09:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/01 11:00:25 by jsarda           ###   ########.fr       */
+/*   Created: 2024/07/02 09:11:03 by jsarda            #+#    #+#             */
+/*   Updated: 2024/07/29 09:41:12 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void	init_exec(t_node *node, t_minishell *data)
+void	ft_close(t_node *data)
 {
-	node->fd_in = STDIN_FILENO;
-	node->fd_out = STDOUT_FILENO;
-	data->print_exit = 0;
+	while (data)
+	{
+		if (data->fdin != -1 && data->fdin != 0)
+			close(data->fdin);
+		if (data->fdout != -1 && data->fdout != 1)
+			close(data->fdout);
+		data = data->next;
+	}
 }
 
-void exec(t_node *list, t_minishell *data)
+int	exec(t_shell *shell)
 {
-	int	i;
+	t_node	*datas;
+	int		num_cmd;
 
-	int		stdin_copy;
-	int		stdout_copy;
-	init_exec(list, data);
-	i = 0;
-	if (list->limiter_hd && list->next == NULL)
+	num_cmd = 0;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
+	datas = shell->datas;
+	handle_heredoc(shell, datas);
+	open_files(&datas);
+	datas = shell->datas;
+	if (datas->next != NULL)
 	{
-		while (list->limiter_hd[i])
-		{
-			printf("HEREDOC FLAG%d\n", list->here_doc);
-			get_tmp_file(list);
-			heredoc(list->limiter_hd[i], list->heredoc_filename);
-			i++;
-			if (list->limiter_hd[i])
-				unlink(list->heredoc_filename);
-		}
-	}
-	stdin_copy = dup(STDIN_FILENO);
-	stdout_copy = dup(STDOUT_FILENO);
-	if (list->next != NULL)
-	{
-		data->print_exit = 1;
-		exec_pipe(list, data);
+		num_cmd = ft_lstsize_cmd(shell->datas);
+		exec_pipe(shell, num_cmd);
 	}
 	else
-		exec_simple_cmd(data, list);
-	dup2(stdin_copy, STDIN_FILENO);
-	dup2(stdout_copy, STDOUT_FILENO);
-	close(stdin_copy);
-	close(stdout_copy);
-	unlink(list->heredoc_filename);
+		exec_simple_cmd(datas, shell);
+	ft_close(datas);
+	free_hd_file(&(shell->datas), 2);
+	free_hd_file(&(shell->datas), 1);
+	return (0);
 }

@@ -1,49 +1,42 @@
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/14 11:29:47 by jsarda            #+#    #+#             */
+/*   Updated: 2023/11/17 13:39:53 by jsarda           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*new_s;
-	size_t	s_length;
+	char	*res;
 	size_t	i;
+	size_t	j;
+	size_t	len2;
 
 	if (!s)
 		return (NULL);
-	s_length = ft_strlen(s);
-	if (s_length <= len + start)
-		len = s_length - start;
-	if (s_length < start)
-	{
-		new_s = malloc(1);
-		new_s[0] = '\0';
-		return (new_s);
-	}
-	new_s = (char *)malloc((sizeof(*s) * (len + 1)));
-	if (!new_s)
+	if ((size_t)start > ft_strlen(s))
+		return (ft_strdup("\0"));
+	if (len > (ft_strlen(s) - start))
+		len2 = ft_strlen(s) - start;
+	else
+		len2 = len;
+	res = malloc(sizeof(char) * (len2 + 1));
+	if (!res)
 		return (NULL);
-	i = 0;
-	while (s[start] && i < len)
-		new_s[i++] = s[start++];
-	new_s[i] = '\0';
-	return (new_s);
-}
-
-char *ft_strsub(const char *s, unsigned int start, size_t len)
-{
-    char *sub;
-    size_t i;
-
-    if (!s)
-        return NULL;
-    sub = (char *)malloc(sizeof(char) * (len + 1));
-    if (!sub)
-        return NULL;
-
-    i = 0;
-    while (i < len)
-    {
-        sub[i] = s[start + i];
-        i++;
-    }
-    sub[len] = '\0';
-    return sub;
+	i = -1;
+	j = 0;
+	while (s[++i])
+	{
+		if (i >= start && j < len)
+			res[j++] = s[i];
+	}
+	res[j] = '\0';
+	return (res);
 }

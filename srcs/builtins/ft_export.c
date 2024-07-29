@@ -5,108 +5,145 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/06 09:24:48 by jsarda            #+#    #+#             */
-/*   Updated: 2024/06/26 13:35:11 by jsarda           ###   ########.fr       */
+/*   Created: 2024/07/04 10:21:22 by jsarda            #+#    #+#             */
+/*   Updated: 2024/07/29 09:40:55 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void	create_var(t_minishell *data, t_env *env, const char *key,
-		const char *value)
+static int	parse_args(char *arg, char **name, char **value, char *supp)
 {
-	t_env	*new_var;
+	char	*equal;
 
-	new_var = allocate_new_var(data);
-	if (!new_var)
-		return ;
-	if (!set_key(new_var, key, data))
-		return ;
-	if (!set_str(new_var, key, value, data))
-		return ;
-	if (!set_value(new_var, value, data))
-		return ;
-	if (env == NULL)
+	equal = ft_strchr(arg, '=');
+	if (equal)
 	{
-		new_var->next = new_var;
-		env = new_var;
+		*equal = '\0';
+		*name = arg;
+		if (*(equal + 1) == '\0')
+			*value = NULL;
+		else
+			*value = equal + 1;
+		if (!**name)
+			return (ft_errors_exec(2, "not a valid identifier", supp, 1), 0);
 	}
 	else
-		insert_new_var(env, new_var);
+	{
+		*name = arg;
+		*value = NULL;
+		if (!**name)
+			return (ft_errors_exec(2, "not a valid identifier", supp, 1), 0);
+	}
+	if (!is_valid_identifier(*name))
+		return (ft_errors_exec(2, "not a valid identifier", supp, 1), 0);
+	return (1);
 }
 
-void	handle_env_change(t_minishell *data, t_env *env, char **var, char *args)
+int	modify_value(t_env *env, const char *value)
+{
+	char	*new_line;
+	char	*tmp_name;
+
+	free(env->value);
+	env->value = ft_strdup(value);
+	if (!env->value)
+		return (env->value = NULL, 0);
+	tmp_name = ft_strjoin(env->name, "=");
+	if (!tmp_name)
+		return (free(env->value), env->value = NULL, 0);
+	new_line = ft_strjoin(tmp_name, value);
+	free(tmp_name);
+	if (!new_line)
+		return (free(env->value), env->value = NULL, 0);
+	free(env->line);
+	env->line = new_line;
+	return (0);
+}
+
+void	handle_env_change(t_shell *shell, char *name, char *value)
 {
 	t_env	*current;
+	char	*tmp_name;
+	char	*tmp_line;
 
-	current = env;
+	current = shell->envp;
 	while (current)
 	{
-		if (ft_strcmp(current->key, var[0]) == 0)
+		if (ft_strcmp(current->name, name) == 0)
 		{
-			if (count_args(var) <= 1)
+			if (!value)
 				break ;
-			modify_value(current, var[1]);
+			modify_value(current, value);
 			break ;
 		}
 		current = current->next;
-		if (current == env)
-		{
-			if (ft_strchr(args, '='))
-				create_var(data, current, var[0], var[1]);
-			break ;
-		}
 	}
-}
-
-void	handle_env_dup_change(t_minishell *data, t_env *env_dup, char **var)
-{
-	t_env	*current_duplicate;
-
-	current_duplicate = env_dup;
-	while (current_duplicate)
+	if (value && !current)
 	{
-		if (ft_strcmp(current_duplicate->key, var[0]) == 0)
-		{
-			if (count_args(var) <= 1)
-				break ;
-			modify_value(current_duplicate, var[1]);
-			break ;
-		}
-		current_duplicate = current_duplicate->next;
-		if (current_duplicate == env_dup)
-		{
-			create_var(data, current_duplicate, var[0], var[1]);
-			break ;
-		}
+		tmp_name = ft_strjoin(name, "=");
+		tmp_line = ft_strjoin(tmp_name, value);
+		ft_lstadd_back_env(&(shell->envp), ft_lstnew_env(tmp_line, name,
+				value));
+		free(tmp_name);
+		free(tmp_line);
 	}
 }
 
-void	ft_export(t_minishell *data, t_node *node, char **args)
+void	handle_exp_change(t_shell *shell, char *name, char *value)
+{
+	t_env	*curr_exp;
+	char	*tmp_name;
+	char	*tmp_line;
+
+	curr_exp = shell->exp;
+	while (curr_exp)
+	{
+		if (ft_strcmp(curr_exp->name, name) == 0)
+		{
+			if (!value)
+				break ;
+			modify_value(curr_exp, value);
+			break ;
+		}
+		curr_exp = curr_exp->next;
+	}
+	if (!curr_exp)
+	{
+		tmp_name = ft_strjoin(name, "=");
+		if (!value)
+			value = "''";
+		tmp_line = ft_strjoin(tmp_name, value);
+		ft_lstadd_back_env(&(shell->exp), ft_lstnew_env(tmp_line, name, value));
+		return (free(tmp_name), free(tmp_line));
+	}
+}
+
+void	ft_export(t_node *data, t_shell *shell, char **args)
 {
 	int		i;
-	char	**var;
+	char	*name;
+	char	*value;
+	char	*supp;
 
-	(void)node;
-	if (!args || !data)
+	if (!data)
 		return ;
 	i = 1;
 	if (!args[1])
-		return (ft_print_export(data->env_dup));
+		return (ft_print_exp(shell->exp, data));
 	while (args[i])
 	{
-		var = ft_split(args[i], '=');
-		if (!var || !var[0])
+		supp = ft_strdup(args[i]);
+		if (parse_args(args[i], &name, &value, supp))
 		{
-			free_split(var);
-			var[1] = NULL;
-			var = NULL;
-			i++;
-			continue ;
+			free(supp);
+			handle_env_change(shell, name, value);
+			handle_exp_change(shell, name, value);
+			g_return_satus = 0;
 		}
-		handle_env_change(data, data->env, var, args[i]);
-		handle_env_dup_change(data, data->env_dup, var);
-		free_split(var);
+		else
+			free(supp);
+		supp = NULL;
 		i++;
 	}
 }
