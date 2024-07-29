@@ -24,7 +24,7 @@ void	execute_commands(t_node *node_list, t_minishell *data)
 	// }
 	free_nodes(node_list);
 }
-int	loop_shell(t_minishell *shell)
+int	main_loop(t_minishell *shell)
 {
     char		*input_line;
     t_node		*node_list;
@@ -42,28 +42,62 @@ int	loop_shell(t_minishell *shell)
 		}
 		if (!process_input_line(input_line, &node_list, shell))
 			continue ;
+
 		shell->exit_status = 0;
 		add_history(input_line);
-		execute_commands(node_list, shell);
+		t_node *current = shell->nodes;
+        int i;
+        while (current != NULL)
+        {
+            i = 0;
+            while (current->args[i] != NULL)
+            {
+                printf("cmd [%d]: %s\n", i, current->cmd);
+                i++;
+            }
+            current = current->next;
+        }
+		exec(shell);
+		//execute_commands(node_list, shell);
 		free(input_line);
 	}
 	return (0);
 }
+
 int	main(int argc, char *argv[], char *env[])
 {
-	t_minishell	mini;
+	t_minishell	*mini;
 
 	(void)argc;
 	(void)argv;
-	init_minishell(&mini);
-	if (!init_env(&mini, env) || !init_env_dup(&mini, env))
+	mini = malloc(sizeof(struct s_minishell));
+	if (!mini)
+		return (1);
+	if (!init_env(mini, env) || !init_env_dup(mini, env))
 	{
+		free(mini);
 		return (1);
 	}
-    loop_shell(&mini);
-	free_mini(&mini);
+	init_minishell(mini);
+    main_loop(mini);
+	free_mini(mini);
 	return (0);
 }
+// int	main(int argc, char *argv[], char *env[])
+// {
+// 	t_minishell	mini;
+
+// 	(void)argc;
+// 	(void)argv;
+// 	init_minishell(&mini);
+// 	if (!init_env(&mini, env) || !init_env_dup(&mini, env))
+// 	{
+// 		return (1);
+// 	}
+//     loop_shell(&mini);
+// 	free_mini(&mini);
+// 	return (0);
+// }
 
 // DEBUG
 

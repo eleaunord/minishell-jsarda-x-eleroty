@@ -111,6 +111,7 @@ void free_mini(t_minishell *data)
 		free_env_list(data->env);
 	if (data->env_dup)
 		free_env_list(data->env_dup);
+	free(data);
 }
 void	free_minishell(t_minishell *data, t_node *node)
 {

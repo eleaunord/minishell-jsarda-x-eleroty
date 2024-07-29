@@ -22,12 +22,14 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	}
 	free(line_copy);
 	current = *nodes;
+	mini->nodes = *nodes;
 	while (current != NULL)
 	{
 		tokens = tokenize_input(current->content);
 		if (!tokens)
 		{
 			freelist(nodes);
+			mini->nodes = NULL;
 			return (0);
 		}
 		parse_tokens(tokens, current, mini);
@@ -50,6 +52,20 @@ int process_input_line(char *input_line, t_node **node_list, t_minishell *data)
         free(input_line);
         return 0;
     }
+	// t_node *current;
+	// int i;
+	// current = *node_list;
+    // while (current != NULL)
+    // {
+    //     i = 0;
+        
+    //     while (current->args[i] != NULL)
+    //     {
+    //         printf("Node args[%d]: %s\n", i, current->args[i]);
+    //         i++;
+    //     }
+    //     current = current->next;
+    // }
     return 1;
 }
 
