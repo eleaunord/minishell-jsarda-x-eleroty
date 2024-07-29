@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:24:02 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 13:55:27 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:05:59 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,9 @@ void	exec_child_process(t_minishell *shell, char *path)
 	exit(0);
 }
 
-int	dir_error(char *cmd)
+void	cmd_error(char *cmd)
 {
-	int	tmp;
-
-	if (!cmd)
-		return (0);
-	tmp = open(cmd, O_DIRECTORY);
-	if (tmp > 0)
-	{
-		ft_errors_exec(1, "Is a directory", cmd, 126);
-		close(tmp);
-		return (1);
-	}
-	if (tmp != -1)
-		close(tmp);
-	return (0);
+	ft_errors_exec(1, "command not found", cmd, 127);
 }
 
 void	exec_simple_cmd(t_node *data, t_minishell *shell)
@@ -97,8 +84,7 @@ void	exec_simple_cmd(t_node *data, t_minishell *shell)
 		return (free(data->path));
 	data->path = get_cmd_path(current, shell);
 	if (!data->path && data->cmd)
-		return (ft_errors_exec(1, "command not found", data->cmd, 127),
-			free(data->path));
+		return (cmd_error(data->cmd), free(data->path));
 	if (!data->cmd)
 		return ;
 	data->pid = fork();

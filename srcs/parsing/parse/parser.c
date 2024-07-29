@@ -37,7 +37,7 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 		return ;
 	if (ft_strstr(tok->value, "$?") != NULL)
 	{
-		expanded_value = expand_exit_status(tok->value, mini->exit_status);
+		expanded_value = expand_exit_status(tok->value, g_status);
 		if (!expanded_value)
 			return;
 		node->args[*arg_index] = expanded_value;
@@ -109,16 +109,17 @@ void set_filename(t_token **tokens, t_node *node)
 	node->limiter_hd[node->limiter_hd_count] = NULL;
 	// Traitement des tokens REDIR_IN
 	process_filename_in(*tokens, node);
-	node->filename_in[node->file_in_count] = NULL;
+	
 	// Traitement des tokens REDIR_OUT
 	process_filename_out(*tokens, node);
 	node->filename_out[node->file_out_count] = NULL;
-		// for (int i = 0; i < node->file_count; i++)
+	// for (int i = 0; i < node->file_in_count; i++)
 	// {
-	// 	if (node->filenames[i] != NULL)
+	// 	if (node->filename_in[i] != NULL)
 	// 	{
-	// 		printf("filename : %s\n", node->filenames[i]);
+	// 		printf("filename : %s\n", node->filename_in[i]);
 	// 	}
+	// 	printf("filename : %d\n", node->file_in_count);
 	// }
 }
 
@@ -171,17 +172,6 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	//SET ARGS
 
 	fill_args(tokens, node, mini);
-	// t_node *head = node;
-	// while (head)
-	// {
-	// 	printf("Arg cunt : %d\n", head->arg_count);
-	// 	int x = 0;
-	// 	while (x < head->arg_count)
-	// 	{
-	// 		printf("Arg[x] : %s\n", head->args[x++]);
-	// 	}
-	// 	head = head->next;
-	// }
 }
 
 // DEBUG

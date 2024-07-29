@@ -6,6 +6,7 @@ int				g_status = 0;
 
 void	init_minishell(t_minishell *mini)
 {
+	//mini->pipes = NULL;
 	mini->env = NULL;
 	mini->env_dup = NULL;
 	mini->nodes = NULL;
@@ -44,11 +45,14 @@ int	main_loop(t_minishell *shell)
 			continue ;
 
 		shell->exit_status = 0;
-		add_history(input_line);
+		
 		debug_print_block(&node_list);
 		exec(shell);
+		add_history(input_line);
 		//execute_commands(node_list, shell);
 		free(input_line);
+		free_nodes(node_list);
+		
 	}
 	return (0);
 }

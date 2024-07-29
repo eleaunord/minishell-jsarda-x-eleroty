@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redir_builtins.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:14:37 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 12:23:57 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:00:05 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	heredoc_builtins(t_node *data, t_minishell *shell, char *eof, char *file_name)
+int	heredoc_builtins(t_node *data, t_minishell *shell, char *eof,
+		char *file_name)
 {
 	if (!eof)
 		return (free(data->last_heredoc), 1);
@@ -62,7 +63,7 @@ int	redir_out_builtins(t_node *data, t_minishell *shell, char *file_name)
 	return (0);
 }
 
-int	appen_redir_out_builtins(t_node *data, t_minishell *shell, char *file_name)
+int	appen_rediroutbuilt(t_node *data, t_minishell *shell, char *file_name)
 {
 	data->fdout = open(file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (data->fdout == -1)
@@ -99,7 +100,7 @@ int	handle_redir_builtins(t_node *data, t_minishell *shell, int i)
 		if (data->is_redir_out == 1)
 			status = redir_out_builtins(data, shell, data->filename_out[i]);
 		else if (data->is_append == 1)
-			status = appen_redir_out_builtins(data, shell, data->filename_out[i]);
+			status = appen_rediroutbuilt(data, shell, data->filename_out[i]);
 		i++;
 	}
 	return (status);

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   last_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 18:13:55 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:04:47 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:58:28 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_close_fdin(t_node *data)
+void	ft_close_fdin(t_node *data)
 {
 	while (data)
 	{
@@ -36,9 +36,7 @@ void	last_child(t_minishell *shell, t_node *data, char **env)
 			manage_no_path(data, shell, 1);
 		else
 		{
-
 			ft_dup(data);
-			ft_close_fdin(data);
 			if (execve(data->path, data->args, env) == -1)
 				execve_fail();
 		}

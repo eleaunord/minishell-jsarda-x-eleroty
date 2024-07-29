@@ -33,7 +33,6 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 			return (0);
 		}
 		parse_tokens(tokens, current, mini);
-		free_tokens(tokens);
 		current = current->next;
 	}
 	return (1);

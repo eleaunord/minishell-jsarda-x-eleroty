@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 09:36:05 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:26:16 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:19:14 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	handle_redir(t_minishell *shell, t_node *data)
 	int	i;
 
 	i = 0;
-	if (data->is_redir_in == 1)
+	if (data->is_here_doc == 1)
 		redir_in(data, shell, data->last_heredoc);
 	while (data->filename_in && data->filename_in[i])
 	{

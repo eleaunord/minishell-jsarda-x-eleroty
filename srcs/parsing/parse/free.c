@@ -101,6 +101,8 @@ void free_nodes(t_node *head)
 			free(current->filename_out);
 		if (current->filename_in)
 			free(current->filename_in);
+		if (current->tokens_in_node)
+			free_tokens(current->tokens_in_node);
 		free(current);
 		current = next;
 	}

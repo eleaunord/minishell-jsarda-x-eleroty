@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug_fonction.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 14:26:01 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 14:53:57 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:26:24 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	debug_first_part_loop(t_node *datas)
 		printf("\t\targs[%d] = %s\n", j, datas->args[j]);
 	printf("\tredir_type_in = %d\n", datas->is_redir_in);
 	printf("\tredir_type_out = %d\n", datas->is_redir_out);
+	printf("\tredir_type_append = %d\n", datas->is_append);
 	printf("\tnamein:\n");
 	j = 0;
 	while (datas->filename_in && datas->filename_in[j])

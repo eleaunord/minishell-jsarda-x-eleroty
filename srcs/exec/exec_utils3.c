@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 21:06:08 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 14:04:46 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:57:08 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*get_cmd_path(t_node *data, t_minishell *shell)
 	char	**paths;
 	char	*cmd_path;
 
-	if (!data || !shell || !data->cmd || !data->cmd[0]) //check
+	if (!data || !shell || !data->cmd || !data->cmd[0])
 		return (NULL);
 	paths = retrive_paths(shell);
 	if (!paths)

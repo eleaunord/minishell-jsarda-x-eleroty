@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   first_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:24:07 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:03:36 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:58:24 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_close_fdin_first(t_node *data)
+void	ft_close_fdin_first(t_node *data)
 {
 	while (data)
 	{
@@ -36,8 +36,6 @@ void	first_child(t_minishell *shell, t_node *data, char **env)
 		else
 		{
 			ft_dup(data);
-			close(data->fdin);
-			//close(data->fdout);
 			if (execve(data->path, data->args, env) == -1)
 				execve_fail();
 		}

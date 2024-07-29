@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/29 17:12:27 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -110,7 +122,6 @@ typedef struct s_minishell
 	int					exit_status;
 }						t_minishell;
 
-
 // EXEC
 int						exec(t_minishell *shell);
 void					first_exec(t_minishell *shell, t_node *data);
@@ -152,6 +163,7 @@ void					manager_mid(t_node *data, t_minishell *shell,
 void					execve_fail(void);
 void					heredoc(t_node *data, t_minishell *shell, char *eof,
 							char *file_name);
+int						dir_error(char *cmd);
 // BUILTINS
 void					ft_cd(t_node *data, t_minishell *shell, char **args);
 void					ft_echo(t_node *data, t_minishell *shell, char **args);

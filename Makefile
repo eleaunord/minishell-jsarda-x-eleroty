@@ -36,6 +36,7 @@ SRCS_FILES	= parsing/environment/env.c \
 			exec/exec_utils.c \
 			exec/exec_utils2.c \
 			exec/exec_utils3.c \
+			exec/exec_utils4.c \
 			builtins/builtins_utils.c \
 			builtins/builtins_utils2.c \
 			exec/redir_utils.c \

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   mid_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:45:52 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:05:23 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:58:32 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_close_fdin_mid(t_node *data)
+void	ft_close_fdin_mid(t_node *data)
 {
 	while (data)
 	{
@@ -33,7 +33,6 @@ void	mid_child(t_minishell *shell, t_node *data, char **env, int fd_tmp)
 		else
 		{
 			ft_dup(data);
-			//ft_close_fdin_mid(data);
 			if (execve(data->path, data->args, env) == -1)
 				execve_fail();
 		}
