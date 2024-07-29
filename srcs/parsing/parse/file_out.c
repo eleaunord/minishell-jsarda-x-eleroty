@@ -20,6 +20,10 @@ void	count_redir_out(t_token **tokens, t_node *node)
 				i++;
 			}
 		}
+		else if (current->type == APPEND_TOKEN)
+		{
+			node->is_append = 1;
+		}
 		current = current->next;
 	}
 	node->file_out_count = i;
@@ -51,12 +55,6 @@ void	process_filename_out(t_token *tokens, t_node *node)
 			if (i < node->file_out_count)
 			{
 				node->filename_out[i++] = current->next->value;
-			}
-			node->here_doc = 1; 
-			if (i == node->file_out_count)
-			{
-				node->filename_out[i] = get_tmp_file();
-				printf("file name out : %s", node->filename_out[i]);
 			}
 			current->next->processed = 1;
 		}

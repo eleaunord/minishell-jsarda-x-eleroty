@@ -61,7 +61,7 @@ void free_node_cmd_args(t_node *node)
 		node->args = NULL;
 	}
 }
-void freetab(t_node **nodes)
+void freelist(t_node **nodes)
 {
     t_node *current;
     t_node *next;
@@ -97,10 +97,10 @@ void free_nodes(t_node *head)
 			free(current->content);
 		if (current->limiter_hd)
 			free(current->limiter_hd);
-		// if (current->tokens_in_node)
-		// 	free_tokens(current->tokens_in_node);
-		if (current->filenames)
-			free(current->filenames);
+		if (current->filename_out)
+			free(current->filename_out);
+		if (current->filename_in)
+			free(current->filename_in);
 		free(current);
 		current = next;
 	}

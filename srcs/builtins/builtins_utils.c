@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juliensarda <juliensarda@student.42.fr>    +#+  +:+       +#+        */
+/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 15:13:32 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/22 21:08:39 by juliensarda      ###   ########.fr       */
+/*   Updated: 2024/07/29 12:22:27 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@ int	is_valid_identifier(const char *name)
 		return (0);
 	while (name[i])
 	{
-		if (!((name[i] >= 'a' && name[i] <= 'z')
-				|| (name[i] >= 'A' && name[i] <= 'Z')
-				|| (name[i] >= '0' && name[i] <= '9')
+		if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A'
+					&& name[i] <= 'Z') || (name[i] >= '0' && name[i] <= '9')
 				|| (name[i] == '_')))
 			return (0);
 		i++;
@@ -40,8 +39,8 @@ static const char	*skip_whitespace(const char *str)
 	return (str);
 }
 
-unsigned long long int	manage_overflow(unsigned long long int nb,
-		int sign, int *overflow)
+unsigned long long int	manage_overflow(unsigned long long int nb, int sign,
+		int *overflow)
 {
 	if (sign == -1)
 	{

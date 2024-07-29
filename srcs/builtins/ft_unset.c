@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 09:28:46 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:00 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:37:29 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ void	ft_unset_1(t_env *env, char **args, int i)
 		prev = NULL;
 		while (current)
 		{
-			if (ft_strncmp(current->name, args[i],
-					ft_strlen(current->name)) == 0)
+			if (ft_strncmp(current->key, args[i],
+					ft_strlen(current->key)) == 0)
 			{
 				if (prev == NULL)
 					env = current->next;
 				else
 					prev->next = current->next;
-				free_unset(current->value, current->name, current->line);
+				free_unset(current->value, current->key, current->str);
 				prev = current;
 				free(prev);
 				break ;
@@ -48,10 +48,10 @@ void	ft_unset_1(t_env *env, char **args, int i)
 	}
 }
 
-void	ft_unset(t_node *data, t_shell *shell, char **args)
+void	ft_unset(t_node *data, t_minishell *shell, char **args)
 {
 	(void)data;
-	ft_unset_1(shell->envp, args, -1);
-	ft_unset_1(shell->exp, args, -1);
-	g_return_satus = 0;
+	ft_unset_1(shell->env, args, -1);
+	ft_unset_1(shell->env_dup, args, -1);
+	g_status = 0;
 }

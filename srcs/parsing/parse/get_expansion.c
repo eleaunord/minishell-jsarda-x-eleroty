@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 // Get the index of a key in the environment list
 int get_the_key(t_env *env, char *key)
@@ -28,7 +28,7 @@ char *construct_result(char *key_expansion, char *start, char *end, char *path_v
         return NULL;
 
     // Copy leading part
-    ft_strncpy(result, key_expansion, leading_length);
+    ft_strcpy(result, key_expansion);
     result[leading_length] = '\0';
 
     // Append expanded key

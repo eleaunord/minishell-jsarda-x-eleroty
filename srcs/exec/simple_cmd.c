@@ -6,15 +6,15 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:24:02 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:37 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:28:23 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_and_redir(t_node *datas, t_node *current, t_shell *shell)
+void	check_and_redir(t_node *datas, t_node *current, t_minishell *shell)
 {
-	if (check_if_redir(datas) == 0 || datas->is_hd == 1)
+	if (check_if_redir(datas) == 0 || datas->is_here_doc == 1)
 	{
 		while (current)
 		{
@@ -24,9 +24,9 @@ void	check_and_redir(t_node *datas, t_node *current, t_shell *shell)
 	}
 }
 
-int	check_and_redir_builtins(t_shell *shell, t_node *datas, t_node *current)
+int	check_and_redir_builtins(t_minishell *shell, t_node *datas, t_node *current)
 {
-	if (check_if_redir(datas) == 0 || datas->is_hd == 1)
+	if (check_if_redir(datas) == 0 || datas->is_here_doc == 1)
 	{
 		while (current)
 		{
@@ -38,16 +38,16 @@ int	check_and_redir_builtins(t_shell *shell, t_node *datas, t_node *current)
 	return (0);
 }
 
-void	exec_child_process(t_shell *shell, char *path)
+void	exec_child_process(t_minishell *shell, char *path)
 {
 	t_node	*datas;
 	t_node	*current;
 	char	**env;
 
-	datas = shell->datas;
+	datas = shell->nodes;
 	current = datas;
 	check_and_redir(datas, current, shell);
-	env = create_char_env(shell->envp, get_env_list_size(shell->envp));
+	env = create_char_env(shell->env, get_env_list_size(shell->env));
 	ft_dup(datas);
 	if (datas->fdin != -1 && datas->fdin != 0)
 		close(datas->fdin);
@@ -80,7 +80,7 @@ int	dir_error(char *cmd)
 	return (0);
 }
 
-void	exec_simple_cmd(t_node *data, t_shell *shell)
+void	exec_simple_cmd(t_node *data, t_minishell *shell)
 {
 	t_node	*current;
 

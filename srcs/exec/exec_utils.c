@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 09:19:26 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:49:15 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 12:13:37 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ int	get_tmp_file(t_node *datas)
 		i++;
 	}
 	filename[i] = '\0';
-	if (datas->tmpfile_hd)
+	if (datas->last_heredoc)
 	{
-		free(datas->tmpfile_hd);
-		datas->tmpfile_hd = NULL;
+		free(datas->last_heredoc);
+		datas->last_heredoc = NULL;
 	}
-	datas->tmpfile_hd = ft_strdup(filename);
+	datas->last_heredoc = ft_strdup(filename);
 	close(tmp);
 	return (0);
 }
@@ -72,21 +72,23 @@ int	check_if_redir(t_node *datas)
 	current = datas;
 	while (current)
 	{
-		if (current->redir_type_out >= 1
-			&& current->redir_type_out <= 4)
+		if (current->is_redir_in == 1)
 			return (0);
-		if (current->redir_type_in >= 1
-			&& current->redir_type_in <= 4)
+		if (current->is_redir_out == 1)
+			return (0);
+		if (current->is_here_doc == 1)
+			return (0);
+		if (current->is_append == 1)
 			return (0);
 		current = current->next;
 	}
 	return (1);
 }
 
-void	exec_built_in(t_node *datas, t_shell *shell)
+void	exec_built_in(t_node *datas, t_minishell *shell)
 {
 	int		index;
-	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_node *, t_shell *,
+	void	(*built_in_funcs[NUM_OF_BUILT_INS])(t_node *, t_minishell *,
 			char **args);
 
 	built_in_funcs[0] = &ft_pwd;

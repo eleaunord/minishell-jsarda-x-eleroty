@@ -1,20 +1,4 @@
-#include "../../../includes/minishell.h"
-
-void	print_env(t_env *list)
-{
-	t_env	*start;
-
-	start = list;
-	if (!list)
-		return ;
-	printf("%s=%s\n", list->key, list->value);
-	list = list->next;
-	while (list != start)
-	{
-		printf("%s=%s\n", list->key, list->value);
-		list = list->next;
-	}
-}
+#include "minishell.h"
 
 void	add_first(t_env **list, t_env *new)
 {
@@ -41,7 +25,7 @@ int	append(t_env **list, char *elem)
 			if (last->next == *list)
 			{
 				perror("Detected circular reference in the list");
-				free(new->content);
+				//free(new->content);
 				free(new);
 				return (0);
 			}
@@ -118,12 +102,12 @@ char	*recup_shlvl(char *tmp)
 	char_lvl = ft_itoa(lvl + 1);
 	if (!char_lvl)
 	{
-		free_split(split);
+		freetab(split);
 		return (NULL);
 	}
 	tmp = ft_strjoin("SHLVL=", char_lvl);
 	free(char_lvl);
-	free_split(split);
+	freetab(split);
 	if (!tmp)
 		return (NULL);
 	return (tmp);

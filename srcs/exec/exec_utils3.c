@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 21:06:08 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:09 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 12:14:50 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,27 @@ void	ft_wait(t_node *data)
 	{
 		if (data && (data->path || is_built_in(data) != -1))
 		{
-			if (data->status != 127)
+			if (data->error_num != 127)
 			{
-				waitpid(data->pid, &data->status, 0);
-				if (WIFSIGNALED(data->status))
-					data->status = WTERMSIG(data->status) + 128;
+				waitpid(data->pid, &data->error_num, 0);
+				if (WIFSIGNALED(data->error_num))
+					data->error_num = WTERMSIG(data->error_num) + 128;
 				else
-					data->status = WEXITSTATUS(data->status);
+					data->error_num = WEXITSTATUS(data->error_num);
 			}
 		}
 		else
 			wait(NULL);
-		g_return_satus = data->status;
+		g_status = data->error_num;
 		data = data->next;
 	}
-	if (g_return_satus == 130)
+	if (g_status == 130)
 		printf("\n");
-	if (g_return_satus == 131)
+	if (g_status == 131)
 		printf("Quit (core dumped)\n");
 }
 
-char	**retrive_paths(t_shell *shell)
+char	**retrive_paths(t_minishell *shell)
 {
 	char	*path_value;
 	char	**paths;
@@ -77,12 +77,12 @@ char	*retrive_path(char **paths, const char *cmd)
 	return (NULL);
 }
 
-char	*get_cmd_path(t_node *data, t_shell *shell)
+char	*get_cmd_path(t_node *data, t_minishell *shell)
 {
 	char	**paths;
 	char	*cmd_path;
 
-	if (!data || !shell || !data->cmd || !data->cmd[0])
+	if (!data || !shell || !data->cmd || !data->cmd[0]) //check
 		return (NULL);
 	paths = retrive_paths(shell);
 	if (!paths)

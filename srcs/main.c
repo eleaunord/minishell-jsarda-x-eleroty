@@ -1,6 +1,8 @@
 // valgrind --suppressions=valgrind_readline_leaks_ignore.supp ./minishell
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
+
+int				g_status = 0;
 
 void	init_minishell(t_minishell *mini)
 {
@@ -14,12 +16,12 @@ void	execute_commands(t_node *node_list, t_minishell *data)
 	t_node	*head;
 
 	head = node_list;
-	exec(head, data);
-	if (data->exit)
-	{
-		free_nodes(node_list);
-		exit(data->exit_status);
-	}
+	exec(data);
+	// if (data->exit)
+	// {
+	// 	free_nodes(node_list);
+	// 	exit(data->exit_status);
+	// }
 	free_nodes(node_list);
 }
 int	loop_shell(t_minishell *shell)
@@ -38,17 +40,17 @@ int	loop_shell(t_minishell *shell)
 			rl_clear_history();
 			break ;
 		}
-		if (!process_input_line(input_line, &node_list, &shell))
+		if (!process_input_line(input_line, &node_list, shell))
 			continue ;
-		data.exit_status = 0;
+		shell->exit_status = 0;
 		add_history(input_line);
-		execute_commands(node_list, &shell);
+		execute_commands(node_list, shell);
 		free(input_line);
 	}
 	return (0);
 }
 int	main(int argc, char *argv[], char *env[])
-{	
+{
 	t_minishell	mini;
 
 	(void)argc;
@@ -58,7 +60,7 @@ int	main(int argc, char *argv[], char *env[])
 	{
 		return (1);
 	}
-    loop_shell(mini);
+    loop_shell(&mini);
 	free_mini(&mini);
 	return (0);
 }

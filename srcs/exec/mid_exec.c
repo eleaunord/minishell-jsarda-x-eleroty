@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:45:52 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:18 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:05:23 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void ft_close_fdin_mid(t_node *data)
 	}
 }
 
-void	mid_child(t_shell *shell, t_node *data, char **env, int fd_tmp)
+void	mid_child(t_minishell *shell, t_node *data, char **env, int fd_tmp)
 {
 	handle_redir(shell, data);
 	manager_mid(data, shell, fd_tmp);
 	if (data->cmd && is_built_in(data) == -1)
 	{
-		env = create_char_env(shell->envp, get_env_list_size(shell->envp));
+		env = create_char_env(shell->env, get_env_list_size(shell->env));
 		if (!data->path && data->cmd && is_built_in(data) == -1)
 			manage_no_path(data, shell, 1);
 		else
@@ -43,7 +43,7 @@ void	mid_child(t_shell *shell, t_node *data, char **env, int fd_tmp)
 	exit_other_child(data, shell);
 }
 
-void	middle_exec(t_shell *shell, t_node *data, int fd_tmp)
+void	middle_exec(t_minishell *shell, t_node *data, int fd_tmp)
 {
 	char	**env;
 

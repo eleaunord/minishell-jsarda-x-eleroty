@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:21:22 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:40:55 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:36:12 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,28 @@ int	modify_value(t_env *env, const char *value)
 	env->value = ft_strdup(value);
 	if (!env->value)
 		return (env->value = NULL, 0);
-	tmp_name = ft_strjoin(env->name, "=");
+	tmp_name = ft_strjoin(env->key, "=");
 	if (!tmp_name)
 		return (free(env->value), env->value = NULL, 0);
 	new_line = ft_strjoin(tmp_name, value);
 	free(tmp_name);
 	if (!new_line)
 		return (free(env->value), env->value = NULL, 0);
-	free(env->line);
-	env->line = new_line;
+	free(env->str);
+	env->str = new_line;
 	return (0);
 }
 
-void	handle_env_change(t_shell *shell, char *name, char *value)
+void	handle_env_change(t_minishell *shell, char *name, char *value)
 {
 	t_env	*current;
 	char	*tmp_name;
 	char	*tmp_line;
 
-	current = shell->envp;
+	current = shell->env;
 	while (current)
 	{
-		if (ft_strcmp(current->name, name) == 0)
+		if (ft_strcmp(current->key, name) == 0)
 		{
 			if (!value)
 				break ;
@@ -83,23 +83,23 @@ void	handle_env_change(t_shell *shell, char *name, char *value)
 	{
 		tmp_name = ft_strjoin(name, "=");
 		tmp_line = ft_strjoin(tmp_name, value);
-		ft_lstadd_back_env(&(shell->envp), ft_lstnew_env(tmp_line, name,
+		ft_lstadd_back_env(&(shell->env), ft_lstnew_env(tmp_line, name,
 				value));
 		free(tmp_name);
 		free(tmp_line);
 	}
 }
 
-void	handle_exp_change(t_shell *shell, char *name, char *value)
+void	handle_exp_change(t_minishell *shell, char *name, char *value)
 {
 	t_env	*curr_exp;
 	char	*tmp_name;
 	char	*tmp_line;
 
-	curr_exp = shell->exp;
+	curr_exp = shell->env_dup;
 	while (curr_exp)
 	{
-		if (ft_strcmp(curr_exp->name, name) == 0)
+		if (ft_strcmp(curr_exp->key, name) == 0)
 		{
 			if (!value)
 				break ;
@@ -114,12 +114,12 @@ void	handle_exp_change(t_shell *shell, char *name, char *value)
 		if (!value)
 			value = "''";
 		tmp_line = ft_strjoin(tmp_name, value);
-		ft_lstadd_back_env(&(shell->exp), ft_lstnew_env(tmp_line, name, value));
+		ft_lstadd_back_env(&(shell->env_dup), ft_lstnew_env(tmp_line, name, value));
 		return (free(tmp_name), free(tmp_line));
 	}
 }
 
-void	ft_export(t_node *data, t_shell *shell, char **args)
+void	ft_export(t_node *data, t_minishell *shell, char **args)
 {
 	int		i;
 	char	*name;
@@ -130,7 +130,7 @@ void	ft_export(t_node *data, t_shell *shell, char **args)
 		return ;
 	i = 1;
 	if (!args[1])
-		return (ft_print_exp(shell->exp, data));
+		return (ft_print_exp(shell->env_dup, data));
 	while (args[i])
 	{
 		supp = ft_strdup(args[i]);
@@ -139,7 +139,7 @@ void	ft_export(t_node *data, t_shell *shell, char **args)
 			free(supp);
 			handle_env_change(shell, name, value);
 			handle_exp_change(shell, name, value);
-			g_return_satus = 0;
+			g_status = 0;
 		}
 		else
 			free(supp);

@@ -1,21 +1,31 @@
 NAME		=	minishell
 
-SRCS_FILES	=	parsing/expander.c \
-			parsing/expander_utils.c \
-			parsing/parsing.c \
-			parsing/env_init.c \
-			parsing/debug_function.c \
-			parsing/parsing_add_spaces.c \
-			parsing/parsing_block_redir.c \
-			parsing/parsing_count_operators.c \
-			parsing/parsing_syntax.c \
-			parsing/parsing_syntax_2.c \
-			parsing/parsing_block.c \
-			parsing/parsing_block_utils.c \
-			utils/ft_split_quotes.c \
-			utils/ft_split_quotes_utils.c \
+SRCS_FILES	= parsing/environment/env.c \
+			parsing/environment/alloc_env.c \
+			parsing/environment/key_value.c \
+			parsing/parse/checkers.c \
+			parsing/parse/count_expansions.c \
+			parsing/parse/expansion.c \
+			parsing/parse/file_in.c \
+			parsing/parse/file_out.c \
+			parsing/parse/free.c \
+			parsing/parse/get_expansion.c \
+			parsing/parse/heredoc.c \
+			parsing/parse/init_parsing.c \
+			parsing/parse/main_parse.c \
+			parsing/parse/parser.c \
+			parsing/parse/remove_quotes.c \
+			parsing/parse/signals.c \
+			parsing/parse/update_tokens.c \
+			parsing/tokenization/collapse_spaces.c \
+			parsing/tokenization/pipes_spaces.c \
+			parsing/tokenization/quotes.c \
+			parsing/tokenization/special_tokens.c \
+			parsing/tokenization/tokenizer.c \
+			parsing/tokenization/tokens.c \
+			parsing/tokenization/whitespaces.c \
+			parsing/tokenization/word_tokens.c \
 			utils/builtins_utils.c \
-			utils/ft_errors_parsing.c \
 			utils/ft_errors_exec.c \
 			utils/env_utils.c \
 			utils/utils.c \
@@ -26,6 +36,7 @@ SRCS_FILES	=	parsing/expander.c \
 			exec/exec_utils2.c \
 			exec/exec_utils3.c \
 			builtins/builtins_utils.c \
+			builtins/builtins_utils2.c \
 			exec/redir_utils.c \
 			exec/redir.c \
 			exec/simple_cmd.c \
@@ -103,10 +114,12 @@ objs/%.o	: srcs/%.c | $(OBJ_DIR)
 			$(CC) $(CFLAGS) -MMD -o $@ -c $<
 
 $(OBJ_DIR):
-	mkdir -p objs/exec
-	mkdir -p objs/builtins
-	mkdir -p objs/parsing
-	mkdir -p objs/utils
+	mkdir -p $(OBJ_DIR)exec
+	mkdir -p $(OBJ_DIR)builtins
+	mkdir -p $(OBJ_DIR)parsing/environment
+	mkdir -p $(OBJ_DIR)parsing/parse
+	mkdir -p $(OBJ_DIR)parsing/tokenization
+	mkdir -p $(OBJ_DIR)utils
 
 # objsd/%.o	: srcs/%.c includes/minishell.h
 # 	mkdir -p objsd

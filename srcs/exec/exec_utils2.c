@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:14:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:07 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 12:14:09 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	get_key(t_env *env, char *key)
 	index = 0;
 	while (env)
 	{
-		if (env->name && ft_strncmp(env->name, key, ft_strlen(env->name)) == 0)
+		if (env->value && ft_strncmp(env->value, key, ft_strlen(env->value)) == 0)
 			return (index);
 		env = env->next;
 		index++;
@@ -27,14 +27,14 @@ int	get_key(t_env *env, char *key)
 	return (-1);
 }
 
-char	*get_path_value(t_shell *datas, char *key)
+char	*get_path_value(t_minishell *datas, char *key)
 {
 	int		index;
 	t_env	*env;
 	int		i;
 
 	i = 0;
-	env = datas->envp;
+	env = datas->env;
 	index = get_key(env, key);
 	if (index == -1)
 		return (NULL);
@@ -61,7 +61,7 @@ char	**create_char_env(t_env *env, int env_size)
 	temp_env = env;
 	while (++i < env_size)
 	{
-		dest[i] = ft_strdup(temp_env->line);
+		dest[i] = ft_strdup(temp_env->str);
 		if (!dest[i])
 		{
 			while (i > 0)
@@ -89,24 +89,24 @@ int	get_env_list_size(t_env *list)
 	return (count);
 }
 
-void	handle_heredoc(t_shell *shell, t_node *data)
+void	handle_heredoc(t_minishell *shell, t_node *data)
 {
 	int	i;
 
 	ft_recup(shell);
 	while (data)
 	{
-		if (data->is_hd)
+		if (data->is_here_doc)
 		{
 			i = 0;
 			while (data->limiter_hd[i])
 			{
 				get_tmp_file(data);
-				heredoc(data, shell, data->limiter_hd[i++], data->tmpfile_hd);
-				if (g_return_satus == 130)
+				heredoc(data, shell, data->limiter_hd[i++], data->last_heredoc);
+				if (g_status == 130)
 					break ;
 			}
-			if (g_return_satus == 130)
+			if (g_status == 130)
 				break ;
 		}
 		data = data->next;

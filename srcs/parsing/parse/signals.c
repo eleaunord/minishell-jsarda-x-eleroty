@@ -3,7 +3,7 @@
 void	sigint_handler(int sig)
 {
 	(void)sig;
-	g_return_satus = 130;
+	g_status = 130;
 	rl_on_new_line();
 	printf("\n");
 	rl_replace_line("", 1);

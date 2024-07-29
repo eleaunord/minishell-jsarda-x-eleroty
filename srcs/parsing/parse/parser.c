@@ -1,4 +1,4 @@
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
 char *expand_exit_status(char *str, unsigned long long error_num)
 {
@@ -22,7 +22,7 @@ char *expand_exit_status(char *str, unsigned long long error_num)
         free(error_num_str);
         return NULL;
     }
-    ft_strncpy(expanded, str, leading_len);
+    ft_strcpy(expanded, str);
     ft_strcpy(expanded + leading_len, error_num_str);
     ft_strcpy(expanded + leading_len + ft_strlen(error_num_str), pos + 2);
     free(error_num_str);

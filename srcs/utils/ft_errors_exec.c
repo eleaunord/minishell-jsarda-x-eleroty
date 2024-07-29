@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 19:43:07 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/22 09:23:00 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:31:32 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	minishell_error(int err_status, char *msg, char *supp)
 	ft_putstr_fd(supp, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(msg, 2);
-	g_return_satus = err_status;
+	g_status = err_status;
 }
 
 void	export_error(int err_status, char *msg, char *supp)
@@ -27,7 +27,7 @@ void	export_error(int err_status, char *msg, char *supp)
 	ft_putstr_fd(supp, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(msg, 2);
-	g_return_satus = err_status;
+	g_status = err_status;
 }
 
 void	ft_errors_exec(int err, char *msg, char *supp, int err_status)

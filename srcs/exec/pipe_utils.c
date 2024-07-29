@@ -6,13 +6,13 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 10:41:13 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:23 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:07:27 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exit_first_child(t_node *data, t_shell *shell)
+void	exit_first_child(t_node *data, t_minishell *shell)
 {
 	if (!data->cmd)
 	{
@@ -25,7 +25,7 @@ void	exit_first_child(t_node *data, t_shell *shell)
 	exit(127);
 }
 
-void	exit_other_child(t_node *data, t_shell *shell)
+void	exit_other_child(t_node *data, t_minishell *shell)
 {
 	if (!data->cmd)
 	{
@@ -38,7 +38,7 @@ void	exit_other_child(t_node *data, t_shell *shell)
 	exit(127);
 }
 
-void	manager_mid(t_node *data, t_shell *shell, int fd_tmp)
+void	manager_mid(t_node *data, t_minishell *shell, int fd_tmp)
 {
 	if (data->fdin == 0 || data->fdin == -1)
 		data->fdin = fd_tmp;
@@ -61,10 +61,10 @@ void	close_fd(t_node *data)
 	}
 }
 
-void	manage_no_path(t_node *head, t_shell *shell, int mod)
+void	manage_no_path(t_node *head, t_minishell *shell, int mod)
 {
 	ft_errors_exec(1, "command not found", head->cmd, 127);
-	head->status = 127;
+	head->error_num = 127;
 	if (mod == 0)
 		close(shell->pipes[0]);
 	else

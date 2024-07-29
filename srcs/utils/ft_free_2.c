@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 12:02:40 by jtaravel          #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:48 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:44:02 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,42 +35,42 @@ void	free_hd_file(t_node **data, int mode)
 	tmp_data = *data;
 	while (tmp_data)
 	{
-		if (mode == 1 && tmp_data->is_hd)
+		if (mode == 1 && tmp_data->is_here_doc)
 		{
-			if (tmp_data->tmpfile_hd)
-				free(tmp_data->tmpfile_hd);
-			tmp_data->tmpfile_hd = NULL;
+			if (tmp_data->last_heredoc)
+				free(tmp_data->last_heredoc);
+			tmp_data->last_heredoc = NULL;
 		}
-		else if (mode == 2 && tmp_data->is_hd && tmp_data->tmpfile_hd)
-			unlink(tmp_data->tmpfile_hd);
+		else if (mode == 2 && tmp_data->is_here_doc && tmp_data->last_heredoc)
+			unlink(tmp_data->last_heredoc);
 		tmp_data = tmp_data->next;
 	}
 }
 
-void	free_child(t_node *data, t_shell *shell, int exit_status)
+void	free_child(t_node *data, t_minishell *shell, int exit_status)
 {
-	ft_free_env_list(&(shell->envp));
-	ft_free_env_list(&(shell->exp));
+	ft_free_env_list(&(shell->env));
+	ft_free_env_list(&(shell->env_dup));
 	free(data->path);
 	data->path = NULL;
 	free_hd_file(&data, 1);
 	ft_close_fd(data);
-	ft_clear_datas(&(shell->datas));
+	ft_clear_datas(&(shell->nodes));
 	free(shell);
 	exit(exit_status);
 }
 
-void	ft_recup(t_shell *shell)
+void	ft_recup(t_minishell *shell)
 {
-	static t_shell	*tmp_shell;
+	static t_minishell	*tmp_shell;
 
 	if (shell)
 		tmp_shell = shell;
 	else
 	{
-		ft_free_env_list(&(tmp_shell->envp));
-		ft_free_env_list(&(tmp_shell->exp));
-		ft_clear_datas(&(tmp_shell->datas));
+		ft_free_env_list(&(tmp_shell->env));
+		ft_free_env_list(&(tmp_shell->env_dup));
+		ft_clear_datas(&(tmp_shell->nodes));
 		free(tmp_shell);
 	}
 }

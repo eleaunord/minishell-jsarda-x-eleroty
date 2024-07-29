@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:24:07 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:13 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:03:36 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void ft_close_fdin_first(t_node *data)
 	}
 }
 
-void	first_child(t_shell *shell, t_node *data, char **env)
+void	first_child(t_minishell *shell, t_node *data, char **env)
 {
 	manage_sig();
 	handle_redir(shell, data);
@@ -30,7 +30,7 @@ void	first_child(t_shell *shell, t_node *data, char **env)
 		data->fdout = shell->pipes[1];
 	if (data->cmd && is_built_in(data) == -1)
 	{
-		env = create_char_env(shell->envp, get_env_list_size(shell->envp));
+		env = create_char_env(shell->env, get_env_list_size(shell->env));
 		if (!data->path && data->cmd && is_built_in(data) == -1)
 			manage_no_path(data, shell, 1);
 		else
@@ -47,7 +47,7 @@ void	first_child(t_shell *shell, t_node *data, char **env)
 	exit_first_child(data, shell);
 }
 
-void	first_exec(t_shell *shell, t_node *data)
+void	first_exec(t_minishell *shell, t_node *data)
 {
 	char	**env;
 

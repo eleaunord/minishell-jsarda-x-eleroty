@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 10:54:23 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:40:52 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:51:29 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 void	print_exit_message(char *message, char *args)
 {
 	printf("exit\n");
-	fprintf(stderr, "minishell: exit: ");
+	printf("minishell: exit: ");
 	if (args)
-		fprintf(stderr, "%s", args);
-	fprintf(stderr, "%s\n", message);
+		printf("%s", args);
+	printf("%s\n", message);
 }
 
 int	ft_isdigit_str(const char *c)
@@ -37,12 +37,12 @@ int	ft_isdigit_str(const char *c)
 	return (0);
 }
 
-void	ft_exit(t_node *data, t_shell *shell, char **args)
+void	ft_exit(t_node *data, t_minishell *shell, char **args)
 {
 	int						overflow;
 	unsigned long long int	result;
 
-	result = g_return_satus;
+	result = g_status;
 	if (count_args(data->args) > 1 && ft_isdigit_str(args[1]) == 1)
 	{
 		print_exit_message(": numeric argument required", args[1]);
@@ -50,7 +50,7 @@ void	ft_exit(t_node *data, t_shell *shell, char **args)
 	}
 	if (count_args(data->args) > 2)
 	{
-		g_return_satus = 1;
+		g_status = 1;
 		return (print_exit_message(" too many arguments", NULL));
 	}
 	if (args[1])

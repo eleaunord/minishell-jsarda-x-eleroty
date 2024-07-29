@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 20:21:58 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 09:40:45 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:29:43 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	cd_errors(void)
 	ft_errors_exec(1, strerror(errno), "malloc", errno);
 }
 
-void	update_pwd(t_shell *shell, t_node *data, char cwd[])
+void	update_pwd(t_minishell *shell, t_node *data, char cwd[])
 {
 	char	**new_tab;
 	char	*tmp;
@@ -29,7 +29,7 @@ void	update_pwd(t_shell *shell, t_node *data, char cwd[])
 	new_tab[0] = ft_strdup("export");
 	if (!new_tab[0])
 		return (cd_errors(), freetab(new_tab));
-	tmp = ft_strdup(get_key_value(shell->envp, "PWD"));
+	tmp = ft_strdup(get_key_value(shell->env, "PWD"));
 	if (!tmp)
 		tmp = ft_strdup(getcwd(cwd, PATH_MAX));
 	tmp_str = ft_strjoin("OLDPWD=", tmp);
@@ -46,7 +46,7 @@ void	update_pwd(t_shell *shell, t_node *data, char cwd[])
 	freetab(new_tab);
 }
 
-void	ft_cd(t_node *data, t_shell *shell, char **args)
+void	ft_cd(t_node *data, t_minishell *shell, char **args)
 {
 	int		cd_ret;
 	char	cwd[PATH_MAX];
@@ -57,7 +57,7 @@ void	ft_cd(t_node *data, t_shell *shell, char **args)
 		return (ft_errors_exec(1, " too many arguments", "cd", 1));
 	if (!data->args[1])
 	{
-		if (check_key(shell->envp, "HOME"))
+		if (check_key(shell->env, "HOME"))
 			return (ft_errors_exec(1, " HOME not set", "cd", 1));
 		cd_ret = chdir(get_path_value(shell, "HOME"));
 		if (cd_ret != 0)
@@ -69,5 +69,5 @@ void	ft_cd(t_node *data, t_shell *shell, char **args)
 	if (cd_ret != 0)
 		return (ft_errors_exec(1, strerror(errno), "cd", 1));
 	update_pwd(shell, data, cwd);
-	g_return_satus = 0;
+	g_status = 0;
 }

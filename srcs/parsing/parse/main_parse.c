@@ -4,7 +4,6 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 {
 	t_node *current;
 	t_token *tokens;
-	int node_index;
 	char *line_copy;
 	bool error;
 
@@ -18,7 +17,7 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 	{
 		write(1, "Syntax error\n", 13);
 		free(line_copy);
-		freetab(nodes);
+		freelist(nodes);
 		return (0);
 	}
 	free(line_copy);
@@ -28,7 +27,7 @@ int tokenizer(char *line, t_node **nodes, t_minishell *mini)
 		tokens = tokenize_input(current->content);
 		if (!tokens)
 		{
-			freetab(nodes);
+			freelist(nodes);
 			return (0);
 		}
 		parse_tokens(tokens, current, mini);

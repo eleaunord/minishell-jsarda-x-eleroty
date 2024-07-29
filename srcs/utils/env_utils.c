@@ -6,29 +6,29 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:07:49 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:42 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:41:37 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_swap(t_env *exp)
+int	ft_swap(t_env *env_dup)
 {
-	char	*temp_name;
+	char	*temp_key;
 	char	*temp_value;
 	int		swapped;
 
 	swapped = 0;
-	if (exp == NULL || exp->next == NULL)
+	if (env_dup == NULL || env_dup->next == NULL)
 		return (swapped);
-	if (strcmp(exp->name, exp->next->name) > 0)
+	if (strcmp(env_dup->key, env_dup->next->key) > 0)
 	{
-		temp_name = exp->name;
-		temp_value = exp->value;
-		exp->name = exp->next->name;
-		exp->value = exp->next->value;
-		exp->next->name = temp_name;
-		exp->next->value = temp_value;
+		temp_key = env_dup->key;
+		temp_value = env_dup->value;
+		env_dup->key = env_dup->next->key;
+		env_dup->value = env_dup->next->value;
+		env_dup->next->key = temp_key;
+		env_dup->next->value = temp_value;
 		swapped = 1;
 		return (swapped);
 	}
@@ -86,9 +86,9 @@ void	print_env(t_env *env, t_node *data)
 		return ;
 	while (env)
 	{
-		if (env->name)
+		if (env->key)
 		{
-			write(data->fdout, env->name, ft_strlen(env->name));
+			write(data->fdout, env->key, ft_strlen(env->key));
 		}
 		if (env->value)
 		{
@@ -100,9 +100,9 @@ void	print_env(t_env *env, t_node *data)
 	}
 }
 
-void	ft_print_exp(t_env *exp, t_node *data)
+void	ft_print_exp(t_env *env_dup, t_node *data)
 {
-	if (exp == NULL)
+	if (env_dup == NULL)
 		return ;
-	sort_ascii(exp, data);
+	sort_ascii(env_dup, data);
 }

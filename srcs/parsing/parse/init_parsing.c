@@ -47,7 +47,6 @@ void	set_cmd(t_token *tokens, t_node *node)
 				node->args[0] = node->cmd;
 				if (!node->cmd)
 					return ;
-				node->cmd_count++;
 				return ;
 			}
 		}
@@ -64,18 +63,15 @@ void	init_parsing(t_node *node)
 	node->args = NULL;
 	node->arg_count = 0;
 	node->cmd = NULL;
-	node->cmd_count = 0;
 	node->limiter_hd = NULL;
 	node->limiter_hd_count = 0;
 	node->key_expansion = NULL;
-	node->filenames = NULL;
-	node->file_count = 0;
 	node->expansion_count = 0;
 	node->last_heredoc = NULL;
 	node->error_num = 0;
 	node->lonely_expansion = 0;
-	node->redir = 0;
-	node->fdout = 0;
+	node->fdintmp = 0;
+	node->fdout = 1;
 	node->fdin = 0;
 	node->is_here_doc = 0;
 	node->is_redir_out = 0;

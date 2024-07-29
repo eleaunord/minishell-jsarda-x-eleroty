@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 10:46:02 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 09:40:47 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 10:30:29 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,11 @@ int	check_arg(char *str)
 	return (-1);
 }
 
-void	ft_echo(t_node *data, t_shell *shell, char **args)
+void	ft_echo(t_node *data, t_minishell *shell, char **args)
 {
 	int	i;
 	int	n_option;
 
-	(void)data;
 	(void)shell;
 	i = 1;
 	n_option = 0;
@@ -54,5 +53,5 @@ void	ft_echo(t_node *data, t_shell *shell, char **args)
 	}
 	if (!n_option)
 		write(data->fdout, "\n", 1);
-	g_return_satus = 0;
+	g_status = 0;
 }

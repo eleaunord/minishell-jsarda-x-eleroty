@@ -13,6 +13,7 @@ void	count_heredocs(t_token **tokens, t_node *node)
 	{
 		if (current->type == HEREDOC_TOKEN)
 		{
+			node->is_here_doc = 1;
 			if (current->next && current->next->type == TOKEN_WORD)
 			{
 				i++;
@@ -72,15 +73,9 @@ void	process_heredoc_tokens(t_token *tokens, t_node *node)
 		if (current->type == HEREDOC_TOKEN && current->next
 			&& current->next->type == TOKEN_WORD)
 		{
-			node->is_here_doc = 1;
 			if (i < node->limiter_hd_count)
 			{
 				node->limiter_hd[i++] = current->next->value;
-			}
-			node->here_doc = 1;
-			if (i == node->limiter_hd_count)
-			{
-				node->filename_in[i] = get_tmp_file();
 			}
 			current->next->processed = 1;
 		}
