@@ -1,5 +1,5 @@
-#ifndef TOKENS_H
-# define TOKENS_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 // Librairies
 # include <errno.h>
@@ -54,26 +54,26 @@ typedef struct s_env
 }						t_env;
 
 // NODES (from parsing to exec, with love)
-typedef struct s_node //t_data
+typedef struct s_node // t_data
 {
 	// Making the nodes (for parsing)
-	struct s_node		*next;
-	void				*content;
+	struct s_node *next;
+	void *content;
 
 	// Dealing with tokens (for parsing)
-	struct s_token		*tokens_in_node;
+	struct s_token *tokens_in_node;
 
 	// From parsing to exec
-	char				*cmd;
-	char				**args;
-	int					arg_count;
+	char *cmd;
+	char **args;
+	int arg_count;
 
 	char **key_expansion; // in args
-	int					expansion_count;
-	int					lonely_expansion;
+	int expansion_count;
+	int lonely_expansion;
 
-	char				**filename_in;
-	char				**filename_out;
+	char **filename_in;
+	char **filename_out;
 	int file_in_count;  // count in (for parsing)
 	int file_out_count; // count out (for parsing)
 	int fdout;          // init to -1 in parsing if redir out
@@ -82,12 +82,12 @@ typedef struct s_node //t_data
 	int redir_out;      // is there a redir out ? 1 : yes, 0 : no
 	int is_here_doc;    // is there a here doc ? 1 : yes, 0 : no
 	char **limiter_hd;  // eof
-	int					limiter_hd_count;
-	char				*last_heredoc;
+	int limiter_hd_count;
+	char *last_heredoc;
 
-	int					pid;
-	int					pipes[2];
-	int					error_num;
+	int pid;
+	int pipes[2];
+	int error_num;
 
 }						t_node;
 
