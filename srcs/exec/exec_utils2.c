@@ -6,7 +6,7 @@
 /*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 17:14:00 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 12:14:09 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/29 14:08:40 by jsarda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	get_key(t_env *env, char *key)
 	index = 0;
 	while (env)
 	{
-		if (env->value && ft_strncmp(env->value, key, ft_strlen(env->value)) == 0)
+		if (env->value && ft_strcmp(env->key, key) == 0)
 			return (index);
 		env = env->next;
 		index++;

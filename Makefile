@@ -14,6 +14,7 @@ SRCS_FILES	= parsing/environment/env.c \
 			parsing/parse/init_parsing.c \
 			parsing/parse/main_parse.c \
 			parsing/parse/parser.c \
+			parsing/parse/debug_fonction.c \
 			parsing/parse/remove_quotes.c \
 			parsing/parse/signals.c \
 			parsing/parse/update_tokens.c \
@@ -57,72 +58,77 @@ SRCS_FILES	= parsing/environment/env.c \
 			exec/redir_builtins.c \
 			main.c \
 
-
 SRCS		=	$(addprefix srcs/, $(SRCS_FILES))
 
-INC_FILES	=	 minishell.h structs.h
-
-INCS	=	$(addprefix includes/, $(INC_FILES))
+INC_FILES	=	minishell.h structs.h
+INCS		=	$(addprefix includes/, $(INC_FILES))
 
 CC		=	cc
 
 LIBS		=	-lreadline -Llibft -lft
 
 CFLAGS		=	-Wall -Wextra -Werror -I ./includes -g3
+CFLAGSD		=	-Wall -Wextra -Werror -I ./includes -DDEBUG=1 -g3
 
-OBJ_DIR =	objs/
+OBJ_DIR		=	objs/
+OBJ_DIRD	=	objsd/
 
-OBJS_FILES	=	$(SRCS_FILES:%.c=%.o)
-# OBJS_FILESD	=	$(SRCS_FILES:%.c=%.o)
+OBJS		=	$(addprefix $(OBJ_DIR), $(SRCS_FILES:.c=.o))
+OBJSD		=	$(addprefix $(OBJ_DIRD), $(SRCS_FILES:.c=.o))
 
-OBJS	=	$(addprefix $(OBJ_DIR), $(OBJS_FILES))
-# OBJSD		=	$(addprefix objsd/, $(OBJS_FILES))
+DEP		=	$(OBJS:.o=.d)
+DEPD		=	$(OBJSD:.o=.d)
 
-DEP		=	$(OBJS:%.o=%.d)
-# DEPD		=	$(OBJSD:%.o=%.d)
-
-# CFLAGSD	=	-Wall -Wextra -Werror -D DEBUG=1 -g3
+NAME		=	minishell
 
 all:		$(NAME)
 
-$(NAME)	:	$(OBJS)
+$(NAME):	$(OBJS)
 		make -C libft
 		$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
 
-
-# debug:		${OBJSD}
-# 			make -C libft
-# 			${CC} ${CFLAGSD} -o ${NAME} ${OBJSD} $(LIBS)
+debug:		$(OBJ_DIRD) $(OBJSD)
+		make -C libft
+		$(CC) $(CFLAGSD) -o $(NAME) $(OBJSD) $(LIBS)
 
 clean:
-	make -C libft clean
-	rm -rf $(OBJS) $(DEP)
-	rm -rf objs/
-	#rm -rf $(OBJSD) $(DEPD)
-	#rm -rf objsd/
+		make -C libft clean
+		rm -rf $(OBJS) $(DEP) $(OBJ_DIR)
+		rm -rf $(OBJSD) $(DEPD) $(OBJ_DIRD)
 
 fclean:		clean
 		make -C libft fclean
 		rm -rf $(NAME)
 
-re		:	fclean all
+re:		fclean all
 
 -include $(DEP)
+-include $(DEPD)
 
-objs/%.o	: srcs/%.c | $(OBJ_DIR)
-			mkdir -p objs
-			$(CC) $(CFLAGS) -MMD -o $@ -c $<
+$(OBJ_DIR)%.o: srcs/%.c | $(OBJ_DIR)
+		mkdir -p $(dir $@)
+		$(CC) $(CFLAGS) -MMD -o $@ -c $<
+
+$(OBJ_DIRD)%.o: srcs/%.c | $(OBJ_DIRD)
+		mkdir -p $(dir $@)
+		$(CC) $(CFLAGSD) -MMD -o $@ -c $<
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)exec
-	mkdir -p $(OBJ_DIR)builtins
-	mkdir -p $(OBJ_DIR)parsing/environment
-	mkdir -p $(OBJ_DIR)parsing/parse
-	mkdir -p $(OBJ_DIR)parsing/tokenization
-	mkdir -p $(OBJ_DIR)utils
+		mkdir -p $(OBJ_DIR)
+		mkdir -p $(OBJ_DIR)exec
+		mkdir -p $(OBJ_DIR)builtins
+		mkdir -p $(OBJ_DIR)parsing/environment
+		mkdir -p $(OBJ_DIR)parsing/parse
+		mkdir -p $(OBJ_DIR)parsing/tokenization
+		mkdir -p $(OBJ_DIR)utils
 
-# objsd/%.o	: srcs/%.c includes/minishell.h
-# 	mkdir -p objsd
-# 	$(CC) $(CFLAGSD) -MMD -o $@ -c $<
+$(OBJ_DIRD):
+		mkdir -p $(OBJ_DIRD)
+		mkdir -p $(OBJ_DIRD)exec
+		mkdir -p $(OBJ_DIRD)builtins
+		mkdir -p $(OBJ_DIRD)parsing/environment
+		mkdir -p $(OBJ_DIRD)parsing/parse
+		mkdir -p $(OBJ_DIRD)parsing/tokenization
+		mkdir -p $(OBJ_DIRD)utils
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re debug

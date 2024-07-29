@@ -21,6 +21,12 @@
 
 # define NUM_OF_BUILT_INS 7
 
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
+
+/*			DEBUG			*/
+
 // MINISHELL STRUCT
 typedef enum e_token_type
 {
@@ -104,6 +110,7 @@ typedef struct s_minishell
 	int					exit_status;
 }						t_minishell;
 
+
 // EXEC
 int						exec(t_minishell *shell);
 void					first_exec(t_minishell *shell, t_node *data);
@@ -165,6 +172,7 @@ int						handle_redir_builtins(t_node *data, t_minishell *shell,
 void					ft_lstadd_back_env(t_env **alst, t_env *new);
 t_env					*ft_lstnew_env(char *line, char *name, char *value);
 
+void					debug_print_block(t_node **list);
 // SIGNALS
 void					handler_sig_cmd(int sig);
 void					manage_sig(void);

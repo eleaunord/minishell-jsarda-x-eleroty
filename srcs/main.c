@@ -45,18 +45,7 @@ int	main_loop(t_minishell *shell)
 
 		shell->exit_status = 0;
 		add_history(input_line);
-		t_node *current = shell->nodes;
-        int i;
-        while (current != NULL)
-        {
-            i = 0;
-            while (current->args[i] != NULL)
-            {
-                printf("cmd [%d]: %s\n", i, current->cmd);
-                i++;
-            }
-            current = current->next;
-        }
+		debug_print_block(&node_list);
 		exec(shell);
 		//execute_commands(node_list, shell);
 		free(input_line);
@@ -73,12 +62,12 @@ int	main(int argc, char *argv[], char *env[])
 	mini = malloc(sizeof(struct s_minishell));
 	if (!mini)
 		return (1);
+	init_minishell(mini);
 	if (!init_env(mini, env) || !init_env_dup(mini, env))
 	{
 		free(mini);
 		return (1);
 	}
-	init_minishell(mini);
     main_loop(mini);
 	free_mini(mini);
 	return (0);
