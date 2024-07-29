@@ -34,17 +34,18 @@ void	allocate_memory_for_filename_out(t_node *node)
 	i = 0;
 	node->filename_out = (char **)calloc(node->file_out_count + 1,
 			sizeof(char *));
-	while(i < node->file_out_count)
-	{
-		node->filename_out[i] =  malloc(sizeof(char) * (sizeof(char) + 1));
-		i++;
-	}
-	node->filename_out[i] = NULL;
 	if (!node->filename_out)
 	{
 		perror("calloc failed");
 		exit(EXIT_FAILURE);
 	}
+	while(i < node->file_out_count)
+	{
+		node->filename_out[i] = NULL;
+		i++;
+	}
+	node->filename_out[i] = NULL;
+
 }
 
 void	process_filename_out(t_token *tokens, t_node *node)
@@ -61,7 +62,7 @@ void	process_filename_out(t_token *tokens, t_node *node)
 		{
 			if (i < node->file_out_count)
 			{
-				node->filename_out[i++] = current->next->value;
+				node->filename_out[i++] = ft_strdup(current->next->value);
 			}
 			current->next->processed = 1;
 		}

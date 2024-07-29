@@ -27,6 +27,8 @@ void	count_heredocs(t_token **tokens, t_node *node)
 // Fonction pour allouer de la mémoire pour limiter_hd
 void	allocate_memory_for_limiter_hd(t_node *node)
 {
+	int i;
+
 	node->limiter_hd = (char **)calloc(node->limiter_hd_count + 1,
 			sizeof(char *));
 	if (!node->limiter_hd)
@@ -34,6 +36,13 @@ void	allocate_memory_for_limiter_hd(t_node *node)
 		perror("calloc failed");
 		exit(EXIT_FAILURE);
 	}
+	i = 0;
+	while (i < node->limiter_hd_count)
+	{
+		node->limiter_hd[i] = NULL;
+		i++;
+	}
+	node->limiter_hd[i] = NULL;
 }
 
 // void print_limiter_hd(t_node *node)
@@ -43,7 +52,7 @@ void	allocate_memory_for_limiter_hd(t_node *node)
 //     if (node == NULL || node->limiter_hd == NULL)
 //     {
 //         printf("No limiter_hd to print.\n");
-//         return;
+//         return ;
 //     }
 
 //     printf("limiter_hd for node:\n");
@@ -75,11 +84,10 @@ void	process_heredoc_tokens(t_token *tokens, t_node *node)
 		{
 			if (i < node->limiter_hd_count)
 			{
-				node->limiter_hd[i++] = current->next->value;
+				node->limiter_hd[i++] = ft_strdup(current->next->value);
 			}
 			current->next->processed = 1;
 		}
 		current = current->next;
 	}
 }
-

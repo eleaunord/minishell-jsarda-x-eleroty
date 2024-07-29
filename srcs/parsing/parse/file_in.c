@@ -27,21 +27,22 @@ void	count_redir_in(t_token **tokens, t_node *node)
 
 void	allocate_memory_for_filename_in(t_node *node)
 {
-	int i;
+	int	i;
+
 	node->filename_in = (char **)calloc(node->file_in_count + 1,
 			sizeof(char *));
-	i = 0;
-	while(i < node->file_in_count)
-	{
-		node->filename_in[i] =  malloc(sizeof(char) * (sizeof(char) + 1));
-		i++;
-	}
-	node->filename_in[i] = NULL;
 	if (!node->filename_in)
 	{
 		perror("calloc failed");
 		exit(EXIT_FAILURE);
 	}
+	i = 0;
+	while (i < node->file_in_count)
+	{
+		node->filename_in[i] = NULL;
+		i++;
+	}
+	node->filename_in[i] = NULL;
 }
 
 void	process_filename_in(t_token *tokens, t_node *node)
@@ -58,7 +59,7 @@ void	process_filename_in(t_token *tokens, t_node *node)
 		{
 			if (i < node->file_in_count)
 			{
-				node->filename_in[i++] = current->next->value;
+				node->filename_in[i++] = ft_strdup(current->next->value);
 			}
 			current->next->processed = 1;
 		}

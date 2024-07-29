@@ -2,7 +2,7 @@
 
 #include "minishell.h"
 
-int				g_status = 0;
+int		g_status = 0;
 
 void	ft_clear_one_block_2(t_node *datas)
 {
@@ -80,8 +80,8 @@ void	init_minishell(t_minishell *mini)
 
 int	main_loop(t_minishell *shell)
 {
-    char		*input_line;
-    t_node		*node_list;
+	char	*input_line;
+	t_node	*node_list;
 
 	input_line = NULL;
 	node_list = NULL;
@@ -96,7 +96,6 @@ int	main_loop(t_minishell *shell)
 		}
 		if (!process_input_line(input_line, &node_list, shell))
 			continue ;
-
 		shell->exit_status = 0;
 		debug_print_block(&node_list);
 		exec(shell);
@@ -122,7 +121,7 @@ int	main(int argc, char *argv[], char *env[])
 		free(mini);
 		return (1);
 	}
-    main_loop(mini);
+	main_loop(mini);
 	free_mini(mini);
 	return (0);
 }

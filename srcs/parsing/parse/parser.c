@@ -158,20 +158,7 @@ void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	update_tokens(&tokens, node);
 	// CHECK LONELY
 	check_lonely_expansions(tokens, node);
-	// printf("is lonely : %d\n", node->lonely_expansion);
-	// t_token *tok;
-	// tok = tokens;
-	// while (tok)
-	// {
-	// 	printf("token : %s\n", (char *)tok->value);
-	// 	printf("expansion : %s\n", (char *)tok->key_expansion);
-	// 	tok = tok->next;
-	// }
-
-	// GET EXPANSION from tokens
 	set_expansions(tokens, node);
-	//SET ARGS
-
 	fill_args(tokens, node, mini);
 }
 
