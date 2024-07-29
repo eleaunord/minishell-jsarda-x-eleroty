@@ -91,8 +91,10 @@ void free_nodes(t_node *head)
 	while (current != NULL)
 	{
 		next = current->next;
-		if (current->cmd || current->args)
-			free_node_cmd_args(current);
+		if (current->cmd)
+			free(current->cmd);
+		if(current->args)
+			freetab(current->args);
 		if (current->content)
 			free(current->content);
 		if (current->limiter_hd)

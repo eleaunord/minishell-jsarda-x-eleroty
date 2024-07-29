@@ -4,27 +4,80 @@
 
 int				g_status = 0;
 
+void	ft_clear_one_block_2(t_node *datas)
+{
+	if (datas->filename_in)
+	{
+		freetab(datas->filename_in);
+		datas->filename_in = NULL;
+	}
+	if (datas->filename_out)
+	{
+		freetab(datas->filename_out);
+		datas->filename_out = NULL;
+	}
+	if (datas->limiter_hd)
+	{
+		freetab(datas->limiter_hd);
+		datas->limiter_hd = NULL;
+	}
+	if (datas->last_heredoc)
+	{
+		if (datas->fdin != -1 && datas->fdin != 0)
+			close(datas->fdin);
+		free(datas->last_heredoc);
+		datas->last_heredoc = NULL;
+	}
+	if (datas->content)
+		free(datas->content);
+	if (datas)
+		free(datas);
+	datas = NULL;
+}
+void	ft_clear_one_block(t_node *datas)
+{
+	if (!datas)
+		return ;
+	if (datas->cmd)
+	{
+		free(datas->cmd);
+		datas->cmd = NULL;
+	}
+	if (datas->path)
+	{
+		free(datas->path);
+		datas->path = NULL;
+	}
+	if (datas->args)
+	{
+		freetab(datas->args);
+		datas->args = NULL;
+	}
+	if (datas->tokens_in_node)
+		free_tokens(datas->tokens_in_node);
+	ft_clear_one_block_2(datas);
+}
+void	ft_clear_datas(t_node **datas)
+{
+	t_node	*tmp;
+
+	if (!datas || !*datas)
+		return ;
+	while (datas && *datas)
+	{
+		tmp = (*datas)->next;
+		ft_clear_one_block(*datas);
+		*datas = tmp;
+	}
+}
 void	init_minishell(t_minishell *mini)
 {
-	//mini->pipes = NULL;
 	mini->env = NULL;
 	mini->env_dup = NULL;
 	mini->nodes = NULL;
 	mini->exit_status = 0;
 }
-void	execute_commands(t_node *node_list, t_minishell *data)
-{
-	t_node	*head;
 
-	head = node_list;
-	exec(data);
-	// if (data->exit)
-	// {
-	// 	free_nodes(node_list);
-	// 	exit(data->exit_status);
-	// }
-	free_nodes(node_list);
-}
 int	main_loop(t_minishell *shell)
 {
     char		*input_line;
@@ -45,14 +98,11 @@ int	main_loop(t_minishell *shell)
 			continue ;
 
 		shell->exit_status = 0;
-		
 		debug_print_block(&node_list);
 		exec(shell);
 		add_history(input_line);
-		//execute_commands(node_list, shell);
 		free(input_line);
-		free_nodes(node_list);
-		
+		ft_clear_datas(&(shell->nodes));
 	}
 	return (0);
 }

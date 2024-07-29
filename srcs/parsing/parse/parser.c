@@ -41,6 +41,7 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 		if (!expanded_value)
 			return;
 		node->args[*arg_index] = expanded_value;
+		node->cmd = expanded_value;
 	}
 	else if (tok->key_expansion != NULL)
 		node->args[*arg_index] = get_expansion(mini, tok->key_expansion);
