@@ -97,11 +97,11 @@ int	main_loop(t_minishell *shell)
 		if (!process_input_line(input_line, &node_list, shell))
 			continue ;
 		shell->exit_status = 0;
-		debug_print_block(&node_list);
+		//debug_print_block(&node_list);
 		exec(shell);
 		add_history(input_line);
 		free(input_line);
-		ft_clear_datas(&(shell->nodes));
+		ft_clear_datas(&(shell->nodes)); // here is where I clean everything
 	}
 	return (0);
 }

@@ -1,21 +1,25 @@
 #include "../../../includes/minishell.h"
 
-void	free_tokens(t_token *tokens)
-{
-	t_token	*temp;
+void free_tokens(t_token *tokens) {
+    t_token *temp;
 
-	if (!tokens)
-		return ;
-	while (tokens)
-	{
-		temp = tokens;
-		tokens = tokens->next;
-		free(temp->value);
-		free(temp->cmd);
-		free(temp->key_expansion);
-		free(temp);
-	}
+    if (!tokens)
+        return;
+    while (tokens) {
+        temp = tokens;
+        tokens = tokens->next;
+        if (temp->value)
+		{
+			 free(temp->value);
+		}
+        if (temp->cmd)
+            free(temp->cmd);
+        if (temp->key_expansion)
+            free(temp->key_expansion);
+        free(temp);
+    }
 }
+
 
 void	free_env_list(t_env *list)
 {

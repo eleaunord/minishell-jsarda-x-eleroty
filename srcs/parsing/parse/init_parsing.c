@@ -22,10 +22,10 @@ void	init_args(t_token *tokens, t_node *node)
 	int	arg_count;
 
 	arg_count = count_arguments(tokens);
-	node->args = (char **)ft_calloc(arg_count + 1, sizeof(char *));
-	node->arg_count = arg_count;
+	node->args = (char **)ft_calloc(arg_count + 1, sizeof(char *));	
 	if (!node->args)
 		return ;
+	node->arg_count = arg_count;
 }
 
 void	set_cmd(t_token *tokens, t_node *node)
@@ -43,8 +43,14 @@ void	set_cmd(t_token *tokens, t_node *node)
 		{
 			if (!tok->processed)
 			{
+				if (node->cmd)
+				{
+					free(node->cmd);
+					node->cmd = NULL;
+				}
 				node->cmd = ft_strdup(tok->value);
 				node->args[0] = node->cmd;
+				node->args[1] = NULL;
 				if (!node->cmd)
 					return ;
 				return ;

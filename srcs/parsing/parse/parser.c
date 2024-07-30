@@ -1,37 +1,40 @@
 #include "minishell.h"
 
-char *expand_exit_status(char *str, unsigned long long error_num)
+char	*expand_exit_status(char *str, unsigned long long error_num)
 {
-	char *pos;
-	size_t leading_len;
-	size_t trailing_len;
-	char *error_num_str;
-	char *expanded;
+	char	*pos;
+	size_t	leading_len;
+	size_t	trailing_len;
+	char	*error_num_str;
+	char	*expanded;
 
 	pos = ft_strstr(str, "$?");
 	if (!pos)
-        return ft_strdup(str);
-    leading_len = pos - str;
-    trailing_len = ft_strlen(pos + 2);
-   	error_num_str = ft_itoa(error_num);
-    if (!error_num_str)
+		return (ft_strdup(str));
+	leading_len = pos - str;
+	trailing_len = ft_strlen(pos + 2);
+	error_num_str = ft_itoa(error_num);
+	if (!error_num_str)
 		return (NULL);
-	expanded = (char *)malloc(leading_len + ft_strlen(error_num_str) + trailing_len + 1);
+	expanded = (char *)malloc(leading_len + ft_strlen(error_num_str)
+			+ trailing_len + 1);
 	if (!expanded)
-    {
-        free(error_num_str);
-        return NULL;
-    }
-    ft_strcpy(expanded, str);
-    ft_strcpy(expanded + leading_len, error_num_str);
-    ft_strcpy(expanded + leading_len + ft_strlen(error_num_str), pos + 2);
-    free(error_num_str);
-    return expanded;
+	{
+		free(error_num_str);
+		return (NULL);
+	}
+	ft_memcpy(expanded, str, leading_len);
+	ft_memcpy(expanded + leading_len, error_num_str, ft_strlen(error_num_str));
+	ft_memcpy(expanded + leading_len + ft_strlen(error_num_str), pos + 2,
+		trailing_len + 1);
+	free(error_num_str);
+	return (expanded);
 }
 
-void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index)
+void	process_token(t_token *tok, t_node *node, t_minishell *mini,
+		int *arg_index)
 {
-	char *expanded_value;
+	char	*expanded_value;
 
 	if (!node->args || *arg_index >= node->arg_count)
 		return ;
@@ -39,9 +42,11 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 	{
 		expanded_value = expand_exit_status(tok->value, g_status);
 		if (!expanded_value)
-			return;
+			return ;
 		node->args[*arg_index] = expanded_value;
-		node->cmd = expanded_value;
+		if (node->cmd)
+			free(node->cmd);
+		node->cmd = ft_strdup(expanded_value);
 	}
 	else if (tok->key_expansion != NULL)
 		node->args[*arg_index] = get_expansion(mini, tok->key_expansion);
@@ -52,7 +57,8 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 		while (*arg_index > 0)
 			free(node->args[--(*arg_index)]);
 		free(node->args);
-		free(node->cmd);
+		if (node->cmd)
+			free(node->cmd);
 		node->args = NULL;
 		node->cmd = NULL;
 		return ;
@@ -60,14 +66,14 @@ void process_token(t_token *tok, t_node *node, t_minishell *mini, int *arg_index
 	(*arg_index)++;
 }
 
-void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
+void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 {
-	t_token *tok;
-	int i;
+	t_token	*tok;
+	int		i;
 
 	tok = tokens;
 	if (!tokens || !node)
-		return;
+		return ;
 	if (node->lonely_expansion == 1)
 	{
 		node->args[0] = get_expansion(mini, tok->key_expansion);
@@ -82,7 +88,7 @@ void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 		{
 			process_token(tok, node, mini, &i);
 			if (!node->args)
-				return;
+				return ;
 		}
 		tok = tok->next;
 	}
@@ -90,12 +96,12 @@ void fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 }
 
 // Fonction principale filename
-void set_filename(t_token **tokens, t_node *node)
+void	set_filename(t_token **tokens, t_node *node)
 {
-	t_token *tok;
+	t_token	*tok;
 
 	if (!tokens || !*tokens || !node)
-		return;
+		return ;
 	tok = *tokens;
 	count_heredocs(&tok, node);
 	// Allocation de mémoire pour limiter_hd
@@ -105,12 +111,11 @@ void set_filename(t_token **tokens, t_node *node)
 	allocate_memory_for_filename_in(node);
 	count_redir_out(&tok, node);
 	allocate_memory_for_filename_out(node);
-	//Traitement des tokens HEREDOC_TOKEN
+	// Traitement des tokens HEREDOC_TOKEN
 	process_heredoc_tokens(*tokens, node);
 	node->limiter_hd[node->limiter_hd_count] = NULL;
 	// Traitement des tokens REDIR_IN
 	process_filename_in(*tokens, node);
-	
 	// Traitement des tokens REDIR_OUT
 	process_filename_out(*tokens, node);
 	node->filename_out[node->file_out_count] = NULL;
@@ -124,14 +129,14 @@ void set_filename(t_token **tokens, t_node *node)
 	// }
 }
 
-void check_lonely_expansions(t_token *tokens, t_node *node)
+void	check_lonely_expansions(t_token *tokens, t_node *node)
 {
-	t_token *tok;
-	int i;
+	t_token	*tok;
+	int		i;
 
 	tok = tokens;
 	if (!tokens || !node)
-		return;
+		return ;
 	i = 0;
 	while (tok && i < 1)
 	{
@@ -141,11 +146,11 @@ void check_lonely_expansions(t_token *tokens, t_node *node)
 	}
 }
 
-void parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
+void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 {
 	if (!tokens)
 	{
-		return;
+		return ;
 	}
 	init_parsing(node);
 	set_filename(&tokens, node);

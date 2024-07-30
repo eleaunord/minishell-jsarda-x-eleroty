@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 12:02:40 by jtaravel          #+#    #+#             */
-/*   Updated: 2024/07/29 10:44:02 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 11:06:25 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,9 @@ void	freetab(char **tab)
 	while (tab[i])
 	{
 		if (tab[i])
+		{
 			free(tab[i]);
+		}
 		i++;
 	}
 	free(tab);
