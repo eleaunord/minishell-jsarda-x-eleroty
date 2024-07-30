@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:21:22 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/30 14:43:59 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:45:51 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	handle_env_change(t_minishell *shell, char *name, char *value)
 {
 	t_env	*current;
 	char	*tmp_name;
-	char	*tmp_line;
+	char	*line;
 
 	current = shell->env;
 	while (current)
@@ -82,10 +82,10 @@ void	handle_env_change(t_minishell *shell, char *name, char *value)
 	if (value && !current)
 	{
 		tmp_name = ft_strjoin(name, "=");
-		tmp_line = ft_strjoin(tmp_name, value);
-		ft_lstadd_back_env(&(shell->env), ft_lstnew_env(tmp_line, name, value));
+		line = ft_strjoin(tmp_name, value);
+		ft_lstadd_back_env(&(shell->env), ft_lstnew_env(line, name, value));
 		free(tmp_name);
-		free(tmp_line);
+		free(line);
 	}
 }
 
@@ -93,7 +93,7 @@ void	handle_exp_change(t_minishell *shell, char *name, char *value)
 {
 	t_env	*curr_exp;
 	char	*tmp_name;
-	char	*tmp_line;
+	char	*line;
 
 	curr_exp = shell->env_dup;
 	while (curr_exp)
@@ -112,10 +112,9 @@ void	handle_exp_change(t_minishell *shell, char *name, char *value)
 		tmp_name = ft_strjoin(name, "=");
 		if (!value)
 			value = "''";
-		tmp_line = ft_strjoin(tmp_name, value);
-		ft_lstadd_back_env(&(shell->env_dup), ft_lstnew_env(tmp_line, name,
-				value));
-		return (free(tmp_name), free(tmp_line));
+		line = ft_strjoin(tmp_name, value);
+		ft_lstadd_back_env(&(shell->env_dup), ft_lstnew_env(line, name, value));
+		return (free(tmp_name), free(line));
 	}
 }
 
