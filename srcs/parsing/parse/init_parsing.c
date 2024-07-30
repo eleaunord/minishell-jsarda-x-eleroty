@@ -1,4 +1,16 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_parsing.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:00:00 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:00:10 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 int	count_arguments(t_token *tokens)
 {
@@ -17,12 +29,13 @@ int	count_arguments(t_token *tokens)
 	}
 	return (count);
 }
+
 void	init_args(t_token *tokens, t_node *node)
 {
 	int	arg_count;
 
 	arg_count = count_arguments(tokens);
-	node->args = (char **)ft_calloc(arg_count + 1, sizeof(char *));	
+	node->args = (char **)ft_calloc(arg_count + 1, sizeof(char *));
 	if (!node->args)
 		return ;
 	node->arg_count = arg_count;
@@ -36,7 +49,7 @@ void	set_cmd(t_token *tokens, t_node *node)
 	if (!tokens || !node)
 		return ;
 	if (!node->args)
-		return;
+		return ;
 	while (tok != NULL)
 	{
 		if (tok->type == TOKEN_WORD)
@@ -89,4 +102,3 @@ void	init_parsing(t_node *node)
 	node->expansion_count = 0;
 	node->lonely_expansion = 0;
 }
-

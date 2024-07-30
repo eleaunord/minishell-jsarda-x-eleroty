@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alloc_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 11:37:36 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 11:38:11 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void free_var_env(t_env *node)
+void	free_var_env(t_env *node)
 {
 	if (node)
 	{
-		// Free dynamically allocated members
 		if (node->str)
 		{
 			free(node->str);
@@ -32,6 +43,7 @@ void	free_t_env(t_env *env)
 	free(env->value);
 	free(env);
 }
+
 t_env	*allocate_new_env(void)
 {
 	t_env	*new_env;

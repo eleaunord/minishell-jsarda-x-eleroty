@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   whitespaces.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:36:03 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:36:08 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
+#include "minishell.h"
 
-// Function to update the quote state
 bool	update_quote_state(char c, bool in_quote, char *quote_char)
 {
 	if (in_quote && c == *quote_char)
@@ -17,7 +27,6 @@ bool	update_quote_state(char c, bool in_quote, char *quote_char)
 	return (in_quote);
 }
 
-// Function to trim leading spaces
 char	*trim_leading_spaces(char *str)
 {
 	while (*str && isspace((unsigned char)*str))
@@ -25,7 +34,6 @@ char	*trim_leading_spaces(char *str)
 	return (str);
 }
 
-// Function to trim trailing spaces
 void	trim_trailing_spaces(char *str)
 {
 	char	*end;
@@ -49,8 +57,6 @@ void	trim_trailing_spaces(char *str)
 	end[1] = '\0';
 }
 
-// Main function to trim leading and trailing spaces,
-	//ignoring spaces inside quotes
 char	*trim_whitespace(char *str)
 {
 	str = trim_leading_spaces(str);

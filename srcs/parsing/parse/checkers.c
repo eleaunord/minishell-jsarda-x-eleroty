@@ -1,17 +1,30 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checkers.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 11:58:52 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 11:59:19 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int is_only_tabs(char *str)
+#include "minishell.h"
+
+int	is_only_tabs(char *str)
 {
 	while (*str)
 	{
 		if (*str != '\t')
 		{
-			return 0;
+			return (0);
 		}
 		str++;
 	}
-	return 1;
+	return (1);
 }
+
 int	is_space(char *line)
 {
 	int	a;
@@ -24,12 +37,13 @@ int	is_space(char *line)
 	return (0);
 }
 
-int check_line(char **line)
+int	check_line(char **line)
 {
 	if ((*line)[0] == '\0' || is_space(*line) || ft_strncmp(*line, "\n", 0))
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
+
 bool	is_quote(char c)
 {
 	return (c == '\'' || c == '"');

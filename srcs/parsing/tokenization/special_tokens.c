@@ -1,6 +1,17 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   special_tokens.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:34:32 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:34:45 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// Function to handle output redirection tokens
+#include "minishell.h"
+
 static int	handle_output_redirection(char *input, t_token **tokens, int index)
 {
 	if (input[1] == '>')
@@ -15,7 +26,6 @@ static int	handle_output_redirection(char *input, t_token **tokens, int index)
 	}
 }
 
-// Function to handle input redirection tokens
 static int	handle_input_redirection(char *input, t_token **tokens, int index)
 {
 	if (input[1] == '<')
@@ -30,7 +40,6 @@ static int	handle_input_redirection(char *input, t_token **tokens, int index)
 	}
 }
 
-// Main function to handle special tokens
 int	special_tokens(char *input, t_token **tokens, int index)
 {
 	if (input[0] == '>')

@@ -1,4 +1,16 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:16:36 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:21:14 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 void	sigint_handler(int sig)
 {
@@ -10,6 +22,7 @@ void	sigint_handler(int sig)
 	rl_redisplay();
 	return ;
 }
+
 void	setup_signal_handlers(void)
 {
 	signal(SIGQUIT, SIG_IGN);

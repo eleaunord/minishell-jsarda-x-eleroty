@@ -1,4 +1,16 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_value.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 11:56:53 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 11:57:52 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 char	*duplicate_string(const char *src)
 {
@@ -14,7 +26,7 @@ static char	*extract_key(const char *src, char *equal_sign)
 	return (ft_strndup(src, equal_sign - src));
 }
 
-static char *extract_value(const char *src, char *equal_sign)
+static char	*extract_value(const char *src, char *equal_sign)
 {
 	if (src == NULL || equal_sign == NULL || equal_sign[1] == '\0')
 		return (NULL);
@@ -50,4 +62,3 @@ int	parse_key_value(t_env **new, char *elem)
 	}
 	return (1);
 }
-

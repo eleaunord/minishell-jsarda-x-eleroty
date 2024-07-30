@@ -1,8 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   collapse_spaces.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:22:52 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:23:17 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
-
-// Function to collapse multiple spaces into a single space,
-	//ignoring spaces inside quotes
+#include "minishell.h"
 
 bool	toggle_quote_state(bool in_quote, char *quote_char, char current_char)
 {
@@ -49,11 +57,11 @@ void	handle_non_space(char **dst, char **src, int *space)
 
 char	*collapse_spaces(char *str)
 {
-	char *dst;
-	char *src;
-	bool in_quote;
-	char quote_char;
-	int space;
+	char	*dst;
+	char	*src;
+	bool	in_quote;
+	char	quote_char;
+	int		space;
 
 	dst = str;
 	src = str;

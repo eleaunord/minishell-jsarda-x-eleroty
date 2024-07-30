@@ -1,11 +1,22 @@
-#include "../../../includes/minishell.h"
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:35:22 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:35:37 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 t_token	*new_token(t_token_type type, char *value)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token)); // LEAK
+	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = ft_strdup(value);
@@ -23,7 +34,6 @@ t_token	*new_token(t_token_type type, char *value)
 	return (token);
 }
 
-// Function to add a token to the list
 void	add_token_to_list(t_token **tokens, t_token *new_token)
 {
 	t_token	*last;
@@ -44,15 +54,12 @@ t_token	*tokenize_input(char *node)
 	t_token	*tokens;
 	int		length;
 	int		i;
-	// t_token	*temp;
 
 	tokens = NULL;
 	i = 0;
-
 	length = ft_strlen(node);
 	while (i < length)
 	{
-
 		if (node[i] == '>' || node[i] == '<')
 		{
 			i = special_tokens(node + i, &tokens, i);
@@ -62,14 +69,5 @@ t_token	*tokenize_input(char *node)
 			i = word_token(node, &tokens, i);
 		}
 	}
-
 	return (tokens);
 }
-	//DEBUG
-	// temp = tokens;
-	// while (temp != NULL)
-	// {
-	// 	printf("TOKEN VALUE: %s\n", (char *)temp->value);
-	// 	printf("TYPE : %d\n", temp->type);
-	// 	temp = temp->next;
-	// }

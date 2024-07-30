@@ -1,4 +1,16 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_out.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 12:50:01 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 12:50:06 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 void	count_redir_out(t_token **tokens, t_node *node)
 {
@@ -29,7 +41,7 @@ void	count_redir_out(t_token **tokens, t_node *node)
 
 void	allocate_memory_for_filename_out(t_node *node)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	node->filename_out = (char **)calloc(node->file_out_count + 1,
@@ -39,13 +51,12 @@ void	allocate_memory_for_filename_out(t_node *node)
 		perror("calloc failed");
 		exit(EXIT_FAILURE);
 	}
-	while(i < node->file_out_count)
+	while (i < node->file_out_count)
 	{
 		node->filename_out[i] = NULL;
 		i++;
 	}
 	node->filename_out[i] = NULL;
-
 }
 
 void	process_filename_out(t_token *tokens, t_node *node)
@@ -57,8 +68,8 @@ void	process_filename_out(t_token *tokens, t_node *node)
 	current = tokens;
 	while (current)
 	{
-		if ((current->type == REDIR_OUT_TOKEN || current->type == APPEND_TOKEN )&& current->next
-			&& current->next->type == TOKEN_WORD)
+		if ((current->type == REDIR_OUT_TOKEN || current->type == APPEND_TOKEN)
+			&& current->next && current->next->type == TOKEN_WORD)
 		{
 			if (i < node->file_out_count)
 			{

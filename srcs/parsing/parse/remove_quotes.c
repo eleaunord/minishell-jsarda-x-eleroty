@@ -1,50 +1,58 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   remove_quotes.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:14:54 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:20:55 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static void init_variables(int *i, int *j, char *quote, int *len, char **result,
-						   char *word)
+#include "minishell.h"
+
+static void	init_variables(t_rem_quotes *data, char *word)
 {
-	*i = -1;
-	*j = 0;
-	*quote = 0;
-	*len = strlen(word);
-	*result = (char *)malloc(*len + 1);
-	if (!(*result))
-		return;
+	data->i = -1;
+	data->j = 0;
+	data->quote = 0;
+	data->len = ft_strlen(word);
+	data->result = (char *)malloc(data->len + 1);
+	if (!data->result)
+		return ;
 }
-static int process_single_quotes(const char *word, int *i, int len,
-								 char *result, int j)
+
+static int	process_single_quotes(const char *word, t_rem_quotes *data)
 {
-	while (word[++(*i)] != '\'' && *i < len)
+	while (word[++(data->i)] != '\'' && data->i < data->len)
 	{
-		result[j++] = word[*i];
+		data->result[data->j++] = word[data->i];
 	}
-	return (j);
+	return (data->j);
 }
 
-char *remove_quotes_from_word(char *word)
+char	*remove_quotes_from_word(char *word)
 {
-	int len;
-	char *result;
-	int i;
-	int j;
-	char quote;
+	t_rem_quotes	data;
 
 	if (!word)
 		return (NULL);
-	init_variables(&i, &j, &quote, &len, &result, word);
-	while (++i < len)
+	init_variables(&data, word);
+	while (++data.i < data.len)
 	{
-		if (word[i] == '\'' && quote == 0)
-			j = process_single_quotes(word, &i, len, result, j);
-		else if (word[i] == '"' && quote == 0)
-			quote = '"';
-		else if (word[i] == '"' && quote == '"')
-			quote = 0;
-		else if (quote == '"' && (word[i] == '\\' || word[i] == '$' || word[i] == '`'))
-			result[j++] = word[i];
+		if (word[data.i] == '\'' && data.quote == 0)
+			data.j = process_single_quotes(word, &data);
+		else if (word[data.i] == '"' && data.quote == 0)
+			data.quote = '"';
+		else if (word[data.i] == '"' && data.quote == '"')
+			data.quote = 0;
+		else if (data.quote == '"' && (word[data.i] == '\\'
+				|| word[data.i] == '$' || word[data.i] == '`'))
+			data.result[data.j++] = word[data.i];
 		else
-			result[j++] = word[i];
+			data.result[data.j++] = word[data.i];
 	}
-	result[j] = '\0';
-	return (result);
+	data.result[data.j] = '\0';
+	return (data.result);
 }

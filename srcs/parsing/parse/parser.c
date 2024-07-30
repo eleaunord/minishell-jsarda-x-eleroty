@@ -1,34 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:14:13 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*expand_exit_status(char *str, unsigned long long error_num)
 {
 	char	*pos;
-	size_t	leading_len;
-	size_t	trailing_len;
+	size_t	lead_l;
+	size_t	trail_l;
 	char	*error_num_str;
-	char	*expanded;
+	char	*expnd;
 
 	pos = ft_strstr(str, "$?");
 	if (!pos)
 		return (ft_strdup(str));
-	leading_len = pos - str;
-	trailing_len = ft_strlen(pos + 2);
+	lead_l = pos - str;
+	trail_l = ft_strlen(pos + 2);
 	error_num_str = ft_itoa(error_num);
 	if (!error_num_str)
 		return (NULL);
-	expanded = (char *)malloc(leading_len + ft_strlen(error_num_str)
-			+ trailing_len + 1);
-	if (!expanded)
+	expnd = (char *)malloc(lead_l + ft_strlen(error_num_str) + trail_l + 1);
+	if (!expnd)
 	{
 		free(error_num_str);
 		return (NULL);
 	}
-	ft_memcpy(expanded, str, leading_len);
-	ft_memcpy(expanded + leading_len, error_num_str, ft_strlen(error_num_str));
-	ft_memcpy(expanded + leading_len + ft_strlen(error_num_str), pos + 2,
-		trailing_len + 1);
+	ft_memcpy(expnd, str, lead_l);
+	ft_memcpy(expnd + lead_l, error_num_str, ft_strlen(error_num_str));
+	ft_memcpy(expnd + lead_l + ft_strlen(error_num_str), pos + 2, trail_l + 1);
 	free(error_num_str);
-	return (expanded);
+	return (expnd);
 }
 
 void	process_token(t_token *tok, t_node *node, t_minishell *mini,
@@ -95,7 +105,6 @@ void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	node->args[i] = NULL;
 }
 
-// Fonction principale filename
 void	set_filename(t_token **tokens, t_node *node)
 {
 	t_token	*tok;
@@ -104,46 +113,16 @@ void	set_filename(t_token **tokens, t_node *node)
 		return ;
 	tok = *tokens;
 	count_heredocs(&tok, node);
-	// Allocation de mémoire pour limiter_hd
 	allocate_memory_for_limiter_hd(node);
-	// other redirections : in and out
 	count_redir_in(&tok, node);
 	allocate_memory_for_filename_in(node);
 	count_redir_out(&tok, node);
 	allocate_memory_for_filename_out(node);
-	// Traitement des tokens HEREDOC_TOKEN
 	process_heredoc_tokens(*tokens, node);
 	node->limiter_hd[node->limiter_hd_count] = NULL;
-	// Traitement des tokens REDIR_IN
 	process_filename_in(*tokens, node);
-	// Traitement des tokens REDIR_OUT
 	process_filename_out(*tokens, node);
 	node->filename_out[node->file_out_count] = NULL;
-	// for (int i = 0; i < node->file_in_count; i++)
-	// {
-	// 	if (node->filename_in[i] != NULL)
-	// 	{
-	// 		printf("filename : %s\n", node->filename_in[i]);
-	// 	}
-	// 	printf("filename : %d\n", node->file_in_count);
-	// }
-}
-
-void	check_lonely_expansions(t_token *tokens, t_node *node)
-{
-	t_token	*tok;
-	int		i;
-
-	tok = tokens;
-	if (!tokens || !node)
-		return ;
-	i = 0;
-	while (tok && i < 1)
-	{
-		if (tok->key_expansion != NULL)
-			node->lonely_expansion = 1;
-		i++;
-	}
 }
 
 void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
@@ -154,44 +133,11 @@ void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	}
 	init_parsing(node);
 	set_filename(&tokens, node);
-	// SET ARGS and command
 	init_args(tokens, node);
 	set_cmd(tokens, node);
-	// SET EXPANSION
 	process_expansions(&tokens);
-	// UPDATE NODE
 	update_tokens(&tokens, node);
-	// CHECK LONELY
 	check_lonely_expansions(tokens, node);
 	set_expansions(tokens, node);
 	fill_args(tokens, node, mini);
 }
-
-// DEBUG
-
-// t_node	*head;
-// int		i;
-
-// head = node;
-// i = 0;
-// while (head)
-// {
-// 	printf("Node : %s\n", (char *)head->content);
-// 	// printf("Cmd : %s\n", head->cmd);
-// 	// printf("File name out: %s\n", head->filename_out);
-// 	while (i < node->limiter_hd_count)
-// 	{
-// 		if (head->filename_in)
-// 			printf("File name in: %s : %s\n", head->limiter_hd[i],
-// 				head->filename_in);
-// 		printf("File name heredoc: %s\n", head->limiter_hd[i++]);
-// 	}
-// 	// printf("Node expansion: %s\n", head->key_expansion);
-// 	// printf("Arg cunt : %d\n", head->arg_count);
-// 	// int x = 0;
-// 	// while (x < head->arg_count)
-// 	// {
-// 	// 	printf("Arg[x] : %s\n", head->args[x++]);
-// 	// }
-// 	head = head->next;
-// }

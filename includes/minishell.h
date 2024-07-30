@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/29 17:12:27 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 13:31:33 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,15 @@ typedef struct s_token
 	char				*key_expansion;
 	int					limiter_hd_count;
 }						t_token;
+
+typedef struct s_rem_quotes
+{
+	int					i;
+	int					j;
+	char				quote;
+	int					len;
+	char				*result;
+}						t_rem_quotes;
 
 // Env struct
 typedef struct s_env
@@ -205,6 +214,21 @@ void					free_child(t_node *data, t_minishell *shell,
 size_t					count_args(char **args);
 
 // PARSING FUNCTIONS
+int						init_env(t_minishell *data, char **env);
+void					process_segment(char *start, t_node **tokens_list);
+int						init_env_null(t_minishell *data, int mode);
+char					*recup_shlvl(char *tmp);
+int						init_env_null(t_minishell *data, int mode);
+void					check_needs_expansion(t_token *tok,
+							int *needs_expansion);
+char					*extract_variables_within_braces(const char *token);
+char					*extract_variables_without_braces(const char *token);
+char					*extract_variables_from_single_quotes(const char *token);
+int						is_in_single_quotes(int in_single_quotes, char c);
+int						should_expand_variable(char *token, int index);
+char					*construct_result(char *key_expansion, char *start,
+							char *end, char *path_value);
+void					check_lonely_expansions(t_token *tokens, t_node *node);
 int						open_quote_check(char *line);
 t_token					*tokenize_input(char *line);
 int						is_space(char *line);

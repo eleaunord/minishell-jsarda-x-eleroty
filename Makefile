@@ -1,15 +1,20 @@
 NAME		=	minishell
 
-SRCS_FILES	= parsing/environment/env.c \
+SRCS_FILES	= parsing/environment/env_utils.c \
+			parsing/environment/init_env.c \
+			parsing/environment/init_envdup.c \
+			parsing/environment/init_envnull.c \
 			parsing/environment/alloc_env.c \
 			parsing/environment/key_value.c \
 			parsing/parse/checkers.c \
-			parsing/parse/count_expansions.c \
-			parsing/parse/expansion.c \
+			parsing/expansion/expan_utils.c \
+			parsing/expansion/expansion.c \
+			parsing/expansion/expand_var.c \
+			parsing/expansion/extract_var.c \
 			parsing/parse/file_in.c \
 			parsing/parse/file_out.c \
 			parsing/parse/free.c \
-			parsing/parse/get_expansion.c \
+			parsing/expansion/get_expansion.c \
 			parsing/parse/heredoc.c \
 			parsing/parse/init_parsing.c \
 			parsing/parse/main_parse.c \
@@ -23,7 +28,7 @@ SRCS_FILES	= parsing/environment/env.c \
 			parsing/tokenization/quotes.c \
 			parsing/tokenization/special_tokens.c \
 			parsing/tokenization/tokenizer.c \
-			parsing/tokenization/tokens.c \
+			parsing/tokenization/node_creation.c \
 			parsing/tokenization/whitespaces.c \
 			parsing/tokenization/word_tokens.c \
 			utils/builtins_utils.c \
@@ -119,6 +124,7 @@ $(OBJ_DIR):
 		mkdir -p $(OBJ_DIR)exec
 		mkdir -p $(OBJ_DIR)builtins
 		mkdir -p $(OBJ_DIR)parsing/environment
+		mkdir -p $(OBJ_DIRD)parsing/expansion
 		mkdir -p $(OBJ_DIR)parsing/parse
 		mkdir -p $(OBJ_DIR)parsing/tokenization
 		mkdir -p $(OBJ_DIR)utils
@@ -128,6 +134,7 @@ $(OBJ_DIRD):
 		mkdir -p $(OBJ_DIRD)exec
 		mkdir -p $(OBJ_DIRD)builtins
 		mkdir -p $(OBJ_DIRD)parsing/environment
+		mkdir -p $(OBJ_DIRD)parsing/expansion
 		mkdir -p $(OBJ_DIRD)parsing/parse
 		mkdir -p $(OBJ_DIRD)parsing/tokenization
 		mkdir -p $(OBJ_DIRD)utils

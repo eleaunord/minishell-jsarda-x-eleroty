@@ -1,4 +1,16 @@
-#include "../../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/30 13:33:59 by eleroty           #+#    #+#             */
+/*   Updated: 2024/07/30 13:34:13 by eleroty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 void	close_quote_check(int *dq, int *sq, int *index, char c)
 {
@@ -39,54 +51,54 @@ int	open_quote_check(char *line)
 	}
 	if (double_quote || single_quote)
 	{
-		// print_error("open quote\n"); => ?
 		return (1);
 	}
 	return (0);
 }
 
-void toggle_quote_status(char c, char *quote)
+void	toggle_quote_status(char c, char *quote)
 {
-    if (c == '"' || c == '\'')
-    {
-        if (*quote == 0)
-            *quote = c;
-        else if (*quote == c)
-            *quote = 0;
-    }
+	if (c == '"' || c == '\'')
+	{
+		if (*quote == 0)
+			*quote = c;
+		else if (*quote == c)
+			*quote = 0;
+	}
 }
 
-void copy_without_quotes(const char *line, char *temp_line)
+void	copy_without_quotes(const char *line, char *temp_line)
 {
-    int i = 0;
-    int j = 0;
-    char quote = 0;
-    int len = strlen(line);
+	int		i;
+	int		j;
+	char	quote;
+	int		len;
 
-    while (i < len)
-    {
-        toggle_quote_status(line[i], &quote);
-        if (quote == 0 || (line[i] != '"' && line[i] != '\''))
-            temp_line[j++] = line[i];
-        i++;
-    }
-    temp_line[j] = '\0';
+	i = 0;
+	j = 0;
+	quote = 0;
+	len = strlen(line);
+	while (i < len)
+	{
+		toggle_quote_status(line[i], &quote);
+		if (quote == 0 || (line[i] != '"' && line[i] != '\''))
+			temp_line[j++] = line[i];
+		i++;
+	}
+	temp_line[j] = '\0';
 }
 
-char *remove_quotes(const char *line)
+char	*remove_quotes(const char *line)
 {
-    int len;
-    char *temp_line;
+	int		len;
+	char	*temp_line;
 
-    if (!line)
-        return NULL;
-
-    len = strlen(line);
-    temp_line = (char *)malloc(len + 1);
-    if (!temp_line)
-        return NULL;
-
-    copy_without_quotes(line, temp_line);
-
-    return temp_line;
+	if (!line)
+		return (NULL);
+	len = strlen(line);
+	temp_line = (char *)malloc(len + 1);
+	if (!temp_line)
+		return (NULL);
+	copy_without_quotes(line, temp_line);
+	return (temp_line);
 }
