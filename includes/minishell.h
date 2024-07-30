@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 14:41:48 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 15:15:04 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,8 +206,7 @@ size_t					count_args(char **args);
 
 void					clear_nodes(t_node **node_list);
 void					clear_process(t_node *node, int *i);
-char					*expand_exit_status(char *str,
-							unsigned long long error_num);
+char					*expand_exit_status(char *str);
 int						init_env(t_minishell *data, char **env);
 void					process_segment(char *start, t_node **tokens_list);
 int						init_env_null(t_minishell *data, int mode);

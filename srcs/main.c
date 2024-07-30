@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:28:48 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 14:32:43 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:29:03 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	main_loop(t_minishell *shell)
 		if (!process_input_line(input_line, &node_list, shell))
 			continue ;
 		shell->exit_status = 0;
+		g_status = 0;
 		exec(shell);
 		add_history(input_line);
 		free(input_line);
