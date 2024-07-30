@@ -21,7 +21,7 @@ SRCS_FILES	= parsing/environment/env_utils.c \
 			parsing/parse/init_parsing.c \
 			parsing/parse/main_parse.c \
 			parsing/parse/parser.c \
-			parsing/parse/debug_fonction.c \
+			parsing/parse/debug_function.c \
 			parsing/parse/remove_quotes.c \
 			parsing/parse/signals.c \
 			parsing/parse/set_cmd.c \
@@ -34,29 +34,29 @@ SRCS_FILES	= parsing/environment/env_utils.c \
 			parsing/tokenization/node_creation.c \
 			parsing/tokenization/whitespaces.c \
 			parsing/tokenization/word_tokens.c \
-			utils/builtins_utils.c \
-			utils/ft_errors_exec.c \
-			utils/env_utils.c \
-			utils/utils.c \
-			utils/ft_free.c \
-			utils/ft_free_2.c \
+			exec/utils/builtins_utils.c \
+			exec/utils/ft_errors_exec.c \
+			exec/utils/env_utils.c \
+			exec/utils/utils.c \
+			exec/utils/ft_free.c \
+			exec/utils/ft_free_2.c \
 			exec/exec.c \
 			exec/exec_utils.c \
 			exec/exec_utils2.c \
 			exec/exec_utils3.c \
 			exec/exec_utils4.c \
-			builtins/builtins_utils.c \
-			builtins/builtins_utils2.c \
+			exec/builtins/builtins_utils.c \
+			exec/builtins/builtins_utils2.c \
 			exec/redir_utils.c \
 			exec/redir.c \
 			exec/simple_cmd.c \
-			builtins/ft_pwd.c \
-			builtins/ft_cd.c \
-			builtins/ft_exit.c \
-			builtins/ft_env.c \
-			builtins/ft_echo.c \
-			builtins/ft_export.c \
-			builtins/ft_unset.c \
+			exec/builtins/ft_pwd.c \
+			exec/builtins/ft_cd.c \
+			exec/builtins/ft_exit.c \
+			exec/builtins/ft_env.c \
+			exec/builtins/ft_echo.c \
+			exec/builtins/ft_export.c \
+			exec/builtins/ft_unset.c \
 			exec/pipe_exec.c \
 			exec/pipe_utils.c \
 			exec/pipe_utils2.c \
@@ -125,7 +125,7 @@ $(OBJ_DIRD)%.o: srcs/%.c | $(OBJ_DIRD)
 $(OBJ_DIR):
 		mkdir -p $(OBJ_DIR)
 		mkdir -p $(OBJ_DIR)exec
-		mkdir -p $(OBJ_DIR)builtins
+		mkdir -p $(OBJ_DIR)exec/builtins
 		mkdir -p $(OBJ_DIR)parsing/environment
 		mkdir -p $(OBJ_DIRD)parsing/expansion
 		mkdir -p $(OBJ_DIR)parsing/free
@@ -136,12 +136,12 @@ $(OBJ_DIR):
 $(OBJ_DIRD):
 		mkdir -p $(OBJ_DIRD)
 		mkdir -p $(OBJ_DIRD)exec
-		mkdir -p $(OBJ_DIRD)builtins
+		mkdir -p $(OBJ_DIRD)exec/builtins
 		mkdir -p $(OBJ_DIRD)parsing/environment
 		mkdir -p $(OBJ_DIRD)parsing/expansion
 		mkdir -p $(OBJ_DIRD)parsing/free
 		mkdir -p $(OBJ_DIRD)parsing/parse
 		mkdir -p $(OBJ_DIRD)parsing/tokenization
-		mkdir -p $(OBJ_DIRD)utils
+		mkdir -p $(OBJ_DIRD)exec/utils
 
 .PHONY: all clean fclean re debug

@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 15:15:04 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:12:09 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void					manager_mid(t_node *data, t_minishell *shell,
 void					execve_fail(void);
 void					heredoc(t_node *data, t_minishell *shell, char *eof,
 							char *file_name);
-int						dir_error(char *cmd);
+int						directory_error(char *cmd);
 // BUILTINS
 void					ft_cd(t_node *data, t_minishell *shell, char **args);
 void					ft_echo(t_node *data, t_minishell *shell, char **args);
@@ -174,7 +174,7 @@ void					ft_unset(t_node *data, t_minishell *shell, char **args);
 
 // BUILTINS UTILS
 unsigned long long int	ft_atoll(const char *str, int *overflow);
-int						is_valid_identifier(const char *name);
+int						check_identifier(const char *name);
 int						heredoc_builtins(t_node *data, t_minishell *shell,
 							char *eof, char *file_name);
 int						handle_redir_builtins(t_node *data, t_minishell *shell,
@@ -291,7 +291,7 @@ int						is_only_tabs(char *str);
 void					free_node_cmd_args(t_node *node);
 void					init_args(t_token *tokens, t_node *node);
 void					ft_putchar_fd(char c, int fd);
-void					freetab(char **tab);
+void					free_tab(char **tab);
 int						process_input_line(char *input_line, t_node **node_list,
 							t_minishell *data);
 void					freelist(t_node **nodes);

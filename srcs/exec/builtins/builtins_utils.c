@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 15:13:32 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 12:22:27 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:00:53 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_valid_identifier(const char *name)
+int	check_identifier(const char *name)
 {
 	int	i;
 
@@ -32,14 +32,14 @@ int	is_valid_identifier(const char *name)
 	return (1);
 }
 
-static const char	*skip_whitespace(const char *str)
+static const char	*trim(const char *str)
 {
 	while (*str && (*str == 32 || (*str >= 8 && *str <= 13)))
 		str++;
 	return (str);
 }
 
-unsigned long long int	manage_overflow(unsigned long long int nb, int sign,
+unsigned long long int	overflow_manager(unsigned long long int nb, int sign,
 		int *overflow)
 {
 	if (sign == -1)
@@ -66,7 +66,7 @@ unsigned long long int	ft_atoll(const char *str, int *overflow)
 	sign = 1;
 	nb = 0;
 	*overflow = 0;
-	str = skip_whitespace(str);
+	str = trim(str);
 	if (str[i] == '-' || str[i] == '+')
 	{
 		if (str[i++] == '-')
@@ -82,5 +82,5 @@ unsigned long long int	ft_atoll(const char *str, int *overflow)
 		nb = nb * 10 + (str[i] - '0');
 		i++;
 	}
-	return (manage_overflow(nb, sign, overflow));
+	return (overflow_manager(nb, sign, overflow));
 }

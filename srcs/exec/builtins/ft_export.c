@@ -6,13 +6,13 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:21:22 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/30 16:45:51 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:04:44 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	parse_args(char *arg, char **name, char **value, char *supp)
+static int	parser_args(char *arg, char **name, char **value, char *supp)
 {
 	char	*equal;
 
@@ -35,7 +35,7 @@ static int	parse_args(char *arg, char **name, char **value, char *supp)
 		if (!**name)
 			return (ft_errors_exec(2, "not a valid identifier", supp, 1), 0);
 	}
-	if (!is_valid_identifier(*name))
+	if (!check_identifier(*name))
 		return (ft_errors_exec(2, "not a valid identifier", supp, 1), 0);
 	return (1);
 }
@@ -133,7 +133,7 @@ void	ft_export(t_node *data, t_minishell *shell, char **args)
 	while (args[i])
 	{
 		supp = ft_strdup(args[i]);
-		if (parse_args(args[i], &name, &value, supp))
+		if (parser_args(args[i], &name, &value, supp))
 		{
 			free(supp);
 			handle_env_change(shell, name, value);

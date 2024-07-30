@@ -6,13 +6,13 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:03:45 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/29 17:07:33 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:11:40 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	dir_error(char *cmd)
+int	directory_error(char *cmd)
 {
 	int	tmp;
 

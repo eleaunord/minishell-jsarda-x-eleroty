@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 18:15:58 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:06:25 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:14:39 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	last(t_node *head, t_minishell *shell)
 	last_exec(shell, head);
 }
 
-void	exec_pipe(t_minishell *shell, int num_cmd)
+void	exec_pipe(t_minishell *shell, int nb_cmd)
 {
 	int		i;
 	t_node	*head;
@@ -43,7 +43,7 @@ void	exec_pipe(t_minishell *shell, int num_cmd)
 	else
 		close(shell->pipes[1]);
 	head = head->next;
-	while (++i < (num_cmd - 2))
+	while (++i < (nb_cmd - 2))
 	{
 		mid(head, shell);
 		head = head->next;

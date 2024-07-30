@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 21:06:08 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 16:57:08 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:11:11 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_wait(t_node *data)
 		printf("Quit (core dumped)\n");
 }
 
-char	**retrive_paths(t_minishell *shell)
+char	**retrieve_paths(t_minishell *shell)
 {
 	char	*path_value;
 	char	**paths;
@@ -48,11 +48,11 @@ char	**retrive_paths(t_minishell *shell)
 		return (NULL);
 	paths = ft_split(path_value, ':');
 	if (!paths)
-		return (freetab(paths), NULL);
+		return (free_tab(paths), NULL);
 	return (paths);
 }
 
-char	*retrive_path(char **paths, const char *cmd)
+char	*retrieve_path(char **paths, const char *cmd)
 {
 	int			i;
 	struct stat	statbuf;
@@ -64,13 +64,13 @@ char	*retrive_path(char **paths, const char *cmd)
 	{
 		cmd_path = ft_strjoin(paths[i], "/");
 		if (!cmd_path)
-			return (freetab(paths), NULL);
+			return (free_tab(paths), NULL);
 		path = ft_strjoin(cmd_path, cmd);
 		free(cmd_path);
 		if (!path)
-			return (freetab(paths), NULL);
+			return (free_tab(paths), NULL);
 		if (stat(path, &statbuf) == 0 && (statbuf.st_mode & S_IXUSR))
-			return (freetab(paths), path);
+			return (free_tab(paths), path);
 		free(path);
 		i++;
 	}
@@ -84,19 +84,19 @@ char	*get_cmd_path(t_node *data, t_minishell *shell)
 
 	if (!data || !shell || !data->cmd || !data->cmd[0])
 		return (NULL);
-	paths = retrive_paths(shell);
+	paths = retrieve_paths(shell);
 	if (!paths)
 	{
 		if (access(data->cmd, X_OK) == 0)
 			return (ft_strdup(data->cmd));
 		return (NULL);
 	}
-	cmd_path = retrive_path(paths, data->cmd);
+	cmd_path = retrieve_path(paths, data->cmd);
 	if (cmd_path)
 		return (cmd_path);
 	if (access(data->cmd, X_OK) == 0)
-		return (freetab(paths), ft_strdup(data->cmd));
-	freetab(paths);
+		return (free_tab(paths), ft_strdup(data->cmd));
+	free_tab(paths);
 	return (NULL);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 09:28:46 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 10:37:29 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:06:37 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	free_unset(char *value, char *name, char *line)
 	free(line);
 }
 
-void	ft_unset_1(t_env *env, char **args, int i)
+static void	ft_unset_bis(t_env *env, char **args, int i)
 {
 	t_env	*current;
 	t_env	*prev;
@@ -51,7 +51,7 @@ void	ft_unset_1(t_env *env, char **args, int i)
 void	ft_unset(t_node *data, t_minishell *shell, char **args)
 {
 	(void)data;
-	ft_unset_1(shell->env, args, -1);
-	ft_unset_1(shell->env_dup, args, -1);
+	ft_unset_bis(shell->env, args, -1);
+	ft_unset_bis(shell->env_dup, args, -1);
 	g_status = 0;
 }

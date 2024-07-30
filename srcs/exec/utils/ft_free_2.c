@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 12:02:40 by jtaravel          #+#    #+#             */
-/*   Updated: 2024/07/30 14:35:29 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:09:02 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	ft_recup(t_minishell *shell)
 	}
 }
 
-void	freetab(char **tab)
+void	free_tab(char **tab)
 {
 	int	i;
 

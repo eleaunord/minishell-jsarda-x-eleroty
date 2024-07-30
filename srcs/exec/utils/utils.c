@@ -58,7 +58,7 @@ char	**ft_erase_in_tab(char **tab, int pos, int pos2)
 		i++;
 	}
 	res[j] = 0;
-	freetab(tab);
+	free_tab(tab);
 	return (res);
 }
 

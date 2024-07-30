@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 09:19:26 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 16:08:51 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 17:07:38 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	is_built_in(t_node *data)
 	i = 0;
 	while (i < NUM_OF_BUILT_INS)
 	{
-		if (ft_strncmp(data->cmd, built_in[i], ft_strlen(built_in[i])) == 0)
+		if (ft_strcmp(data->cmd, built_in[i]) == 0)
 			return (i);
 		i++;
 	}

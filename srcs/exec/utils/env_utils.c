@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:07:49 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/30 16:52:34 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:08:58 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	sort_ascii(t_env *env, t_node *data)
 		write(data->fdout, "\n", 1);
 		i++;
 	}
-	freetab(env_tab);
+	free_tab(env_tab);
 }
 
 void	print_env(t_env *env, t_node *data)

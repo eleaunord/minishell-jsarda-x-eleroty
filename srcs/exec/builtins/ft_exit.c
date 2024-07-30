@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 10:54:23 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:51:29 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:04:03 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	print_exit_message(char *message, char *args)
 	printf("%s\n", message);
 }
 
-int	ft_isdigit_str(const char *c)
+static int	is_digit_str(const char *c)
 {
 	int	i;
 
@@ -43,7 +43,7 @@ void	ft_exit(t_node *data, t_minishell *shell, char **args)
 	unsigned long long int	result;
 
 	result = g_status;
-	if (count_args(data->args) > 1 && ft_isdigit_str(args[1]) == 1)
+	if (count_args(data->args) > 1 && is_digit_str(args[1]) == 1)
 	{
 		print_exit_message(": numeric argument required", args[1]);
 		return (free_child(data, shell, 2));

@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 11:58:10 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 16:48:17 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:09:22 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ char	*recup_shlvl(char *tmp)
 	char_lvl = ft_itoa(lvl + 1);
 	if (!char_lvl)
 	{
-		freetab(split);
+		free_tab(split);
 		return (NULL);
 	}
 	tmp = ft_strjoin("SHLVL=", char_lvl);
 	free(char_lvl);
-	freetab(split);
+	free_tab(split);
 	if (!tmp)
 		return (NULL);
 	return (tmp);

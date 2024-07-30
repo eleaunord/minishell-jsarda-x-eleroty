@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 22:30:23 by juliensarda       #+#    #+#             */
-/*   Updated: 2024/07/29 10:38:19 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:07:05 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 
 char	*get_key_value(t_env *env, char *key)
 {
-	t_env	*current;
+	t_env	*curr;
 
-	current = env;
-	while (current)
+	curr = env;
+	while (curr)
 	{
-		if (!ft_strcmp(current->key, key))
-			return (current->value);
-		current = current->next;
+		if (!ft_strcmp(curr->key, key))
+			return (curr->value);
+		curr = curr->next;
 	}
 	return (NULL);
 }
 
 int	check_key(t_env *env, char *key)
 {
-	t_env	*current;
+	t_env	*curr;
 
-	current = env;
-	while (current)
+	curr = env;
+	while (curr)
 	{
-		if (!ft_strcmp(current->key, key))
+		if (!ft_strcmp(curr->key, key))
 			return (0);
-		current = current->next;
+		curr = curr->next;
 	}
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 09:11:03 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 12:10:15 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 18:13:55 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	ft_close(t_node *data)
 int	exec(t_minishell *shell)
 {
 	t_node	*datas;
-	int		num_cmd;
+	int		nb_cmd;
 
-	num_cmd = 0;
+	nb_cmd = 0;
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGPIPE, SIG_IGN);
@@ -78,8 +78,8 @@ int	exec(t_minishell *shell)
 	datas = shell->nodes;
 	if (datas->next != NULL)
 	{
-		num_cmd = ft_lstsize_cmd(shell->nodes);
-		exec_pipe(shell, num_cmd);
+		nb_cmd = ft_lstsize_cmd(shell->nodes);
+		exec_pipe(shell, nb_cmd);
 	}
 	else
 		exec_simple_cmd(datas, shell);

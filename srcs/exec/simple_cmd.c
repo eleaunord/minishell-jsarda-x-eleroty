@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:24:02 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 17:05:59 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:12:05 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	exec_simple_cmd(t_node *data, t_minishell *shell)
 			exec_built_in(data, shell);
 		return ;
 	}
-	if (dir_error(data->cmd))
+	if (directory_error(data->cmd))
 		return (free(data->path));
 	data->path = get_cmd_path(current, shell);
 	if (!data->path && data->cmd)

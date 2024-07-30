@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:29:44 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 14:38:45 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 18:09:37 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ void	free_files(t_node *node_list)
 {
 	if (node_list->filename_in)
 	{
-		freetab(node_list->filename_in);
+		free_tab(node_list->filename_in);
 		node_list->filename_in = NULL;
 	}
 	if (node_list->filename_out)
 	{
-		freetab(node_list->filename_out);
+		free_tab(node_list->filename_out);
 		node_list->filename_out = NULL;
 	}
 	if (node_list->limiter_hd)
 	{
-		freetab(node_list->limiter_hd);
+		free_tab(node_list->limiter_hd);
 		node_list->limiter_hd = NULL;
 	}
 	free_hd(node_list);
@@ -64,7 +64,7 @@ void	free_nodes(t_node *node_list)
 	}
 	if (node_list->args)
 	{
-		freetab(node_list->args);
+		free_tab(node_list->args);
 		node_list->args = NULL;
 	}
 	if (node_list->tokens_in_node)
