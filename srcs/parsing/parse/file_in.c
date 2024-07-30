@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:49:30 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 12:49:34 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:50:26 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	allocate_memory_for_filename_in(t_node *node)
 {
 	int	i;
 
-	node->filename_in = (char **)calloc(node->file_in_count + 1,
+	node->filename_in = (char **)ft_calloc(node->file_in_count + 1,
 			sizeof(char *));
 	if (!node->filename_in)
 	{

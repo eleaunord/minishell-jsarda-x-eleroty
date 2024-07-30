@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 11:07:49 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:41:37 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 16:52:34 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_swap(t_env *env_dup)
 	swapped = 0;
 	if (env_dup == NULL || env_dup->next == NULL)
 		return (swapped);
-	if (strcmp(env_dup->key, env_dup->next->key) > 0)
+	if (ft_strcmp(env_dup->key, env_dup->next->key) > 0)
 	{
 		temp_key = env_dup->key;
 		temp_value = env_dup->value;

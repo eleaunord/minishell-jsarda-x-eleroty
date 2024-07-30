@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:31:05 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 12:45:53 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:49:37 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static char	*extract_key(char *key_expansion, char **start, char **end)
 	char	*key;
 
 	find_key_start_end(key_expansion, start, end);
-	dollar_pos = strchr(key_expansion, '$');
+	dollar_pos = ft_strchr(key_expansion, '$');
 	key = extract_the_key(*start, *end, dollar_pos);
 	return (key);
 }

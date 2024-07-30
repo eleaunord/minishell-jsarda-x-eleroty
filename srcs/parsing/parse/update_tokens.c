@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:21:49 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:22:20 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:51:27 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	handle_key_expansion_trimming(t_token *token)
 
 	new_value = NULL;
 	if (token->key_expansion != NULL && token->key_expansion[0] == '"'
-		&& token->key_expansion[strlen(token->key_expansion) - 1] == '"')
+		&& token->key_expansion[ft_strlen(token->key_expansion) - 1] == '"')
 	{
 		new_value = ft_strtrim(token->key_expansion, "\"");
 		free(token->key_expansion);

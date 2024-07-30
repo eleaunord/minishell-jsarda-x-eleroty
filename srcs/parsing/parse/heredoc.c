@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:52:13 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 12:52:25 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:50:44 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	allocate_memory_for_limiter_hd(t_node *node)
 {
 	int	i;
 
-	node->limiter_hd = (char **)calloc(node->limiter_hd_count + 1,
+	node->limiter_hd = (char **)ft_calloc(node->limiter_hd_count + 1,
 			sizeof(char *));
 	if (!node->limiter_hd)
 	{

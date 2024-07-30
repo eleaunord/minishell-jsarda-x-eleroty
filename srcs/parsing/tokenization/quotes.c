@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:33:59 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:34:13 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 16:52:08 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	copy_without_quotes(const char *line, char *temp_line)
 	i = 0;
 	j = 0;
 	quote = 0;
-	len = strlen(line);
+	len = ft_strlen(line);
 	while (i < len)
 	{
 		toggle_quote_status(line[i], &quote);
@@ -95,7 +95,7 @@ char	*remove_quotes(const char *line)
 
 	if (!line)
 		return (NULL);
-	len = strlen(line);
+	len = ft_strlen(line);
 	temp_line = (char *)malloc(len + 1);
 	if (!temp_line)
 		return (NULL);
