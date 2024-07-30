@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsarda <jsarda@student.42.fr>              +#+  +:+       +#+        */
+/*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:21:22 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/29 10:36:12 by jsarda           ###   ########.fr       */
+/*   Updated: 2024/07/30 14:43:59 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ void	handle_env_change(t_minishell *shell, char *name, char *value)
 	{
 		tmp_name = ft_strjoin(name, "=");
 		tmp_line = ft_strjoin(tmp_name, value);
-		ft_lstadd_back_env(&(shell->env), ft_lstnew_env(tmp_line, name,
-				value));
+		ft_lstadd_back_env(&(shell->env), ft_lstnew_env(tmp_line, name, value));
 		free(tmp_name);
 		free(tmp_line);
 	}
@@ -114,7 +113,8 @@ void	handle_exp_change(t_minishell *shell, char *name, char *value)
 		if (!value)
 			value = "''";
 		tmp_line = ft_strjoin(tmp_name, value);
-		ft_lstadd_back_env(&(shell->env_dup), ft_lstnew_env(tmp_line, name, value));
+		ft_lstadd_back_env(&(shell->env_dup), ft_lstnew_env(tmp_line, name,
+				value));
 		return (free(tmp_name), free(tmp_line));
 	}
 }

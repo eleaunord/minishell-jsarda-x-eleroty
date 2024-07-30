@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:00:00 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:00:10 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:14:01 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,42 +39,6 @@ void	init_args(t_token *tokens, t_node *node)
 	if (!node->args)
 		return ;
 	node->arg_count = arg_count;
-}
-
-void	set_cmd(t_token *tokens, t_node *node)
-{
-	t_token	*tok;
-
-	tok = tokens;
-	if (!tokens || !node)
-		return ;
-	if (!node->args)
-		return ;
-	while (tok != NULL)
-	{
-		if (tok->type == TOKEN_WORD)
-		{
-			if (!tok->processed)
-			{
-				if (node->cmd)
-				{
-					free(node->cmd);
-					node->cmd = NULL;
-				}
-				node->cmd = ft_strdup(tok->value);
-				node->args[0] = node->cmd;
-				node->args[1] = NULL;
-				if (!node->cmd)
-					return ;
-				return ;
-			}
-		}
-		else if (tok->type >= APPEND_TOKEN && tok->type <= REDIR_IN_TOKEN)
-			tok->processed = 1;
-		tok = tok->next;
-	}
-	node->cmd = NULL;
-	node->args[0] = NULL;
 }
 
 void	init_parsing(t_node *node)

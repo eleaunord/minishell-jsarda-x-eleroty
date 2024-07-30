@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 12:02:40 by jtaravel          #+#    #+#             */
-/*   Updated: 2024/07/30 11:06:25 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:35:29 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	free_child(t_node *data, t_minishell *shell, int exit_status)
 	data->path = NULL;
 	free_hd_file(&data, 1);
 	ft_close_fd(data);
-	ft_clear_datas(&(shell->nodes));
+	clear_nodes(&(shell->nodes));
 	free(shell);
 	exit(exit_status);
 }
@@ -70,7 +70,7 @@ void	ft_recup(t_minishell *shell)
 	{
 		ft_free_env_list(&(tmp_shell->env));
 		ft_free_env_list(&(tmp_shell->env_dup));
-		ft_clear_datas(&(tmp_shell->nodes));
+		clear_nodes(&(tmp_shell->nodes));
 		free(tmp_shell);
 	}
 }

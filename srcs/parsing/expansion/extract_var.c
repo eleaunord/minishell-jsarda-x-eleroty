@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:02:40 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 12:34:11 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:42:00 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*extract_variables_without_braces(const char *token)
 	return (ft_strsub(token, start, end - start));
 }
 
-char	*extract_variables_from_single_quotes(const char *token)
+char	*extract_var_from_single_quotes(const char *token)
 {
 	if (token[0] == '\'' && token[ft_strlen(token) - 1] == '\'')
 	{

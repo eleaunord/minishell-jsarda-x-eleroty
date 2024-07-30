@@ -6,12 +6,11 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 11:14:11 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/30 10:51:57 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:43:30 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
 
 char	*ft_strdup(const char *s)
 {

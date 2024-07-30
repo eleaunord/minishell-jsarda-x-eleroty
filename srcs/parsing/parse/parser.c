@@ -6,74 +6,37 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:14:13 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:26:27 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*expand_exit_status(char *str, unsigned long long error_num)
-{
-	char	*pos;
-	size_t	lead_l;
-	size_t	trail_l;
-	char	*error_num_str;
-	char	*expnd;
-
-	pos = ft_strstr(str, "$?");
-	if (!pos)
-		return (ft_strdup(str));
-	lead_l = pos - str;
-	trail_l = ft_strlen(pos + 2);
-	error_num_str = ft_itoa(error_num);
-	if (!error_num_str)
-		return (NULL);
-	expnd = (char *)malloc(lead_l + ft_strlen(error_num_str) + trail_l + 1);
-	if (!expnd)
-	{
-		free(error_num_str);
-		return (NULL);
-	}
-	ft_memcpy(expnd, str, lead_l);
-	ft_memcpy(expnd + lead_l, error_num_str, ft_strlen(error_num_str));
-	ft_memcpy(expnd + lead_l + ft_strlen(error_num_str), pos + 2, trail_l + 1);
-	free(error_num_str);
-	return (expnd);
-}
-
-void	process_token(t_token *tok, t_node *node, t_minishell *mini,
-		int *arg_index)
+void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
 {
 	char	*expanded_value;
 
-	if (!node->args || *arg_index >= node->arg_count)
+	if (!node->args || *i >= node->arg_count)
 		return ;
 	if (ft_strstr(tok->value, "$?") != NULL)
 	{
 		expanded_value = expand_exit_status(tok->value, g_status);
 		if (!expanded_value)
 			return ;
-		node->args[*arg_index] = expanded_value;
+		node->args[*i] = expanded_value;
 		if (node->cmd)
 			free(node->cmd);
 		node->cmd = ft_strdup(expanded_value);
 	}
 	else if (tok->key_expansion != NULL)
-		node->args[*arg_index] = get_expansion(mini, tok->key_expansion);
+		node->args[*i] = get_expansion(mini, tok->key_expansion);
 	else
-		node->args[*arg_index] = ft_strdup(tok->value);
-	if (!node->args[*arg_index])
+		node->args[*i] = ft_strdup(tok->value);
+	if (!node->args[*i])
 	{
-		while (*arg_index > 0)
-			free(node->args[--(*arg_index)]);
-		free(node->args);
-		if (node->cmd)
-			free(node->cmd);
-		node->args = NULL;
-		node->cmd = NULL;
-		return ;
+		clear_process(node, i);
 	}
-	(*arg_index)++;
+	(*i)++;
 }
 
 void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
@@ -96,7 +59,7 @@ void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	{
 		if (tok->type == TOKEN_WORD && !tok->processed)
 		{
-			process_token(tok, node, mini, &i);
+			process_tok(tok, node, mini, &i);
 			if (!node->args)
 				return ;
 		}

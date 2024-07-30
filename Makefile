@@ -7,13 +7,15 @@ SRCS_FILES	= parsing/environment/env_utils.c \
 			parsing/environment/alloc_env.c \
 			parsing/environment/key_value.c \
 			parsing/parse/checkers.c \
+			parsing/expansion/exit_status.c \
 			parsing/expansion/expan_utils.c \
 			parsing/expansion/expansion.c \
 			parsing/expansion/expand_var.c \
 			parsing/expansion/extract_var.c \
 			parsing/parse/file_in.c \
 			parsing/parse/file_out.c \
-			parsing/parse/free.c \
+			parsing/free/free.c \
+			parsing/free/free_2.c \
 			parsing/expansion/get_expansion.c \
 			parsing/parse/heredoc.c \
 			parsing/parse/init_parsing.c \
@@ -22,6 +24,7 @@ SRCS_FILES	= parsing/environment/env_utils.c \
 			parsing/parse/debug_fonction.c \
 			parsing/parse/remove_quotes.c \
 			parsing/parse/signals.c \
+			parsing/parse/set_cmd.c \
 			parsing/parse/update_tokens.c \
 			parsing/tokenization/collapse_spaces.c \
 			parsing/tokenization/pipes_spaces.c \
@@ -125,6 +128,7 @@ $(OBJ_DIR):
 		mkdir -p $(OBJ_DIR)builtins
 		mkdir -p $(OBJ_DIR)parsing/environment
 		mkdir -p $(OBJ_DIRD)parsing/expansion
+		mkdir -p $(OBJ_DIR)parsing/free
 		mkdir -p $(OBJ_DIR)parsing/parse
 		mkdir -p $(OBJ_DIR)parsing/tokenization
 		mkdir -p $(OBJ_DIR)utils
@@ -135,6 +139,7 @@ $(OBJ_DIRD):
 		mkdir -p $(OBJ_DIRD)builtins
 		mkdir -p $(OBJ_DIRD)parsing/environment
 		mkdir -p $(OBJ_DIRD)parsing/expansion
+		mkdir -p $(OBJ_DIRD)parsing/free
 		mkdir -p $(OBJ_DIRD)parsing/parse
 		mkdir -p $(OBJ_DIRD)parsing/tokenization
 		mkdir -p $(OBJ_DIRD)utils

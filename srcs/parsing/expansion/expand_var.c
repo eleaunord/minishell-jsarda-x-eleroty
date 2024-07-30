@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:04:20 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 12:32:11 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:46:04 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,5 @@ char	*expand_variables(char *token)
 			return (handle_variable_expansion(token, &i));
 		}
 	}
-	return (extract_variables_from_single_quotes(token));
+	return (extract_var_from_single_quotes(token));
 }

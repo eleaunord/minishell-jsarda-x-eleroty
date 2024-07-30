@@ -6,14 +6,13 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:31:33 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/30 14:41:48 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// Librairies
 # include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
@@ -37,19 +36,15 @@
 #  define DEBUG 0
 # endif
 
-/*			DEBUG			*/
-
-// MINISHELL STRUCT
 typedef enum e_token_type
 {
-	TOKEN_WORD,      // = 0
-	APPEND_TOKEN,    // ">>" ; = 1
-	REDIR_OUT_TOKEN, // ">" ; = 2
-	HEREDOC_TOKEN,   // "<<" ; = 3
-	REDIR_IN_TOKEN,  // "<" ; = 4
+	TOKEN_WORD,
+	APPEND_TOKEN,
+	REDIR_OUT_TOKEN,
+	HEREDOC_TOKEN,
+	REDIR_IN_TOKEN,
 }						t_token_type;
 
-// TOKENS INSIDE NODES (only for parsing)
 typedef struct s_token
 {
 	t_token_type		type;
@@ -71,7 +66,6 @@ typedef struct s_rem_quotes
 	char				*result;
 }						t_rem_quotes;
 
-// Env struct
 typedef struct s_env
 {
 	char				*str;
@@ -81,47 +75,42 @@ typedef struct s_env
 	struct s_env		*next;
 }						t_env;
 
-// NODES (from parsing to exec, with love)
-typedef struct s_node // t_data
+typedef struct s_node
 {
-	// Making the nodes (for parsing)
-	struct s_node *next;
-	void *content;
+	struct s_node		*next;
+	void				*content;
 
-	// Dealing with tokens (for parsing)
-	struct s_token *tokens_in_node;
+	struct s_token		*tokens_in_node;
 
-	// From parsing to exec
-	char *cmd;
-	char **args;
-	int arg_count;
+	char				*cmd;
+	char				**args;
+	int					arg_count;
 
-	char **key_expansion; // in args
-	int expansion_count;
-	int lonely_expansion;
+	char				**key_expansion;
+	int					expansion_count;
+	int					lonely_expansion;
 
-	char **filename_in;
-	char **filename_out;
-	int file_in_count;  // count in (for parsing)
-	int file_out_count; // count out (for parsing)
-	int fdout;          // init to -1 in parsing if redir out
-	int fdin;           // init to -1 in parsing if redir in
-	int fdintmp;
-	int is_redir_in;   // is there a redir in ? 1 : yes, 0 : no
-	int is_redir_out;  // is there a redir out ? 1 : yes, 0 : no
-	int is_here_doc;   // is there a here doc ? 1 : yes, 0 : no
-	int is_append;     // to do => fdout too ?
-	char **limiter_hd; // eof
-	int limiter_hd_count;
-	char *last_heredoc;
-	char *path;
+	char				**filename_in;
+	char				**filename_out;
+	int					file_in_count;
+	int					file_out_count;
+	int					fdout;
+	int					fdin;
+	int					fdintmp;
+	int					is_redir_in;
+	int					is_redir_out;
+	int					is_here_doc;
+	int					is_append;
+	char				**limiter_hd;
+	int					limiter_hd_count;
+	char				*last_heredoc;
+	char				*path;
 
-	int pid;
-	int error_num; // statu
+	int					pid;
+	int					error_num;
 
 }						t_node;
 
-// // Struct qui centralise tout
 typedef struct s_minishell
 {
 	t_env				*env;
@@ -214,6 +203,11 @@ void					free_child(t_node *data, t_minishell *shell,
 size_t					count_args(char **args);
 
 // PARSING FUNCTIONS
+
+void					clear_nodes(t_node **node_list);
+void					clear_process(t_node *node, int *i);
+char					*expand_exit_status(char *str,
+							unsigned long long error_num);
 int						init_env(t_minishell *data, char **env);
 void					process_segment(char *start, t_node **tokens_list);
 int						init_env_null(t_minishell *data, int mode);
@@ -223,7 +217,7 @@ void					check_needs_expansion(t_token *tok,
 							int *needs_expansion);
 char					*extract_variables_within_braces(const char *token);
 char					*extract_variables_without_braces(const char *token);
-char					*extract_variables_from_single_quotes(const char *token);
+char					*extract_var_from_single_quotes(const char *token);
 int						is_in_single_quotes(int in_single_quotes, char c);
 int						should_expand_variable(char *token, int index);
 char					*construct_result(char *key_expansion, char *start,
@@ -304,4 +298,5 @@ int						process_input_line(char *input_line, t_node **node_list,
 void					freelist(t_node **nodes);
 char					*trim_whitespace(char *str);
 extern int				g_status;
+
 #endif
