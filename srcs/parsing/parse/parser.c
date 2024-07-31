@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 12:28:56 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 13:47:08 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,8 @@ void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
 
 	if (!node->args || *i >= node->arg_count)
 		return ;
-
 	if (tok->key_expansion != NULL)
-		node->args[*i] = get_expansion(mini, tok->key_expansion);
+		node->args[*i] = get_expansion(mini, tok->key_expansion);		
 	else if (ft_strstr(tok->value, "$?") != NULL)
 	{
 		expanded_value = expand_exit_status(tok->value);
