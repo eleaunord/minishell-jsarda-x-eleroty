@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:36:26 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:36:29 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 17:26:52 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,14 @@ static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes)
 {
 	while (input[index] != '\0')
 	{
-		if (!(*in_quotes) && (input[index] == ' ' || input[index] == '>'
-				|| input[index] == '<'))
+		if (input[index] == '"')
 		{
-			break ;
+			*in_quotes = !(*in_quotes);
 		}
-		close_quote_check(in_quotes, in_quotes, NULL, input[index]);
+		else if (!(*in_quotes) && (input[index] == ' ' || input[index] == '>' || input[index] == '<'))
+		{
+			break;
+		}
 		index++;
 	}
 	return (index);

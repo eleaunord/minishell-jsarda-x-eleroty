@@ -30,7 +30,7 @@
 
 -> Consider escape characters.
 
-3/ Test Tokenizer: Write tests to ensure the tokenizer handles various edge cases (e.g., multiple spaces, quoted strings, escape sequences).
+3/ Test Tokenizer: Write tests to ensure the tokenizer handles various edge cases (e.g., dq_flagiple spaces, quoted strings, escape sequences).
 
 
 ## EXEC

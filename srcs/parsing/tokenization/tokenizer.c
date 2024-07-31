@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:35:22 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:35:37 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 17:26:04 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_token	*new_token(t_token_type type, char *value)
 	token->type = type;
 	token->next = NULL;
 	token->processed = 0;
+	token->dq_flag = 0;
 	return (token);
 }
 
@@ -69,5 +70,6 @@ t_token	*tokenize_input(char *node)
 			i = word_token(node, &tokens, i);
 		}
 	}
+	
 	return (tokens);
 }

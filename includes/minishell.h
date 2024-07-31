@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 18:12:09 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 15:40:54 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_token
 	int					processed;
 	char				*key_expansion;
 	int					limiter_hd_count;
+	int dq_flag;
 }						t_token;
 
 typedef struct s_rem_quotes
@@ -278,7 +279,8 @@ int						tokenizer(char *line, t_node **nodes,
 							t_minishell *mini);
 void					parse_tokens(t_token *tokens, t_node *node,
 							t_minishell *mini);
-char					*get_expansion(t_minishell *data, char *key_expansion);
+//char					*get_expansion(t_minishell *data, char *key_expansion);
+char	*get_expansion(t_minishell *data,  t_token *tok);
 void					set_expansions(t_token *tokens, t_node *node);
 int						init_env_dup(t_minishell *data, char **env);
 int						append(t_env **list, char *elem);

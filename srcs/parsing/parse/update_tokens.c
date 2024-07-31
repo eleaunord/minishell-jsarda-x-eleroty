@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:21:49 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 14:12:07 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 17:47:40 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	handle_key_expansion_trimming(t_token *token)
 		new_value = ft_strtrim(token->key_expansion, "\"");
 		free(token->key_expansion);
 		token->key_expansion = new_value;
+		//printf("this is the tok : %s\n", token->key_expansion);
 	}
 	else if (token->key_expansion != NULL && ft_strchr(token->key_expansion,
 			'$'))
@@ -84,12 +85,12 @@ void	handle_dollar_sign_removal(t_token *token)
 void	update_tokens(t_token **tokens, t_node *node)
 {
 	t_token	*current;
-
 	if (!tokens || !*tokens || !node)
 		return ;
 	current = *tokens;
 	while (current)
 	{
+
 		handle_dollar_sign_removal(current);
 		handle_quotes_removal(current);
 		handle_key_expansion_trimming(current);
