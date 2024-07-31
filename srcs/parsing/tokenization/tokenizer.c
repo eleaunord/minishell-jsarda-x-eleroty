@@ -31,7 +31,7 @@ t_token	*new_token(t_token_type type, char *value)
 	token->type = type;
 	token->next = NULL;
 	token->processed = 0;
-	token->dq_flag = 0;
+	token->sq = 0;
 	return (token);
 }
 

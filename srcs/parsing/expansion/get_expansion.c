@@ -66,7 +66,7 @@ void	find_key_start_end(char *key_expansion, char **start, char **end)
 	}
 }
 
-static char	*extract_key(char *key_expansion, char **start, char **end)
+char	*extract_key(char *key_expansion, char **start, char **end)
 {
 	char	*dollar_pos;
 	char	*key;

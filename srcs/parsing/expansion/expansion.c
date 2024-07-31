@@ -52,24 +52,49 @@ void	check_needs_expansion(t_token *tok, int *needs_expansion)
 	}
 }
 
-void	process_expansions(t_token **tokens)
+// void	process_expansions(t_token **tokens)
+// {
+// 	t_token	*tok;
+// 	int		needs_expansion;
+
+// 	if (!tokens)
+// 		return ;
+// 	tok = *tokens;
+// 	while (tok != NULL)
+// 	{
+// 		check_needs_expansion(tok, &needs_expansion);
+// 		if (needs_expansion)
+// 			tok->key_expansion = expand_variables(tok->value);
+// 		else
+// 			tok->key_expansion = NULL;
+// 		tok = tok->next;
+// 	}
+	
+// }
+void process_expansions(t_token **tokens)
 {
-	t_token	*tok;
-	int		needs_expansion;
+	t_token *tok;
+	int needs_expansion;
+	int is_in_single_quotes;
 
 	if (!tokens)
-		return ;
+		return;
 	tok = *tokens;
 	while (tok != NULL)
 	{
 		check_needs_expansion(tok, &needs_expansion);
 		if (needs_expansion)
-			tok->key_expansion = expand_variables(tok->value);
+		{
+			tok->key_expansion = expand_variables(tok->value, &is_in_single_quotes);
+			tok->sq = is_in_single_quotes;
+		}
 		else
+		{
 			tok->key_expansion = NULL;
+			tok->sq = 0;
+		}
 		tok = tok->next;
 	}
-	
 }
 
 void	check_lonely_expansions(t_token *tokens, t_node *node)

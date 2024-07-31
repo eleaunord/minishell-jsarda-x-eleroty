@@ -18,8 +18,7 @@ static int	is_alnum(int c)
 			&& c <= 'z'));
 }
 
-
-int	is_in_single_quotes(int in_single_quotes, char c)
+int is_in_sq(int in_single_quotes, char c)
 {
 	if (c == '\'')
 		return (!in_single_quotes);

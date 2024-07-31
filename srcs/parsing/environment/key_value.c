@@ -19,7 +19,7 @@ char	*duplicate_string(const char *src)
 	return (ft_strdup(src));
 }
 
-static char	*extract_key(const char *src, char *equal_sign)
+static char	*take_key(const char *src, char *equal_sign)
 {
 	if (src == NULL || equal_sign == NULL)
 		return (NULL);
@@ -41,7 +41,7 @@ int	parse_key_value(t_env **new, char *elem)
 	equal_sign = ft_strchr(elem, '=');
 	if (equal_sign)
 	{
-		(*new)->key = extract_key(elem, equal_sign);
+		(*new)->key = take_key(elem, equal_sign);
 		if ((*new)->key == NULL)
 			return (0);
 		(*new)->value = extract_value(elem, equal_sign);

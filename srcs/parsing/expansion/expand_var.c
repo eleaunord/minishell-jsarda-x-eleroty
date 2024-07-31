@@ -66,20 +66,42 @@ static char	*handle_variable_expansion(char *token, int *i)
 	return (NULL);
 }
 
-char	*expand_variables(char *token)
+// char	*expand_variables(char *token)
+// {
+// 	int	i;
+// 	int	in_single_quotes;
+
+// 	i = -1;
+// 	in_single_quotes = 0;
+// 	while (token[++i])
+// 	{
+// 		in_single_quotes = is_in_single_quotes(in_single_quotes, token[i]);
+// 		if (should_expand_variable(token, i) && !in_single_quotes)
+// 		{
+// 			return (handle_variable_expansion(token, &i));
+// 		}
+// 	}
+// 	return (extract_var_from_single_quotes(token));
+// }
+char *expand_variables(char *token, int *is_in_single_quotes)
 {
-	int	i;
-	int	in_single_quotes;
+	int i;
+	int in_single_quotes;
 
 	i = -1;
 	in_single_quotes = 0;
 	while (token[++i])
 	{
-		in_single_quotes = is_in_single_quotes(in_single_quotes, token[i]);
+		in_single_quotes = is_in_sq(in_single_quotes, token[i]);
 		if (should_expand_variable(token, i) && !in_single_quotes)
 		{
+			*is_in_single_quotes = 0;
 			return (handle_variable_expansion(token, &i));
 		}
+	}
+	if (in_single_quotes)
+	{
+		*is_in_single_quotes = 1;
 	}
 	return (extract_var_from_single_quotes(token));
 }

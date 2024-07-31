@@ -56,6 +56,7 @@ typedef struct s_token
 	char				*key_expansion;
 	int					limiter_hd_count;
 	int dq_flag;
+	int sq;
 }						t_token;
 
 typedef struct s_rem_quotes
@@ -204,7 +205,8 @@ void					free_child(t_node *data, t_minishell *shell,
 size_t					count_args(char **args);
 
 // PARSING FUNCTIONS
-void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i);
+char *extract_key(char *key_expansion, char **start, char **end); 
+void process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i);
 void					clear_nodes(t_node **node_list);
 void					clear_process(t_node *node, int *i);
 char					*expand_exit_status(char *str);
@@ -218,7 +220,7 @@ void					check_needs_expansion(t_token *tok,
 char					*extract_variables_within_braces(const char *token);
 char					*extract_variables_without_braces(const char *token);
 char					*extract_var_from_single_quotes(const char *token);
-int						is_in_single_quotes(int in_single_quotes, char c);
+int is_in_sq(int in_single_quotes, char c);
 int						should_expand_variable(char *token, int index);
 char					*construct_result(char *key_expansion, char *start,
 							char *end, char *path_value);
@@ -243,8 +245,9 @@ int						special_tokens(char *input, t_token **tokens,
 t_token					*new_token(t_token_type type, char *value);
 int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-char					*expand_variables(char *token);
-void					close_quote_check(int *dq, int *sq, int *index, char c);
+//char					*expand_variables(char *token);
+char *expand_variables(char *token, int *is_in_single_quotes);
+void close_quote_check(int *dq, int *sq, int *index, char c);
 int						count_arguments(t_token *tokens);
 void					free_nodes(t_node *list);
 void					free_nodes(t_node *list);
