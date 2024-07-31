@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:04:20 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 14:46:04 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 10:59:11 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ static char	*handle_variable_expansion(char *token, int *i)
 	variable = extract_variable(token, i);
 	if (variable)
 	{
-		leading_spaces = strndup(token, *i);
-		trailing_spaces = strdup(token + *i + strlen(variable));
+		leading_spaces = ft_strndup(token, *i);
+		trailing_spaces = ft_strdup(token + *i + ft_strlen(variable));
 		result = allocate_and_concatenate_result(leading_spaces, variable,
 				trailing_spaces);
 		free(leading_spaces);

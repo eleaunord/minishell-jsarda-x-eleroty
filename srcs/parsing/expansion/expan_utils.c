@@ -6,34 +6,18 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:30:06 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 12:46:06 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 10:45:26 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*construct_result(char *key_expansion, char *start, char *end,
-		char *path_value)
+static int	is_alnum(int c)
 {
-	size_t	leading_length;
-	size_t	key_length;
-	size_t	trailing_length;
-	size_t	result_length;
-	char	*result;
-
-	leading_length = start - key_expansion;
-	key_length = ft_strlen(path_value);
-	trailing_length = ft_strlen(end);
-	result_length = leading_length + key_length + trailing_length;
-	result = (char *)malloc(result_length + 1);
-	if (!result)
-		return (NULL);
-	ft_strcpy(result, key_expansion);
-	result[leading_length] = '\0';
-	ft_strcat(result, path_value);
-	ft_strcat(result, end);
-	return (result);
+	return ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a'
+			&& c <= 'z'));
 }
+
 
 int	is_in_single_quotes(int in_single_quotes, char c)
 {
@@ -44,8 +28,8 @@ int	is_in_single_quotes(int in_single_quotes, char c)
 
 int	should_expand_variable(char *token, int index)
 {
-	return (token[index] == '$' && (token[index + 1] == '{' || !token[index
-				+ 1]));
+	return (token[index] == '$' && (is_alnum(token[index + 1]) || token[index
+			+ 1] == '_'));
 }
 
 int	count_expansions(t_token *tokens)

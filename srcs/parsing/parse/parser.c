@@ -6,40 +6,75 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 16:42:10 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 11:34:51 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+char	*get_full_expansion(t_minishell *mini, char *input)
+{
+	char	*result;
+	char	*expanded_value;
+	
+	result = expand_exit_status(input);
+	if (!result)
+	{
+		return (NULL);
+	}
+	expanded_value = get_expansion(mini, result);
+	free(result);
+	return (expanded_value);
+}
+
 void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
 {
-	char	*expanded_value;
-
 	if (!node->args || *i >= node->arg_count)
 		return ;
-	if (ft_strstr(tok->value, "$?") != NULL)
+	if (tok->key_expansion != NULL)
 	{
-		expanded_value = expand_exit_status(tok->value);
-		if (!expanded_value)
-			return ;
-		node->args[*i] = expanded_value;
-		if (node->cmd && ft_strcmp(node->cmd, "$?") == 0)
-		{
-			free(node->cmd);
-			node->cmd = ft_strdup(expanded_value);
-		}		
+		node->args[*i] = get_full_expansion(mini, tok->key_expansion);
 	}
-	else if (tok->key_expansion != NULL)
-		node->args[*i] = get_expansion(mini, tok->key_expansion);
 	else
-		node->args[*i] = ft_strdup(tok->value);
+	{
+		node->args[*i] = get_full_expansion(mini, tok->value);
+	}
 	if (!node->args[*i])
 	{
 		clear_process(node, i);
 	}
 	(*i)++;
 }
+
+// void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
+// {
+// 	char	*expanded_value;
+
+// 	if (!node->args || *i >= node->arg_count)
+// 		return ;
+
+// 	if (tok->key_expansion != NULL)
+// 		node->args[*i] = get_expansion(mini, tok->key_expansion);
+// 	else if (ft_strstr(tok->value, "$?") != NULL)
+// 	{
+// 		expanded_value = expand_exit_status(tok->value);
+// 		if (!expanded_value)
+// 			return ;
+// 		node->args[*i] = expanded_value;
+// 		if (node->cmd && ft_strcmp(node->cmd, "$?") == 0)
+// 		{
+// 			free(node->cmd);
+// 			node->cmd = ft_strdup(expanded_value);
+// 		}
+// 	}
+// 	else
+// 		node->args[*i] = ft_strdup(tok->value);
+// 	if (!node->args[*i])
+// 	{
+// 		clear_process(node, i);
+// 	}
+// 	(*i)++;
+// }
 
 void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 {

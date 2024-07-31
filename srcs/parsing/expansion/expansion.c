@@ -6,11 +6,34 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:00:47 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:37:28 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 11:00:51 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*construct_result(char *key_expansion, char *start, char *end,
+		char *path_value)
+{
+	size_t	leading_length;
+	size_t	key_length;
+	size_t	trailing_length;
+	size_t	result_length;
+	char	*result;
+
+	leading_length = start - key_expansion;
+	key_length = ft_strlen(path_value);
+	trailing_length = ft_strlen(end);
+	result_length = leading_length + key_length + trailing_length;
+	result = (char *)malloc(result_length + 1);
+	if (!result)
+		return (NULL);
+	ft_strcpy(result, key_expansion);
+	result[leading_length] = '\0';
+	ft_strcat(result, path_value);
+	ft_strcat(result, end);
+	return (result);
+}
 
 void	check_needs_expansion(t_token *tok, int *needs_expansion)
 {
@@ -46,6 +69,7 @@ void	process_expansions(t_token **tokens)
 			tok->key_expansion = NULL;
 		tok = tok->next;
 	}
+	
 }
 
 void	check_lonely_expansions(t_token *tokens, t_node *node)
