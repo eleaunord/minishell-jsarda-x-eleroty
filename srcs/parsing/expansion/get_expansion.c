@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:31:05 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 11:26:46 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 12:30:51 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,32 +72,25 @@ static char	*extract_key(char *key_expansion, char **start, char **end)
 	char	*key;
 
 	find_key_start_end(key_expansion, start, end);
-	//dollar_pos = ft_strchr(key_expansion, '$');
-	dollar_pos = ft_strchr(*start, '$'); 
+	dollar_pos = ft_strchr(key_expansion, '$');
+	// dollar_pos = ft_strchr(*start, '$');
 	key = extract_the_key(*start, *end, dollar_pos);
 	return (key);
 }
 
-
 char	*get_expansion(t_minishell *data, char *key_expansion)
 {
+	char	*start;
+	char	*end;
+	char	*key;
+	char	*path_value;
 	char	*result;
 
-	result = ft_strdup(key_expansion);
-	char *start, *end, *key, *path_value, *new_result, *temp;
-	while ((start = ft_strchr(result, '$')) != NULL)
-	{
-		temp = result;
-		key = extract_key(result, &start, &end);
-		path_value = get_path_value(data, key);
-		free(key);
-		if (!path_value)
-		{
-			path_value = "";
-		}
-		new_result = construct_result(result, start, end, path_value);
-		free(temp);
-		result = new_result;
-	}
+	key = extract_key(key_expansion, &start, &end);
+	path_value = get_path_value(data, key);
+	free(key);
+	if (!path_value)
+		return (NULL);
+	result = construct_result(key_expansion, start, end, path_value);
 	return (result);
 }
