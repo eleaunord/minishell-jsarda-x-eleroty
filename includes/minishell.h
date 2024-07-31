@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 15:40:54 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/07/31 19:04:12 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void					free_child(t_node *data, t_minishell *shell,
 size_t					count_args(char **args);
 
 // PARSING FUNCTIONS
-
+void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i);
 void					clear_nodes(t_node **node_list);
 void					clear_process(t_node *node, int *i);
 char					*expand_exit_status(char *str);
