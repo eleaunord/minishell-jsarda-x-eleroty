@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:35:22 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 17:26:04 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:03:53 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,5 @@ t_token	*tokenize_input(char *node)
 			i = word_token(node, &tokens, i);
 		}
 	}
-	
 	return (tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:00:34 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/30 13:05:54 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:07:06 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@ static int	process_node(t_node *current, t_minishell *mini)
 	t_token	*tokens;
 
 	tokens = tokenize_input(current->content);
+	// t_token *c = tokens;
+	// while (c)
+	// {
+	// 	printf("VALUE :%s\n", c->value);
+	// 	c = c->next;
+	// }
 	if (!tokens)
 	{
 		freelist(&current);

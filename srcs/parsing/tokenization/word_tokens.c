@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:36:26 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 17:26:52 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:06:21 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,36 @@ static void	tokenize_word(char *input, t_token **tokens, int index,
 		free(temp_line);
 	}
 }
-
 static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes)
 {
 	while (input[index] != '\0')
 	{
-		if (input[index] == '"')
+		if (!(*in_quotes) && (input[index] == ' ' || input[index] == '>'
+				|| input[index] == '<'))
 		{
-			*in_quotes = !(*in_quotes);
+			break ;
 		}
-		else if (!(*in_quotes) && (input[index] == ' ' || input[index] == '>' || input[index] == '<'))
-		{
-			break;
-		}
+		close_quote_check(in_quotes, in_quotes, NULL, input[index]);
 		index++;
 	}
 	return (index);
 }
+// static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes)
+// {
+// 	while (input[index] != '\0')
+// 	{
+// 		if (input[index] == '"')
+// 		{
+// 			*in_quotes = !(*in_quotes);
+// 		}
+// 		else if (!(*in_quotes) && (input[index] == ' ' || input[index] == '>' || input[index] == '<'))
+// 		{
+// 			break;
+// 		}
+// 		index++;
+// 	}
+// 	return (index);
+// }
 
 int	word_token(char *input, t_token **tokens, int index)
 {

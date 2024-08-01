@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:21:49 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 19:15:27 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:02:20 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ void	update_tokens(t_token **tokens, t_node *node)
 	current = *tokens;
 	while (current)
 	{
-
 		handle_dollar_sign_removal(current);
 		handle_quotes_removal(current);
 		handle_key_expansion_trimming(current);

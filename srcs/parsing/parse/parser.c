@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 19:12:12 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:19:17 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,121 +168,147 @@
 
 void process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
 {
-	if (!node->args || *i >= node->arg_count)
-		return;
+    if (!node->args || *i >= node->arg_count)
+        return;
 
-	// Free previously allocated memory if any
-	if (node->args[*i])
-	{
-		free(node->args[*i]);
-		node->args[*i] = NULL;
-	}
+    // Free previously allocated memory if any
+    if (node->args[*i])
+    {
+        free(node->args[*i]);
+        node->args[*i] = NULL;
+    }
 
-	char *original = tok->value;
-	char *result = NULL;
-	size_t result_len = 0;
-	char *cur = original;
+    // Check if the token is inside single quotes
+    if (tok->sq == 1)
+    {
+		//printf("hey");
+        node->args[*i] = strdup(tok->value);  // Store the value directly if inside single quotes
+        if (!node->args[*i])
+        {
+            printf("node->args[%d] is NULL after storing tok->value\n", *i);
+            clear_process(node, i);
+            return;
+        }
+        printf("Set node->args[%d] to tok->value: %s\n", *i, node->args[*i]);
 
-	while (*cur)
-	{
-		char *start = NULL;
-		char *end = NULL;
-		char *key = extract_key(cur, &start, &end);
+        // Set node->cmd if it's the first argument
+        if (*i == 0)
+        {
+            node->cmd = ft_strdup(node->args[*i]);
+        }
 
-		if (key)
-		{
-			size_t len_before_key = start - cur;
-			size_t key_len = end - start;
-			char *path_value = get_path_value(mini, key);
+        (*i)++;
+        printf("Incremented i to: %d\n", *i);
+        return;
+    }
 
-			// Resize the result buffer
-			size_t new_size = result_len + len_before_key + (path_value ? strlen(path_value) : key_len) + 1;
-			char *new_result = realloc(result, new_size);
-			if (!new_result)
-			{
-				free(result);
-				free(key);
-				return;
-			}
-			result = new_result;
+    // If not inside single quotes, proceed with the expansion
+    char *original = tok->value;
+    char *result = NULL;
+    size_t result_len = 0;
+    char *cur = original;
 
-			// Copy part before the key
-			if (len_before_key > 0)
-			{
-				strncpy(result + result_len, cur, len_before_key);
-				result_len += len_before_key;
-			}
+    while (*cur)
+    {
+        char *start = NULL;
+        char *end = NULL;
+        char *key = extract_key(cur, &start, &end);
 
-			// Copy the value of the key
-			if (path_value)
-			{
-				strcpy(result + result_len, path_value);
-				result_len += strlen(path_value);
-			}
-			else
-			{
-				strncpy(result + result_len, start, key_len);
-				result_len += key_len;
-			}
+        if (key)
+        {
+            size_t len_before_key = start - cur;
+            size_t key_len = end - start;
+            char *path_value = get_path_value(mini, key);
 
-			// Move the cursor
-			cur = end;
-			free(key);
-		}
-		else
-		{
-			size_t len_remaining = strlen(cur);
-			char *new_result = realloc(result, result_len + len_remaining + 1);
-			if (!new_result)
-			{
-				free(result);
-				return;
-			}
-			result = new_result;
-			strcpy(result + result_len, cur);
-			result_len += len_remaining;
-			break;
-		}
-	}
+            // Resize the result buffer
+            size_t new_size = result_len + len_before_key + (path_value ? strlen(path_value) : key_len) + 1;
+            char *new_result = realloc(result, new_size);
+            if (!new_result)
+            {
+                free(result);
+                free(key);
+                return;
+            }
+            result = new_result;
 
-	// Handle the special case of expanding "$?"
-	if (ft_strstr(result, "$?") != NULL)
-	{
-		char *expanded_value = expand_exit_status(result);
-		if (expanded_value)
-		{
-			free(result);
-			result = expanded_value;
-			result_len = strlen(result);
-		}
-	}
+            // Copy part before the key
+            if (len_before_key > 0)
+            {
+                strncpy(result + result_len, cur, len_before_key);
+                result_len += len_before_key;
+            }
 
-	// Ensure result is null-terminated
-	if (result)
-	{
-		result[result_len] = '\0';
-	}
+            // Copy the value of the key
+            if (path_value)
+            {
+                strcpy(result + result_len, path_value);
+                result_len += strlen(path_value);
+            }
+            else
+            {
+                strncpy(result + result_len, start, key_len);
+                result_len += key_len;
+            }
 
-	node->args[*i] = result;
+            // Move the cursor
+            cur = end;
+            free(key);
+        }
+        else
+        {
+            size_t len_remaining = strlen(cur);
+            char *new_result = realloc(result, result_len + len_remaining + 1);
+            if (!new_result)
+            {
+                free(result);
+                return;
+            }
+            result = new_result;
+            strcpy(result + result_len, cur);
+            result_len += len_remaining;
+            break;
+        }
+    }
 
-	if (!node->args[*i])
-	{
-		printf("node->args[%d] is NULL after processing\n", *i);
-		clear_process(node, i);
-		return;
-	}
+    // Handle the special case of expanding "$?"
+    if (ft_strstr(result, "$?") != NULL)
+    {
+        char *expanded_value = expand_exit_status(result);
+        if (expanded_value)
+        {
+            free(result);
+            result = expanded_value;
+            result_len = strlen(result);
+        }
+    }
 
-	printf("Set node->args[%d] to result: %s\n", *i, node->args[*i]);
+    // Ensure result is null-terminated
+    if (result)
+    {
+        result[result_len] = '\0';
+    }
 
-	// Set node->cmd if it's the first argument
-	if (*i == 0)
-	{
-		node->cmd = ft_strdup(result);
-	}
+    node->args[*i] = result;
 
-	(*i)++;
-	printf("Incremented i to: %d\n", *i);
+    if (!node->args[*i])
+    {
+        printf("node->args[%d] is NULL after processing\n", *i);
+        clear_process(node, i);
+        return;
+    }
+
+    printf("Set node->args[%d] to result: %s\n", *i, node->args[*i]);
+
+    // Set node->cmd if it's the first argument
+    if (*i == 0)
+    {
+        node->cmd = ft_strdup(result);
+    }
+
+    (*i)++;
+    printf("Incremented i to: %d\n", *i);
 }
+
 
 void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 {
