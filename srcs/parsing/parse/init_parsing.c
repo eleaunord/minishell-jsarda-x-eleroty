@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:00:00 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 15:03:02 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:13:56 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,5 @@ void	init_parsing(t_node *node)
 	node->pid = -42;
 	node->arg_count = 0;
 	node->key_expansion = NULL;
-	node->expansion_count = 0;
 	node->lonely_expansion = 0;
 }

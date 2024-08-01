@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:00:47 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 10:33:02 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:17:27 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,26 +51,6 @@ void	check_needs_expansion(t_token *tok, int *needs_expansion)
 		value++;
 	}
 }
-
-// void	process_expansions(t_token **tokens)
-// {
-// 	t_token	*tok;
-// 	int		needs_expansion;
-
-// 	if (!tokens)
-// 		return ;
-// 	tok = *tokens;
-// 	while (tok != NULL)
-// 	{
-// 		check_needs_expansion(tok, &needs_expansion);
-// 		if (needs_expansion)
-// 			tok->key_expansion = expand_variables(tok->value);
-// 		else
-// 			tok->key_expansion = NULL;
-// 		tok = tok->next;
-// 	}
-
-// }
 
 void	check_is_btw_sq(t_token *tok, int *is_in_single_quotes)
 {

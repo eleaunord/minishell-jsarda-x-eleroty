@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 15:19:25 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:22:07 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ typedef struct s_node
 	int					arg_count;
 
 	char				**key_expansion;
-	int					expansion_count;
 	int					lonely_expansion;
 
 	char				**filename_in;
@@ -234,7 +233,6 @@ char					*remove_quotes(const char *line);
 int						ft_strcmp(char *s1, char *s2);
 int						tokenizer(char *line, t_node **nodes,
 							t_minishell *mini);
-void					free_minishell(t_minishell *mini, t_node *list);
 void					free_env_list(t_env *env_list);
 int						init_env(t_minishell *data, char **env);
 void					free_tokens(t_token *tokens);
@@ -285,8 +283,6 @@ int						tokenizer(char *line, t_node **nodes,
 							t_minishell *mini);
 void					parse_tokens(t_token *tokens, t_node *node,
 							t_minishell *mini);
-// char					*get_expansion(t_minishell *data, char *key_expansion);
-// char	*get_expansion(t_minishell *data,  t_token *tok);
 char					*lonely_expand(t_minishell *data, t_token *tok);
 char					*get_expansion(char *str, t_env **env);
 void					set_expansions(t_token *tokens, t_node *node);
@@ -308,7 +304,9 @@ void					freelist(t_node **nodes);
 char					*trim_whitespace(char *str);
 int						check_expand_name(char c);
 char					*toggle_quote_flags(int *sq, int *dq, char *str, int i);
-char	*delete_extra_quotes(char *str, int i, int dq, int sq);
+char					*strip_quotes(int dq, int sq, char *str, int i);
+char					*handle_special_case(char *find, int status);
+char					*extract_variable_name(char *trim, char *str, int *i);
 extern int				g_status;
 
 #endif

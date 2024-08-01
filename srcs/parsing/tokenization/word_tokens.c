@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:36:26 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 15:31:36 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:26:29 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	tokenize_word(char *input, t_token **tokens, int index,
 		free(temp_line);
 	}
 }
+
 static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes,
 		char *quote_char)
 {

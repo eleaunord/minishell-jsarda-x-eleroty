@@ -6,49 +6,13 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 13:48:30 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 14:27:36 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:21:49 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*allocate_and_copy(char *find, char *status_str, char *pos)
-{
-	char	*expanded_value;
-	size_t	prefix_len;
-
-	prefix_len = pos - find;
-	expanded_value = malloc(ft_strlen(find) + ft_strlen(status_str) + 1);
-	if (!expanded_value)
-		return (NULL);
-	ft_strncpy(expanded_value, find, prefix_len);
-	ft_strcpy(expanded_value + prefix_len, status_str);
-	ft_strcpy(expanded_value + prefix_len + ft_strlen(status_str), pos + 1);
-	return (expanded_value);
-}
-
-// Function to handle the special case with '?'
-char	*handle_special_case(char *find, int status)
-{
-	char	*status_str;
-	char	*expanded_value;
-	char	*pos;
-
-	status_str = ft_itoa(status);
-	if (!status_str)
-		return (NULL);
-	pos = ft_strstr(find, "?");
-	if (!pos)
-	{
-		free(status_str);
-		return (NULL);
-	}
-	expanded_value = allocate_and_copy(find, status_str, pos);
-	free(status_str);
-	return (expanded_value);
-}
-
-char	*get_content_env(t_env **env, char *find)
+char	*lookup_env_value(t_env **env, char *find)
 {
 	t_env	*tmp;
 	char	*result;
@@ -70,12 +34,13 @@ char	*get_content_env(t_env **env, char *find)
 	return (NULL);
 }
 
-char	*append_expanded_value(int *fag_add, char *recup, char *res, t_env **env)
+char	*append_expanded_value(int *fag_add, char *recup, char *res,
+		t_env **env)
 {
 	char	*tmp_content;
 	char	*tmp_res;
 
-	tmp_content = get_content_env(env, recup);
+	tmp_content = lookup_env_value(env, recup);
 	if (!tmp_content)
 	{
 		tmp_content = ft_strdup("");
@@ -102,16 +67,6 @@ static char	*init_expansion_state(int *f, int *i)
 	*i = -1;
 	*f = 0;
 	return (NULL);
-}
-
-char	*extract_variable_name(char *trim, char *str, int *i)
-{
-	while (str && str[*i] && str[*i] != ' ' && check_expand_name(str[*i])
-		&& str[*i] != '$')
-		trim = ft_realloc(trim, str[(*i)++], 0);
-	if (str[*i] == '$' || str[*i] == ' ' || !check_expand_name(str[*i]))
-		(*i)--;
-	return (trim);
 }
 
 char	*perform_expansion(char *str, t_env **env, int dq, int sq)

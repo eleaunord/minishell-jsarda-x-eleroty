@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 13:45:14 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 15:18:59 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:07:21 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	handle_unquoted_token(t_token *tok, t_minishell *mini, t_node *node,
 {
 	char	*expanded_value;
 
-	//expanded_value = get_expansion(ft_strdup(tok->value), &mini->env, 0, NULL);
 	expanded_value = get_expansion(ft_strdup(tok->value), &mini->env);
 	if (!expanded_value)
 	{
@@ -29,8 +28,7 @@ static void	handle_unquoted_token(t_token *tok, t_minishell *mini, t_node *node,
 		free(node->args[*i]);
 		node->args[*i] = NULL;
 	}
-	//node->args[*i] = expanded_value;
-	node->args[*i] = delete_extra_quotes(expanded_value, 0, 0, 0);
+	node->args[*i] = strip_quotes(0, 0, expanded_value, 0);
 	if (!node->args[*i])
 	{
 		clear_process(node, i);
@@ -48,8 +46,7 @@ static void	handle_squoted_token(t_token *tok, t_node *node, int *i)
 		free(node->args[*i]);
 		node->args[*i] = NULL;
 	}
-	//node->args[*i] = ft_strdup(tok->value);
-	node->args[*i] = delete_extra_quotes(ft_strdup(tok->value), 0, 0, 0);
+	node->args[*i] = strip_quotes(0, 0, ft_strdup(tok->value), 0);
 	if (!node->args[*i])
 	{
 		clear_process(node, i);

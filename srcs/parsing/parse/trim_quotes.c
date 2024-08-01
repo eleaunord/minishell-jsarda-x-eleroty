@@ -6,41 +6,15 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:14:52 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 15:15:30 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:25:49 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_trim(char *str, int pos, int len)
+int	find_closing_quote(char *str, int i, int option)
 {
-	char	*res;
-	int		i;
-	int		j;
-
-	res = malloc(sizeof(char) * ((ft_strlen(str) - len) + 20));
-	if (!res)
-		free(NULL);
-	ft_bzero(res, ft_strlen(str) - len + 20);
-	i = -1;
-	j = 0;
-	while (str[++i])
-	{
-		if (i == pos)
-			i += len;
-		if ((size_t)i >= ft_strlen(str))
-			break ;
-		res[j] = str[i];
-		j++;
-	}
-	free(str);
-	res[j] = 0;
-	return (res);
-}
-
-int	recup_second_quote(char *str, int i, int mode)
-{
-	if (mode == 1)
+	if (option == 1)
 	{
 		while (str[i])
 		{
@@ -49,7 +23,7 @@ int	recup_second_quote(char *str, int i, int mode)
 			i++;
 		}
 	}
-	else if (mode == 2)
+	else if (option == 2)
 	{
 		while (str[i])
 		{
@@ -60,55 +34,58 @@ int	recup_second_quote(char *str, int i, int mode)
 	}
 	return (-1);
 }
-char	*cut_delete_quote(char *str, int pos1, int pos2)
+
+char	*clear_quotes(char *str, int start, int end)
 {
-	if (pos2 == -1)
+	if (end == -1)
 		return (NULL);
 	else
 	{
-		str = ft_trim(str, pos1, 1);
-		str = ft_trim(str, pos2 - 1, 1);
+		str = ft_trim(str, start, 1);
+		str = ft_trim(str, end - 1, 1);
 	}
 	return (str);
 }
-int	cut_delete_quote_loop(char *str, int i, int *dq, int *sq)
+
+int	remove_quotes_loop(int *in_dq, int *in_sq, char *str, int i)
 {
-	if (str[i] == '\'' && *sq == 0 && *dq == 0)
+	if (str[i] == '\'' && *in_sq == 0 && *in_dq == 0)
 	{
-		*sq = 1;
+		*in_sq = 1;
 		return (i);
 	}
-	else if (str[i] == '\"' && *dq == 0 && *sq == 0)
+	else if (str[i] == '\"' && *in_dq == 0 && *in_sq == 0)
 	{
-		*dq = 1;
+		*in_dq = 1;
 		return (i);
 	}
 	return (0);
 }
-char	*delete_extra_quotes(char *str, int i, int dq, int sq)
+
+char	*strip_quotes(int in_dq, int in_sq, char *str, int i)
 {
-	int	pos1;
-	int	pos2;
+	int	start;
+	int	end;
 
 	while (str && str[i])
 	{
-		pos1 = 0;
-		pos2 = -1;
-		pos1 = cut_delete_quote_loop(str, i, &dq, &sq);
-		if (dq == 1 && sq == 0)
-			pos2 = recup_second_quote(str, i + 1, 1);
-		if (sq == 1 && dq == 0)
-			pos2 = recup_second_quote(str, i + 1, 2);
-		if (pos2 != -1)
+		start = 0;
+		end = -1;
+		start = remove_quotes_loop(&in_dq, &in_sq, str, i);
+		if (in_dq == 1 && in_sq == 0)
+			end = find_closing_quote(str, i + 1, 1);
+		if (in_sq == 1 && in_dq == 0)
+			end = find_closing_quote(str, i + 1, 2);
+		if (end != -1)
 		{
-			str = cut_delete_quote(str, pos1, pos2);
+			str = clear_quotes(str, start, end);
 			if (!str)
 				return (NULL);
-			sq = 0;
-			dq = 0;
-			i = pos2 - 2;
+			in_sq = 0;
+			in_dq = 0;
+			i = end - 2;
 		}
 		i++;
 	}
 	return (str);
-} 
+}

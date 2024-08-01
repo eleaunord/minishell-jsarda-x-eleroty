@@ -6,12 +6,11 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 14:38:08 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 16:26:04 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 {
@@ -33,7 +32,6 @@ void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	{
 		if (tok->type == TOKEN_WORD && !tok->processed)
 		{
-			//printf("tok val %s\n", tok->value);
 			process_tok(tok, node, mini, &i);
 			if (!node->args)
 				return ;
@@ -76,6 +74,5 @@ void	parse_tokens(t_token *tokens, t_node *node, t_minishell *mini)
 	process_expansions(&tokens);
 	update_tokens(&tokens, node);
 	check_lonely_expansions(tokens, node);
-	set_expansions(tokens, node);
 	fill_args(tokens, node, mini);
 }
