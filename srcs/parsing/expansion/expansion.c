@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:00:47 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 10:25:03 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:33:02 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,48 +69,45 @@ void	check_needs_expansion(t_token *tok, int *needs_expansion)
 // 			tok->key_expansion = NULL;
 // 		tok = tok->next;
 // 	}
-	
+
 // }
-void check_is_btw_sq(t_token *tok, int *is_in_single_quotes)
-{
-    char *value = tok->value;
-    size_t len = strlen(value);
 
-    // Check if the token starts and ends with single quotes
-    if (len >= 2 && value[0] == '\'' && value[len - 1] == '\'')
-    {
-        *is_in_single_quotes = 1;
-    }
-    else
-    {
-        *is_in_single_quotes = 0;
-    }
+void	check_is_btw_sq(t_token *tok, int *is_in_single_quotes)
+{
+	char	*value;
+	size_t	len;
+
+	value = tok->value;
+	len = strlen(value);
+	if (len >= 2 && value[0] == '\'' && value[len - 1] == '\'')
+	{
+		*is_in_single_quotes = 1;
+	}
+	else
+	{
+		*is_in_single_quotes = 0;
+	}
 }
 
-
-
-void process_expansions(t_token **tokens)
+void	process_expansions(t_token **tokens)
 {
-    t_token *tok;
-    int is_in_single_quotes;
+	t_token	*tok;
+	int		is_in_single_quotes;
 
-    if (!tokens)
-        return;
-    tok = *tokens;
-    is_in_single_quotes = 0;
-    while (tok != NULL)
-    {
-        printf("VALUE TOK : %s\n", tok->value);
-        check_is_btw_sq(tok, &is_in_single_quotes);
-        printf("SQ TOK (before setting): %d\n", is_in_single_quotes);
-        tok->sq = is_in_single_quotes ? 1 : 0;
-        printf("SQ TOK (after setting): %d\n", tok->sq);
-        tok = tok->next;
-    }
+	if (!tokens)
+		return ;
+	tok = *tokens;
+	is_in_single_quotes = 0;
+	while (tok != NULL)
+	{
+		check_is_btw_sq(tok, &is_in_single_quotes);
+		if (is_in_single_quotes)
+			tok->sq = 1;
+		else
+			tok->sq = 0;
+		tok = tok->next;
+	}
 }
-
-
-
 
 void	check_lonely_expansions(t_token *tokens, t_node *node)
 {

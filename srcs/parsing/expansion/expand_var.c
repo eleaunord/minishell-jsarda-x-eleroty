@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:04:20 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 10:59:11 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:32:58 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ static char	*handle_variable_expansion(char *token, int *i)
 // 	}
 // 	return (extract_var_from_single_quotes(token));
 // }
-char *expand_variables(char *token, int *is_in_single_quotes)
+char	*expand_variables(char *token, int *is_in_single_quotes)
 {
-	int i;
-	int in_single_quotes;
+	int	i;
+	int	in_single_quotes;
 
 	i = -1;
 	in_single_quotes = 0;

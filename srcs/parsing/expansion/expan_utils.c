@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:30:06 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 10:45:26 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:33:42 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	is_alnum(int c)
 			&& c <= 'z'));
 }
 
-int is_in_sq(int in_single_quotes, char c)
+int	is_in_sq(int in_single_quotes, char c)
 {
 	if (c == '\'')
 		return (!in_single_quotes);
@@ -28,7 +28,7 @@ int is_in_sq(int in_single_quotes, char c)
 int	should_expand_variable(char *token, int index)
 {
 	return (token[index] == '$' && (is_alnum(token[index + 1]) || token[index
-			+ 1] == '_'));
+				+ 1] == '_'));
 }
 
 int	count_expansions(t_token *tokens)

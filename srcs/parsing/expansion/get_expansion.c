@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:31:05 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 19:13:33 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 10:33:17 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,11 @@ char	*get_expansion(t_minishell *data, t_token *tok)
 	char	*path_value;
 	char	*result;
 
-	
 	key = extract_key(tok->value, &start, &end);
-	//printf("key : %s\n", key);
 	path_value = get_path_value(data, key);
-	//printf("path : %s\n", path_value);
 	free(key);
 	if (!path_value)
 		return (NULL);
 	result = construct_result(tok->value, start, end, path_value);
-	//printf("res : %s\n", result);
 	return (result);
 }
