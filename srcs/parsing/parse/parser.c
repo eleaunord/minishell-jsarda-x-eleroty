@@ -6,35 +6,75 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 12:17:51 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 13:10:38 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+char *get_content_env(t_env **env, char *find) {
+    t_env *tmp;
+    char *expanded_value;
+    char *status_str;
 
-char	*get_content_env(t_env **env, char *find)
-{
-	t_env	*tmp;
-	 // char *expanded_value;
+    if (!find) {
+        return NULL;
+    }
 
-	if (!find)
-	{
-		printf("get_content_env: find is NULL\n");
-		return (NULL);
-	}
-	if (ft_strcmp(find, "?") == 0)
-	{
-		return (ft_itoa(g_status));
-	}
-	tmp = *env;
-	while (tmp)
-	{
-		if (tmp->key && ft_strcmp(find, tmp->key) == 0)
-			return (ft_strdup(tmp->value));
-		tmp = tmp->next;
-	}
-	return (NULL);
+    // Check if the `find` string contains `?`
+    if (ft_strstr(find, "?")) {
+        // Replace `?` with the current status value
+        status_str = ft_itoa(g_status);
+        expanded_value = malloc(strlen(find) + strlen(status_str) + 1);
+        if (!expanded_value) {
+            free(status_str);
+            return NULL;
+        }
+
+        char *pos = ft_strstr(find, "?");
+        size_t prefix_len = pos - find;
+        strncpy(expanded_value, find, prefix_len);
+        strcpy(expanded_value + prefix_len, status_str);
+        strcpy(expanded_value + prefix_len + strlen(status_str), pos + 1);
+
+        free(status_str);
+        return expanded_value;
+    }
+
+    // Standard environment variable lookup
+    tmp = *env;
+    while (tmp) {
+        if (tmp->key && ft_strcmp(find, tmp->key) == 0) {
+            return ft_strdup(tmp->value);
+        }
+        tmp = tmp->next;
+    }
+
+    return NULL;
 }
+// char	*get_content_env(t_env **env, char *find)
+// {
+// 	t_env	*tmp;
+// 	 // char *expanded_value;
+
+// 	if (!find)
+// 	{
+// 		//printf("get_content_env: find is NULL\n");
+// 		return (NULL);
+// 	}
+// 	if (ft_strcmp(find, "?") == 0)
+// 	{
+// 		printf("hey");
+// 		return (ft_itoa(g_status));
+// 	}
+// 	tmp = *env;
+// 	while (tmp)
+// 	{
+// 		if (tmp->key && ft_strcmp(find, tmp->key) == 0)
+// 			return (ft_strdup(tmp->value));
+// 		tmp = tmp->next;
+// 	}
+// 	return (NULL);
+// }
 
 int	valid_name(char c)
 {
@@ -93,11 +133,12 @@ char *cut_expander_loop_1(char *recup, char *res, t_env **env, int *f) {
     char *tmp_content;
     char *tmp_res;
 
+	//printf("recup: %s\n", recup);
     tmp_content = get_content_env(env, recup);
+	//printf("tmp content: %s\n", tmp_content);
     if (!tmp_content) {
         tmp_content = ft_strdup("");  // Handle the case where environment variable is not found
     }
-
     if (!res) {
         res = ft_strdup(tmp_content);
     } else {
@@ -105,7 +146,7 @@ char *cut_expander_loop_1(char *recup, char *res, t_env **env, int *f) {
         free(res);
         res = tmp_res;
     }
-
+	//printf("res: %s\n", res);
     free(tmp_content);
     free(recup);
     recup = NULL;
@@ -244,7 +285,7 @@ void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 	{
 		if (tok->type == TOKEN_WORD && !tok->processed)
 		{
-			printf("tok value: %s\n", tok->value);
+			//printf("tok value: %s\n", tok->value);
 			process_tok(tok, node, mini, &i);
 			if (!node->args)
 				return ;
