@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:21:49 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 10:34:27 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 14:41:18 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,18 @@ void	handle_key_expansion_trimming(t_token *token)
 	}
 }
 
-void	handle_quotes_removal(t_token *token)
-{
-	char	*new_value;
+// void	handle_quotes_removal(t_token *token)
+// {
+// 	char	*new_value;
 
-	if (ft_strchr(token->value, '\'') != NULL || ft_strchr(token->value,
-			'"') != NULL)
-	{
-		new_value = remove_quotes_from_word(token->value);
-		free(token->value);
-		token->value = new_value;
-	}
-}
+// 	if (ft_strchr(token->value, '\'') != NULL || ft_strchr(token->value,
+// 			'"') != NULL)
+// 	{
+// 		new_value = remove_quotes_from_word(token->value);
+// 		free(token->value);
+// 		token->value = new_value;
+// 	}
+// }
 
 void	handle_dollar_sign_removal(t_token *token)
 {
@@ -91,7 +91,9 @@ void	update_tokens(t_token **tokens, t_node *node)
 	while (current)
 	{
 		handle_dollar_sign_removal(current);
-		handle_quotes_removal(current);
+		//printf("update tokens value before:%s\n", current->value);
+		//handle_quotes_removal(current);
+		//printf("update tokens value after:%s\n", current->value);
 		handle_key_expansion_trimming(current);
 		current = current->next;
 	}

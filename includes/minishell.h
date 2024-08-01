@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:12:24 by eleroty           #+#    #+#             */
-/*   Updated: 2024/07/31 19:04:12 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 15:19:25 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ typedef struct s_token
 	int					processed;
 	char				*key_expansion;
 	int					limiter_hd_count;
-	int dq_flag;
-	int sq;
+	int					dq_flag;
+	int					sq;
 }						t_token;
 
 typedef struct s_rem_quotes
@@ -205,8 +205,10 @@ void					free_child(t_node *data, t_minishell *shell,
 size_t					count_args(char **args);
 
 // PARSING FUNCTIONS
-char *extract_key(char *key_expansion, char **start, char **end); 
-void process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i);
+char					*extract_key(char *key_expansion, char **start,
+							char **end);
+void					process_tok(t_token *tok, t_node *node,
+							t_minishell *mini, int *i);
 void					clear_nodes(t_node **node_list);
 void					clear_process(t_node *node, int *i);
 char					*expand_exit_status(char *str);
@@ -220,7 +222,7 @@ void					check_needs_expansion(t_token *tok,
 char					*extract_variables_within_braces(const char *token);
 char					*extract_variables_without_braces(const char *token);
 char					*extract_var_from_single_quotes(const char *token);
-int is_in_sq(int in_single_quotes, char c);
+int						is_in_sq(int in_single_quotes, char c);
 int						should_expand_variable(char *token, int index);
 char					*construct_result(char *key_expansion, char *start,
 							char *end, char *path_value);
@@ -245,9 +247,10 @@ int						special_tokens(char *input, t_token **tokens,
 t_token					*new_token(t_token_type type, char *value);
 int						word_token(char *input, t_token **tokens, int index);
 void					add_token_to_list(t_token **tokens, t_token *new_token);
-//char					*expand_variables(char *token);
-char *expand_variables(char *token, int *is_in_single_quotes);
-void close_quote_check(int *dq, int *sq, int *index, char c);
+// char					*expand_variables(char *token);
+char					*expand_variables(char *token,
+							int *is_in_single_quotes);
+void					close_quote_check(int *dq, int *sq, int *index, char c);
 int						count_arguments(t_token *tokens);
 void					free_nodes(t_node *list);
 void					free_nodes(t_node *list);
@@ -282,8 +285,10 @@ int						tokenizer(char *line, t_node **nodes,
 							t_minishell *mini);
 void					parse_tokens(t_token *tokens, t_node *node,
 							t_minishell *mini);
-//char					*get_expansion(t_minishell *data, char *key_expansion);
-char	*get_expansion(t_minishell *data,  t_token *tok);
+// char					*get_expansion(t_minishell *data, char *key_expansion);
+// char	*get_expansion(t_minishell *data,  t_token *tok);
+char					*lonely_expand(t_minishell *data, t_token *tok);
+char					*get_expansion(char *str, t_env **env);
 void					set_expansions(t_token *tokens, t_node *node);
 int						init_env_dup(t_minishell *data, char **env);
 int						append(t_env **list, char *elem);
@@ -301,6 +306,9 @@ int						process_input_line(char *input_line, t_node **node_list,
 							t_minishell *data);
 void					freelist(t_node **nodes);
 char					*trim_whitespace(char *str);
+int						check_expand_name(char c);
+char					*toggle_quote_flags(int *sq, int *dq, char *str, int i);
+char	*delete_extra_quotes(char *str, int i, int dq, int sq);
 extern int				g_status;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 10:29:49 by jsarda            #+#    #+#             */
-/*   Updated: 2024/07/30 15:08:23 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 14:16:45 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,7 @@ t_list					*ft_lstmap(t_list *lst, void *(*f)(void *),
 							void (*del)(void *));
 void					ft_lstiter(t_list *lst, void (*f)(void *));
 int						ft_strcmp(char *s1, char *s2);
+char					*ft_strncpy(char *dest, char *src, unsigned int n);
+char					*ft_realloc(char *res, char c, int i);
 
 #endif

@@ -17,9 +17,12 @@ SRCS_FILES	= parsing/environment/env_utils.c \
 			parsing/free/free.c \
 			parsing/free/free_2.c \
 			parsing/expansion/get_expansion.c \
+			parsing/expansion/lonely_expand.c \
+			parsing/parse/handle_quote.c \
 			parsing/parse/heredoc.c \
 			parsing/parse/init_parsing.c \
 			parsing/parse/main_parse.c \
+			parsing/parse/trim_quotes.c \
 			parsing/parse/parser.c \
 			parsing/parse/debug_function.c \
 			parsing/parse/remove_quotes.c \

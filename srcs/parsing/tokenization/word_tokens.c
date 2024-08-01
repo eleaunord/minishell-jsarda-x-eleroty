@@ -6,7 +6,7 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:36:26 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 11:54:35 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 15:31:36 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,22 @@ static void	tokenize_word(char *input, t_token **tokens, int index,
 		free(temp_line);
 	}
 }
-
-static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes)
+static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes,
+		char *quote_char)
 {
 	while (input[index] != '\0')
 	{
 		if (input[index] == '\'' || input[index] == '\"')
 		{
-			*in_quotes = !*in_quotes;
+			if (*in_quotes && input[index] == *quote_char)
+			{
+				*in_quotes = 0;
+			}
+			else if (!*in_quotes)
+			{
+				*in_quotes = 1;
+				*quote_char = input[index];
+			}
 		}
 		if (!*in_quotes && (input[index] == ' ' || input[index] == '>'
 				|| input[index] == '<'))
@@ -47,10 +55,14 @@ static int	handle_quotes_and_whitespace(char *input, int index, int *in_quotes)
 
 int	word_token(char *input, t_token **tokens, int index)
 {
-	int in_quotes = 0;
-	int word_start = index;
+	int		in_quotes;
+	char	quote_char;
+	int		word_start;
 
-	index = handle_quotes_and_whitespace(input, index, &in_quotes);
+	in_quotes = 0;
+	quote_char = '\0';
+	word_start = index;
+	index = handle_quotes_and_whitespace(input, index, &in_quotes, &quote_char);
 	if (index > word_start)
 	{
 		tokenize_word(input, tokens, index, word_start);
