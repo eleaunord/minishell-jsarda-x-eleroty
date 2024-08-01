@@ -6,38 +6,40 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:01:01 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 11:45:55 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 12:17:51 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_content_env(t_env **env, char *find)
+char	*get_content_env(t_env **env, char *find)
 {
-    t_env *tmp;
+	t_env	*tmp;
+	 // char *expanded_value;
 
-    if (!find) {
-        printf("get_content_env: find is NULL\n");
-        return NULL;
-    }
-    if (ft_strcmp(find, "?") == 0) {
-        return ft_itoa(g_status);
-    }
-    tmp = *env;
-    while (tmp)
-    {
-        if (tmp->key && ft_strcmp(find, tmp->key) == 0)
-            return ft_strdup(tmp->value);
-        tmp = tmp->next;
-    }
-    return NULL;
+	if (!find)
+	{
+		printf("get_content_env: find is NULL\n");
+		return (NULL);
+	}
+	if (ft_strcmp(find, "?") == 0)
+	{
+		return (ft_itoa(g_status));
+	}
+	tmp = *env;
+	while (tmp)
+	{
+		if (tmp->key && ft_strcmp(find, tmp->key) == 0)
+			return (ft_strdup(tmp->value));
+		tmp = tmp->next;
+	}
+	return (NULL);
 }
-
 
 int	valid_name(char c)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| c == '_' || c == '?')
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
+		|| c == '?')
 		return (1);
 	return (0);
 }
@@ -87,31 +89,32 @@ char	*recup_dq_sq_expander(char *str, int i, int *sq, int *dq)
 		*dq = 0;
 	return (NULL);
 }
-char	*cut_expander_loop_1(char *recup, char *res, t_env **env, int *f)
-{
-	char	*tmp_content;
-	char	*tmp_res;
+char *cut_expander_loop_1(char *recup, char *res, t_env **env, int *f) {
+    char *tmp_content;
+    char *tmp_res;
 
-	tmp_content = NULL;
-	tmp_res = NULL;
-	if (!res)
-	{
-		res = malloc(1);
-		res[0] = 0;
-	}
-	tmp_content = get_content_env(env, recup);
-	tmp_res = ft_strjoin(res, tmp_content);
-	free(tmp_content);
-	free(res);
-	res = ft_strdup(tmp_res);
-	free(tmp_res);
-	free(recup);
-	recup = NULL;
-	*f = 1;
-	return (res);
+    tmp_content = get_content_env(env, recup);
+    if (!tmp_content) {
+        tmp_content = ft_strdup("");  // Handle the case where environment variable is not found
+    }
+
+    if (!res) {
+        res = ft_strdup(tmp_content);
+    } else {
+        tmp_res = ft_strjoin(res, tmp_content);
+        free(res);
+        res = tmp_res;
+    }
+
+    free(tmp_content);
+    free(recup);
+    recup = NULL;
+    *f = 1;
+    return res;
 }
 
-static	char	*expander_loop_init(int *f, int *i)
+
+static char	*expander_loop_init(int *f, int *i)
 {
 	*i = -1;
 	*f = 0;
@@ -120,8 +123,8 @@ static	char	*expander_loop_init(int *f, int *i)
 
 char	*cut_expander_in_loop(char *str, int *i, char *recup)
 {
-	while (str && str[*i] && str[*i] != ' '
-		&& valid_name(str[*i]) && str[*i] != '$')
+	while (str && str[*i] && str[*i] != ' ' && valid_name(str[*i])
+		&& str[*i] != '$')
 		recup = reallocator(recup, str[(*i)++], 0);
 	if (str[*i] == '$' || str[*i] == ' ' || !valid_name(str[*i]))
 		(*i)--;
@@ -177,43 +180,48 @@ char	*expander(char *str, t_env **env, int i, char *res)
 	}
 	return (res);
 }
-void process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
+
+
+
+void	process_tok(t_token *tok, t_node *node, t_minishell *mini, int *i)
 {
-    if (!node->args || *i >= node->arg_count)
-        return;
-    if (node->args[*i])
-    {
-        free(node->args[*i]);
-        node->args[*i] = NULL;
-    }
-    if (tok->sq == 1)
-    {
-        node->args[*i] = ft_strdup(tok->value);
-        if (!node->args[*i])
-        {
-            clear_process(node, i);
-            return;
-        }
-        if (*i == 0)
-            node->cmd = ft_strdup(node->args[*i]);
-        (*i)++;
-        return;
-    }
-    char *expanded_value = expander(ft_strdup(tok->value), &mini->env, 0, NULL);
-    if (!expanded_value)
-    {
-        clear_process(node, i);
-        return;
-    }
-    node->args[*i] = expanded_value;
-    if (!node->args[*i])
-    {
-        clear_process(node, i);
-        return;
-    }
-    if (*i == 0)
-        node->cmd = ft_strdup(node->args[*i]);
-    (*i)++;
+	char	*expanded_value;
+
+	if (!node->args || *i >= node->arg_count)
+		return ;
+	if (node->args[*i])
+	{
+		free(node->args[*i]);
+		node->args[*i] = NULL;
+	}
+	if (tok->sq == 1)
+	{
+		node->args[*i] = ft_strdup(tok->value);
+		if (!node->args[*i])
+		{
+			clear_process(node, i);
+			return ;
+		}
+		if (*i == 0)
+			node->cmd = ft_strdup(node->args[*i]);
+		(*i)++;
+		return ;
+	}
+	expanded_value = expander(ft_strdup(tok->value), &mini->env, 0, NULL);
+	if (!expanded_value)
+	{
+		clear_process(node, i);
+		return ;
+	}
+	node->args[*i] = expanded_value;
+	if (!node->args[*i])
+	{
+		clear_process(node, i);
+		return ;
+	}
+	if (*i == 0)
+		node->cmd = ft_strdup(node->args[*i]);
+	(*i)++;
 }
 
 void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
@@ -238,7 +246,6 @@ void	fill_args(t_token *tokens, t_node *node, t_minishell *mini)
 		{
 			printf("tok value: %s\n", tok->value);
 			process_tok(tok, node, mini, &i);
-			
 			if (!node->args)
 				return ;
 		}

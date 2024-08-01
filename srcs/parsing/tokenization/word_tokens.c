@@ -6,13 +6,11 @@
 /*   By: eleroty <eleroty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:36:26 by eleroty           #+#    #+#             */
-/*   Updated: 2024/08/01 11:53:27 by eleroty          ###   ########.fr       */
+/*   Updated: 2024/08/01 11:54:35 by eleroty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 static void	tokenize_word(char *input, t_token **tokens, int index,
 		int word_start)
@@ -52,14 +50,11 @@ int	word_token(char *input, t_token **tokens, int index)
 	int in_quotes = 0;
 	int word_start = index;
 
-	// Handle initial quotes and whitespace
 	index = handle_quotes_and_whitespace(input, index, &in_quotes);
 	if (index > word_start)
 	{
 		tokenize_word(input, tokens, index, word_start);
 	}
-
-	// Skip any remaining whitespace
 	while (input[index] == ' ')
 	{
 		index++;
