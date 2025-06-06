@@ -1,5 +1,7 @@
 # 🐚 minishell
 
+*The project was developed collaboratively by Julien Sarda (jsarda) and Éléonore Roty (eleroty).*
+
 ## Overview
 
 **minishell** is a small-scale reimplementation of a Unix shell written in C. The project focuses on replicating Bash-like behavior for command parsing, execution, piping, and redirection. It involves working closely with system calls, process management, and file descriptors to simulate how a real shell works.
