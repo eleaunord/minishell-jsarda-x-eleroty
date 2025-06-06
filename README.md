@@ -1,53 +1,109 @@
-# MINISHELL
+# 🐚 minishell
 
-## GENERAL
+## Overview
 
-- No need to to follow the POSIX norm. (Portable Operating System Interface)
+**minishell** is a small-scale reimplementation of a Unix shell written in C. The project focuses on replicating Bash-like behavior for command parsing, execution, piping, and redirection. It involves working closely with system calls, process management, and file descriptors to simulate how a real shell works.
 
-### USEFUL LINK
+> The goal is to build your own fully functional shell—no shortcuts, no external parsing libraries—just raw logic, low-level C, and lots of debugging.
 
-- https://github.com/Hqndler/42-minishell
--   https://fr.manpages.org/execve/2https://fr.manpages.org/execve/2 (execve doc)
-- https://youtu.be/iq7puCxsgHQ?si=86cOQmlYwsrHcmRP (execve video)
+---
 
-### PROMPT
+## 📚 What we Learned
 
-- COMMAND :
-	LS, CAT, ECHO
+This project helped me develop a much deeper understanding of:
 
-- REDIRECTION :
-	<, >, <<, >>
+* **Process and signal management** (`fork`, `execve`, `waitpid`, etc.)
+* Writing a proper **parser** that handles quotes, pipes, escape characters, and expansions.
+* Implementing **built-in commands** directly within the main shell process.
+* **File descriptor redirection**: managing input/output redirections, pipes, and heredocs.
+* Handling **signals** properly (`Ctrl+C`, `Ctrl+D`, `Ctrl+\`)—including tricky cases like heredoc interruptions.
+* Clean memory management: freeing everything properly to avoid leaks and crashes.
+* Structuring a mid-sized C project with modular, readable code.
 
-## PARSING
+---
 
-### => Tokenization to do list
+## ✅ Mandatory Features
 
-1/ Identify Tokens: List all possible tokens (e.g., commands, flags, arguments, operators like |, >, <, etc.).
+* Custom prompt with history (using `readline`)
+* Command parsing with:
 
-2/ Write a Tokenizer: Create a function to split the input string into tokens.
+  * Spaces and quotes (`'`, `"`)
+  * Pipes (`|`) and redirections (`<`, `>`, `<<`, `>>`)
+  * Environment variable expansion (`$VAR`, `$?`)
+* Execution system:
 
--> Handle quotes (single and double) to allow spaces within arguments.
+  * Built-ins: `echo`, `cd`, `pwd`, `export`, `unset`, `env`, `exit`
+  * External commands with `PATH` resolution
+  * Pipes between multiple commands
+* Signal handling:
 
--> Consider escape characters.
+  * `Ctrl+C` triggers a new prompt
+  * `Ctrl+D` exits the shell
+  * `Ctrl+\` is ignored
+* Exit status (`$?`) updated properly
 
-3/ Test Tokenizer: Write tests to ensure the tokenizer handles various edge cases (e.g., dq_flagiple spaces, quoted strings, escape sequences).
+---
 
+## 🔧 How Execution Works
 
-## EXEC
+1. **Prompt & Input**
+   Uses `readline()` to read user input and store history.
 
-### Handling Simple Commands
+2. **Parsing**
+   Tokenizes the input while respecting quoting and expansion rules.
 
-#### Creating a Child Process with fork()
-   - Use fork() to create a new process.
-    - fork() returns a process ID (PID). The PID is 0 for the child process, and for the parent process, it is the child's PID.
+3. **Execution**
 
-#### Replacing the Process Image with execve()
-    - Use execve() in the child process to replace the process image with the specified command.
-    - execve() takes three arguments: the path to the executable, an array of arguments, and an array of environment variables.
+   * Forks and executes commands
+   * Handles pipes using `dup2` and multiple child processes
+   * Redirects input/output based on redirection operators
+   * Runs built-ins in the parent process when needed
 
-#### Waiting for the Child Process to Finish with waitpid()
-    - Use waitpid() in the parent process to wait for the child process to finish.
-    - waitpid() takes the child process's PID and a pointer to an integer where the exit status will be stored.
+4. **Cleanup**
 
-#### Error Handling
-   - Handle possible errors for fork(), execve(), and waitpid() using perror() and appropriate return code
+   * Frees all allocated memory
+   * Restores file descriptors
+   * Handles errors and resets signals safely
+
+---
+
+## 🚧 Difficulties Faced
+
+* Handling edge cases in parsing (quotes within quotes, escaped characters, etc.)
+* Managing multiple pipes and redirections simultaneously
+* Correctly implementing heredoc with signals and temporary file cleanup
+* Avoiding memory leaks, especially when reusing structures in the execution loop
+* Recreating Bash-like behavior accurately, even for built-ins and exit codes
+
+---
+
+## 🛠️ Build & Run
+
+```bash
+make
+./minishell
+```
+
+Example usage:
+
+```bash
+minishell> echo hello | cat -e > out.txt
+minishell> cat out.txt
+hello$
+```
+
+---
+
+## 📎 References
+
+* [execve man page](https://fr.manpages.org/execve/2)
+* [execve video explanation](https://youtu.be/iq7puCxsgHQ?si=86cOQmlYwsrHcmRP)
+* [42-minishell repo (community example)](https://github.com/Hqndler/42-minishell)
+
+---
+
+## 🧠 Final Thoughts
+
+Rebuilding a shell was both the most painful and most rewarding project we’ve done at 42 so far. It’s a huge lesson in **how Unix works behind the scenes**, how to handle processes responsibly, and how to keep a large C project organized and maintainable. Watching my shell evolve from a single `echo` to a working pipeline with redirections was incredibly satisfying.
+
+> It’s not just about launching commands—it’s about doing it *right*, reliably, and cleanly.
